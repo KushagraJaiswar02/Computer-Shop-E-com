@@ -91,6 +91,44 @@ const LOCAL_STORAGE_KEYS = {
   ENQUIRIES: 'compshop_enquiries',
 };
 
+const defaultHeroImageMigrations: Record<string, string> = {
+  'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=1200&q=80': 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=2000&q=85',
+  'https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=1200&q=80': 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?auto=format&fit=crop&w=2000&q=85',
+  'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=80': 'https://images.unsplash.com/photo-1691580438246-a6e5cb35ca05?auto=format&fit=crop&w=2000&q=85',
+};
+
+const normalizeHomepageConfig = (stored: any): HomepageConfig => {
+  const base = DEFAULT_HOMEPAGE_CONFIG;
+  const slides = Array.isArray(stored?.heroSlides) ? stored.heroSlides : base.heroSlides;
+  return {
+    ...base,
+    ...stored,
+    heroIntervalMs: Number.isFinite(stored?.heroIntervalMs) ? stored.heroIntervalMs : base.heroIntervalMs,
+    heroSlides: slides.map((slide: any, index: number) => {
+      const matchingDefaultImage = Object.keys(defaultHeroImageMigrations).find(imageUrl => slide.imageUrl === imageUrl);
+      const imageUrl = matchingDefaultImage ? defaultHeroImageMigrations[matchingDefaultImage] : slide.imageUrl || '';
+      return {
+        ...slide,
+        id: slide.id || `slide-${index + 1}`,
+        title: slide.title || '',
+        description: slide.description ?? slide.subtitle ?? '',
+        eyebrow: slide.eyebrow ?? slide.badge ?? '',
+        imageUrl,
+        mobileImageUrl: slide.mobileImageUrl || '',
+        imageAlt: matchingDefaultImage?.includes('photo-1527443224154-c4a3942d3acf')
+          ? 'Gaming monitor, keyboard and mouse on a gaming desk'
+          : slide.imageAlt || slide.title || '',
+        imagePosition: slide.imagePosition || 'center center',
+        textPosition: slide.textPosition === 'right' ? 'right' : 'left',
+        ctaLabel: slide.ctaLabel ?? slide.ctaText ?? '',
+        ctaUrl: slide.ctaUrl ?? slide.ctaLink ?? '/',
+        isActive: Boolean(slide.isActive),
+        sortOrder: Number.isFinite(slide.sortOrder) ? slide.sortOrder : index,
+      };
+    }),
+  };
+};
+
 export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Theme state - light mode default
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -276,7 +314,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const saved = localStorage.getItem(LOCAL_STORAGE_KEYS.HOMEPAGE);
     if (saved) {
       try {
-        return JSON.parse(saved);
+        return normalizeHomepageConfig(JSON.parse(saved));
       } catch (e) {
         console.error('Failed to parse homepage config', e);
       }

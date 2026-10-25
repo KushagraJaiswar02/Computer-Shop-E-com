@@ -35,10 +35,10 @@ export const NavigationWheel: React.FC = () => {
     { id: 'about', label: 'About Store', to: '/about', icon: Award, angle: 70 },
   ], []);
 
-  // A 320px desktop ring (236px on narrow screens), centered just beyond the left edge.
-  const radius = isMobile ? 130 : 176;
-  const ringThickness = isMobile ? 36 : 44;
-  const centerX = isMobile ? -38 : -46;
+  // A 444px outer desktop ring (336px on narrow screens), centered just beyond the left edge.
+  const radius = isMobile ? 148 : 198;
+  const ringThickness = isMobile ? 40 : 48;
+  const centerX = isMobile ? -42 : -50;
   const centerY = 0;
 
   useEffect(() => {
@@ -48,7 +48,10 @@ export const NavigationWheel: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
     if (isNavWheelOpen) {
       const activeElement = document.activeElement as HTMLElement | null;
       const exploreTrigger = document.querySelector<HTMLButtonElement>(
@@ -59,13 +62,20 @@ export const NavigationWheel: React.FC = () => {
       setIsMounted(true);
     } else if (isMounted) {
       setIsClosing(true);
+      const exitDuration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 380;
       closeTimer.current = setTimeout(() => {
+        closeTimer.current = null;
         setIsMounted(false);
         setIsClosing(false);
         triggerRef.current?.focus();
-      }, 280);
+      }, exitDuration);
     }
-    return () => { if (closeTimer.current) clearTimeout(closeTimer.current); };
+    return () => {
+      if (closeTimer.current) {
+        clearTimeout(closeTimer.current);
+        closeTimer.current = null;
+      }
+    };
   }, [isNavWheelOpen]);
 
   useEffect(() => {
@@ -113,7 +123,19 @@ export const NavigationWheel: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-[80] pointer-events-none select-none" aria-label="Navigation wheel">
-      {/* Transparent click catcher closes the wheel while leaving the storefront visible. */}
+      <div
+        aria-hidden="true"
+        className={`wheel-local-blur absolute pointer-events-none ${isClosing ? 'wheel-local-blur-closing' : ''}`}
+        style={{
+          left: isMobile ? -170 : -200,
+          top: '50%',
+          width: isMobile ? 520 : 600,
+          height: isMobile ? 520 : 600,
+          transform: 'translateY(-50%)',
+        }}
+      />
+
+      {/* Transparent click catcher closes the wheel without affecting the storefront. */}
       <button
         type="button"
         tabIndex={-1}
@@ -161,7 +183,7 @@ export const NavigationWheel: React.FC = () => {
               aria-current={selected ? 'true' : undefined}
               title={item.label}
               className={`wheel-icon pointer-events-auto absolute z-10 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-white transition-[opacity,transform] duration-200 focus-visible:z-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#c85032] ${selected ? 'wheel-icon-selected opacity-0' : 'opacity-100 hover:scale-110'}`}
-              style={{ left: x, top: y, animationDelay: `${index * 24}ms` }}
+              style={{ left: x, top: y, animationDelay: `${index * 16}ms` }}
             >
               <Icon className="h-5 w-5 stroke-[2.2]" />
             </button>

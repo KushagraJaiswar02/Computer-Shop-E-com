@@ -113,16 +113,17 @@ export interface WishlistItem {
 export interface HeroSlide {
   id: string;
   title: string;
-  subtitle: string;
-  badge: string;
-  ctaText: string;
-  ctaLink: string;
-  secondaryCtaText?: string;
-  secondaryCtaLink?: string;
+  description: string;
+  eyebrow?: string;
   imageUrl: string;
-  accentColor?: string;
-  featuredSpecs?: string[];
+  mobileImageUrl?: string;
+  imageAlt?: string;
+  imagePosition: string;
+  textPosition: 'left' | 'right';
+  ctaLabel: string;
+  ctaUrl: string;
   isActive: boolean;
+  sortOrder: number;
 }
 
 export interface AnnouncementConfig {
@@ -156,6 +157,7 @@ export interface HomepageSection {
 export interface HomepageConfig {
   announcement: AnnouncementConfig;
   heroSlides: HeroSlide[];
+  heroIntervalMs: number;
   sections: HomepageSection[];
   featuredProductIds: string[];
   dealProductIds: string[];
