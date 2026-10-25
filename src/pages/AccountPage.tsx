@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import {
   User,
   Package,
@@ -19,8 +19,12 @@ import { KeycapButton } from '../components/common/KeycapButton';
 
 export const AccountPage: React.FC = () => {
   const { orders } = useStore();
-  const [activeTab, setActiveTab] = useState<'orders' | 'profile' | 'addresses'>('orders');
+  const { subpage } = useParams<{ subpage?: string }>();
+  const routeTab: 'orders' | 'profile' | 'addresses' = subpage === 'addresses' ? 'addresses' : subpage === 'profile' ? 'profile' : 'orders';
+  const [activeTab, setActiveTab] = useState<'orders' | 'profile' | 'addresses'>(routeTab);
   const [selectedOrderDetails, setSelectedOrderDetails] = useState<string | null>(null);
+
+  useEffect(() => setActiveTab(routeTab), [routeTab]);
 
   const activeOrder = orders.find(o => o.id === selectedOrderDetails);
 

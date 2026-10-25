@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, X } from 'lucide-react';
+import { Search, X, ArrowUpRight } from 'lucide-react';
 import { useStore } from '../../../context/StoreContext';
 import { KeyBadge } from '../../common/KeyBadge';
 import { formatPrice } from '../../../lib/utils';
+import type { Product } from '../../../types';
+
+type SearchSuggestion = { id: string; kind: string; label: string; detail: string; to: string; product?: Product };
 
 export const HeaderSearch: React.FC = () => {
   const [query, setQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const { registerSearchInputRef, products } = useStore();
+  const { registerSearchInputRef, products, categories, brands } = useStore();
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const listboxId = 'header-search-suggestions';
@@ -17,11 +20,19 @@ export const HeaderSearch: React.FC = () => {
   const suggestions = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
     if (normalizedQuery.length < 2) return [];
-    return products
-      .filter(product => [product.name, product.brandName, product.categoryName, product.seriesName || '', product.sku, ...product.attributes.map(attribute => attribute.value)]
+    const matchingProducts: SearchSuggestion[] = products
+      .filter(product => [product.name, product.brandName, product.categoryName, product.subcategoryName || '', product.seriesName || '', product.sku, product.shortDescription, ...product.attributes.flatMap(attribute => [attribute.name, attribute.value])]
         .some(value => value.toLocaleLowerCase().includes(normalizedQuery)))
-      .slice(0, 6);
-  }, [products, query]);
+      .slice(0, 6)
+      .map(product => ({ id: `product-${product.id}`, kind: 'Product', label: product.name, detail: `${product.brandName} · ${product.categoryName} · ${product.sku}`, to: `/product/${product.slug}`, product }));
+    const matchingCategories: SearchSuggestion[] = categories.filter(category => [category.name, category.description, ...category.subcategories.map(subcategory => subcategory.name)].some(value => value.toLocaleLowerCase().includes(normalizedQuery)))
+      .slice(0, 3)
+      .map(category => ({ id: `category-${category.id}`, kind: 'Category', label: category.name, detail: 'Browse category and subcategories', to: `/category/${category.id}` }));
+    const matchingBrands: SearchSuggestion[] = brands.filter(brand => [brand.name, brand.description, ...brand.seriesList.map(series => series.name)].some(value => value.toLocaleLowerCase().includes(normalizedQuery)))
+      .slice(0, 3)
+      .map(brand => ({ id: `brand-${brand.id}`, kind: 'Brand', label: brand.name, detail: 'Browse brand catalog', to: `/brand/${brand.id}` }));
+    return [...matchingProducts, ...matchingCategories, ...matchingBrands];
+  }, [products, categories, brands, query]);
 
   useEffect(() => {
     registerSearchInputRef(searchInputRef);
@@ -30,7 +41,7 @@ export const HeaderSearch: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const selected = isOpen && activeIndex >= 0 ? suggestions[activeIndex] : undefined;
-    if (selected) navigate(`/product/${selected.slug}`);
+    if (selected) navigate(selected.to);
     else if (query.trim()) navigate(`/shop?q=${encodeURIComponent(query.trim())}`);
     else return;
     setIsOpen(false);
@@ -83,13 +94,13 @@ export const HeaderSearch: React.FC = () => {
       {isOpen && query.trim().length >= 2 && (
         <div className="absolute inset-x-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900" onMouseDown={event => event.preventDefault()}>
           {suggestions.length ? (
-            <ul id={listboxId} role="listbox" aria-label="Product suggestions" className="max-h-80 overflow-y-auto p-1.5">
-              {suggestions.map((product, index) => (
-                <li key={product.id} id={`header-search-option-${index}`} role="option" aria-selected={index === activeIndex}>
-                  <button type="button" onMouseEnter={() => setActiveIndex(index)} onClick={() => { navigate(`/product/${product.slug}`); setIsOpen(false); searchInputRef.current?.blur(); }} className={`flex min-h-14 w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left ${index === activeIndex ? 'bg-blue-50 dark:bg-slate-800' : 'hover:bg-slate-50 dark:hover:bg-slate-800/70'}`}>
-                    <img src={product.images[0]} alt="" loading="lazy" className="h-10 w-10 shrink-0 rounded-md bg-slate-100 object-contain dark:bg-slate-800" />
-                    <span className="min-w-0 flex-1"><span className="block truncate text-xs font-semibold text-slate-900 dark:text-slate-100">{product.name}</span><span className="mt-0.5 block truncate text-[11px] text-slate-500">{product.brandName} · {product.categoryName}</span></span>
-                    <span className="shrink-0 text-xs font-semibold text-slate-700 dark:text-slate-200">{formatPrice(product.price)}</span>
+            <ul id={listboxId} role="listbox" aria-label="Product, category, and brand suggestions" className="max-h-80 overflow-y-auto p-1.5">
+              {suggestions.map((suggestion, index) => (
+                <li key={suggestion.id} id={`header-search-option-${index}`} role="option" aria-selected={index === activeIndex}>
+                  <button type="button" onMouseEnter={() => setActiveIndex(index)} onClick={() => { navigate(suggestion.to); setIsOpen(false); searchInputRef.current?.blur(); }} className={`flex min-h-14 w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left ${index === activeIndex ? 'bg-blue-50 dark:bg-slate-800' : 'hover:bg-slate-50 dark:hover:bg-slate-800/70'}`}>
+                    {suggestion.product ? <img src={suggestion.product.images[0]} alt="" loading="lazy" className="h-10 w-10 shrink-0 rounded-md bg-slate-100 object-contain dark:bg-slate-800" /> : <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-slate-100 text-blue-700 dark:bg-slate-800 dark:text-blue-300"><ArrowUpRight className="h-4 w-4" /></span>}
+                    <span className="min-w-0 flex-1"><span className="block text-[10px] font-bold uppercase tracking-wide text-blue-700 dark:text-blue-300">{suggestion.kind}</span><span className="block truncate text-xs font-semibold text-slate-900 dark:text-slate-100">{suggestion.label}</span><span className="mt-0.5 block truncate text-[11px] text-slate-500">{suggestion.detail}</span></span>
+                    {suggestion.product && <span className="shrink-0 text-xs font-semibold text-slate-700 dark:text-slate-200">{formatPrice(suggestion.product.price)}</span>}
                   </button>
                 </li>
               ))}

@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Cpu, CheckCircle2, MessageSquare, ShieldCheck, Wrench, Layers } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { KeycapButton } from '../components/common/KeycapButton';
 
 export const EnquiryPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const { submitEnquiry } = useStore();
   const [customerName, setCustomerName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [companyName, setCompanyName] = useState('');
-  const [enquiryType, setEnquiryType] = useState<'custom_pc_build' | 'bulk_procurement' | 'compatibility_check' | 'component_availability'>('custom_pc_build');
+  const [enquiryType, setEnquiryType] = useState<'custom_pc_build' | 'bulk_procurement' | 'compatibility_check' | 'component_availability'>(() => searchParams.get('request') === 'product' ? 'component_availability' : 'custom_pc_build');
   const [targetBudget, setTargetBudget] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -133,7 +135,7 @@ export const EnquiryPage: React.FC = () => {
                     <option value="custom_pc_build">Complete Custom PC Build Consultation</option>
                     <option value="bulk_procurement">Bulk Hardware & Laptop Procurement</option>
                     <option value="compatibility_check">Technical Compatibility & Cooler Clearance</option>
-                    <option value="component_availability">Specific Silicon / SKU Reservation</option>
+                    <option value="component_availability">Request a Product / Specific SKU Availability</option>
                   </select>
                 </div>
 

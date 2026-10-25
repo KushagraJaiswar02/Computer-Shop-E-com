@@ -19,7 +19,7 @@ export const BrandsSection: React.FC = () => {
             </p>
           </div>
           <Link
-            to="/shop"
+            to="/brands"
             className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
           >
             <span>All Brands</span>

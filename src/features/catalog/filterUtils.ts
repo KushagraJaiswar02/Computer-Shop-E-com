@@ -8,6 +8,8 @@ export interface CatalogFilterCriteria {
   series?: string;
   isDealOnly?: boolean;
   isBestsellerOnly?: boolean;
+  isFeaturedOnly?: boolean;
+  isSaleOnly?: boolean;
   minPrice?: number;
   maxPrice?: number;
   inStockOnly?: boolean;
@@ -26,6 +28,8 @@ export function filterAndSortProducts(
     series = '',
     isDealOnly = false,
     isBestsellerOnly = false,
+    isFeaturedOnly = false,
+    isSaleOnly = false,
     minPrice = 0,
     maxPrice = 500000,
     inStockOnly = false,
@@ -39,10 +43,12 @@ export function filterAndSortProducts(
         const q = searchQuery.toLowerCase();
         const matchesName = product.name.toLowerCase().includes(q);
         const matchesBrand = product.brandName.toLowerCase().includes(q);
-        const matchesCategory = product.categoryName.toLowerCase().includes(q);
+        const matchesCategory = `${product.categoryName} ${product.subcategoryName || ''}`.toLowerCase().includes(q);
+        const matchesSeries = (product.seriesName || '').toLowerCase().includes(q);
+        const matchesDescription = product.shortDescription.toLowerCase().includes(q);
         const matchesSku = product.sku.toLowerCase().includes(q);
-        const matchesAttrs = product.attributes.some(a => a.value.toLowerCase().includes(q));
-        if (!matchesName && !matchesBrand && !matchesCategory && !matchesSku && !matchesAttrs) {
+        const matchesAttrs = product.attributes.some(a => `${a.name} ${a.value}`.toLowerCase().includes(q));
+        if (!matchesName && !matchesBrand && !matchesCategory && !matchesSeries && !matchesDescription && !matchesSku && !matchesAttrs) {
           return false;
         }
       }
@@ -66,6 +72,12 @@ export function filterAndSortProducts(
 
       // Bestseller
       if (isBestsellerOnly && !product.isBestseller) return false;
+
+      // Featured collection
+      if (isFeaturedOnly && !product.isFeatured) return false;
+
+      // Product has a valid catalog discount/original price.
+      if (isSaleOnly && !((product.originalPrice || 0) > product.price || (product.discountPercent || 0) > 0)) return false;
 
       // Price
       if (product.price < minPrice || product.price > maxPrice) return false;

@@ -24,6 +24,8 @@ export const ShopPage: React.FC = () => {
   const activeSearch = searchParams.get('q') || '';
   const isDealOnly = searchParams.get('deal') === 'true';
   const isBestsellerOnly = searchParams.get('bestseller') === 'true';
+  const isFeaturedOnly = searchParams.get('featured') === 'true';
+  const isSaleOnly = searchParams.get('sale') === 'true';
   const requestedMinPrice = Number(searchParams.get('minPrice'));
   const requestedMaxPrice = Number(searchParams.get('maxPrice'));
   const minPriceParam = Number.isFinite(requestedMinPrice) ? Math.max(0, Math.min(DEFAULT_MAX_PRICE, requestedMinPrice)) : 0;
@@ -79,6 +81,8 @@ export const ShopPage: React.FC = () => {
     if (activeSeries) count++;
     if (isDealOnly) count++;
     if (isBestsellerOnly) count++;
+    if (isFeaturedOnly) count++;
+    if (isSaleOnly) count++;
     if (inStockOnly) count++;
     if (priceRange[0] > 0 || priceRange[1] < DEFAULT_MAX_PRICE) count++;
     if (activeSearch) count++;
@@ -90,6 +94,8 @@ export const ShopPage: React.FC = () => {
     activeSeries,
     isDealOnly,
     isBestsellerOnly,
+    isFeaturedOnly,
+    isSaleOnly,
     inStockOnly,
     priceRange,
     activeSearch,
@@ -105,6 +111,8 @@ export const ShopPage: React.FC = () => {
       series: activeSeries,
       isDealOnly,
       isBestsellerOnly,
+      isFeaturedOnly,
+      isSaleOnly,
       minPrice: priceRange[0],
       maxPrice: priceRange[1],
       inStockOnly,
@@ -119,6 +127,8 @@ export const ShopPage: React.FC = () => {
     activeSeries,
     isDealOnly,
     isBestsellerOnly,
+    isFeaturedOnly,
+    isSaleOnly,
     priceRange,
     inStockOnly,
     sortBy,
@@ -175,6 +185,8 @@ export const ShopPage: React.FC = () => {
               activeSeries={activeSeries}
               isDealOnly={isDealOnly}
               isBestsellerOnly={isBestsellerOnly}
+              isFeaturedOnly={isFeaturedOnly}
+              isSaleOnly={isSaleOnly}
               inStockOnly={inStockOnly}
               minPrice={priceRange[0]}
               maxPrice={priceRange[1]}

@@ -8,6 +8,7 @@ import { HomePage } from './pages/HomePage';
 import { ShopPage } from './pages/ShopPage';
 import { CategoryPage } from './pages/CategoryPage';
 import { BrandPage } from './pages/BrandPage';
+import { BrandsPage } from './pages/BrandsPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { WishlistPage } from './pages/WishlistPage';
 import { CartPage } from './pages/CartPage';
@@ -46,6 +47,7 @@ export const App: React.FC = () => {
             <Route path="category/:categoryId/:subcategoryId" element={<CategoryPage />} />
             <Route path="brand/:brandId" element={<BrandPage />} />
             <Route path="brand/:brandId/:seriesId" element={<BrandPage />} />
+            <Route path="brands" element={<BrandsPage />} />
             <Route path="product/:slug" element={<ProductDetailPage />} />
             <Route path="wishlist" element={<WishlistPage />} />
             <Route path="cart" element={<CartPage />} />
