@@ -356,7 +356,7 @@ export const AdminProductsPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 mb-1">Price ($)</label>
+                  <label className="block text-slate-400 mb-1">Price (₹ INR)</label>
                   <input
                     type="number"
                     step="0.01"

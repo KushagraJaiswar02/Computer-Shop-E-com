@@ -46,7 +46,7 @@ export const OrderConfirmationPage: React.FC = () => {
             <div className="text-left">
               <span className="text-slate-400 text-[10px] uppercase font-mono block">Simulated Tracking Number</span>
               <span className="font-mono font-bold text-slate-800 dark:text-slate-200 text-sm">
-                {order.trackingNumber || 'NT-TRACK-9948201'}
+                {order.trackingNumber || 'CS-TRACK-9948201'}
               </span>
             </div>
             <div className="text-left sm:text-right">

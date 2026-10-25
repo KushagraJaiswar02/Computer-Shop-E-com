@@ -40,15 +40,15 @@ export const AdminLayout: React.FC = () => {
           {/* Admin Header */}
           <div className="p-5 border-b border-slate-800 flex items-center justify-between">
             <Link to="/admin" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-mono font-bold text-sm shadow-keycap">
-                NX
+              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-mono font-bold text-sm shadow-keycap">
+                CS
               </div>
               <div>
                 <span className="font-bold text-sm tracking-tight text-white block">
-                  NexusTech Admin
+                  Storefront Admin
                 </span>
-                <span className="text-[10px] font-mono text-brand-400">
-                  DEVELOPMENT PROTOTYPE
+                <span className="text-[10px] font-mono text-blue-400">
+                  MANAGEMENT PORTAL
                 </span>
               </div>
             </Link>

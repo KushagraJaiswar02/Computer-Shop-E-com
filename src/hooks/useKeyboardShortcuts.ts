@@ -7,8 +7,8 @@ export const useKeyboardShortcuts = () => {
   const location = useLocation();
   const {
     focusSearch,
-    setIsCategoryNavOpen,
-    isCategoryNavOpen,
+    setIsNavWheelOpen,
+    isNavWheelOpen,
     setIsCartOpen,
     isCartOpen,
     isShortcutsModalOpen,
@@ -40,8 +40,8 @@ export const useKeyboardShortcuts = () => {
           e.preventDefault();
           return;
         }
-        if (isCategoryNavOpen) {
-          setIsCategoryNavOpen(false);
+        if (isNavWheelOpen) {
+          setIsNavWheelOpen(false);
           e.preventDefault();
           return;
         }
@@ -69,7 +69,7 @@ export const useKeyboardShortcuts = () => {
         case 'c':
         case 'C': {
           e.preventDefault();
-          setIsCategoryNavOpen(prev => !prev);
+          setIsNavWheelOpen(prev => !prev);
           break;
         }
         case 'w':
@@ -106,8 +106,8 @@ export const useKeyboardShortcuts = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [
     focusSearch,
-    setIsCategoryNavOpen,
-    isCategoryNavOpen,
+    setIsNavWheelOpen,
+    isNavWheelOpen,
     setIsCartOpen,
     isCartOpen,
     isShortcutsModalOpen,

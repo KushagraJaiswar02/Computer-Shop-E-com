@@ -65,6 +65,8 @@ interface StoreContextType {
   submitEnquiry: (enquiry: Omit<HardwareEnquiry, 'id' | 'createdAt' | 'status'>) => void;
 
   // Shortcuts & UI focus
+  isNavWheelOpen: boolean;
+  setIsNavWheelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   isCategoryNavOpen: boolean;
   setIsCategoryNavOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   isShortcutsModalOpen: boolean;
@@ -79,23 +81,26 @@ interface StoreContextType {
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 const LOCAL_STORAGE_KEYS = {
-  THEME: 'nexustech_theme',
-  CART: 'nexustech_cart',
-  WISHLIST: 'nexustech_wishlist',
-  COMPARE: 'nexustech_compare',
-  HOMEPAGE: 'nexustech_homepage_config_v2',
-  PRODUCTS: 'nexustech_custom_products',
-  ORDERS: 'nexustech_orders',
-  ENQUIRIES: 'nexustech_enquiries',
+  THEME: 'compshop_theme',
+  CART: 'compshop_cart',
+  WISHLIST: 'compshop_wishlist',
+  COMPARE: 'compshop_compare',
+  HOMEPAGE: 'compshop_homepage_config_v3',
+  PRODUCTS: 'compshop_custom_products',
+  ORDERS: 'compshop_orders',
+  ENQUIRIES: 'compshop_enquiries',
 };
 
 export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Theme state
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+  // Theme state - light mode default
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEYS.THEME);
-    if (saved === 'dark' || saved === 'light') return saved;
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  });
+    if (saved === 'dark' || saved === 'light') {
+      setTheme(saved);
+    }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, theme);
@@ -139,7 +144,6 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setProducts(prev => prev.filter(p => p.id !== id));
   };
 
-  // Categories & Brands (static data reference for consistency)
   const categories = INITIAL_CATEGORIES;
   const brands = INITIAL_BRANDS;
 
@@ -209,7 +213,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const cartSubtotal = cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
-  // Wishlist
+  // Wishlist - defaults to empty as required
   const [wishlist, setWishlist] = useState<string[]>(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEYS.WISHLIST);
     if (saved) {
@@ -219,7 +223,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         console.error('Failed to parse wishlist', e);
       }
     }
-    return ['prod-lap-001', 'prod-gpu-001'];
+    return [];
   });
 
   useEffect(() => {
@@ -267,7 +271,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const clearCompare = () => setCompareList([]);
   const isInCompare = (productId: string) => compareList.includes(productId);
 
-  // Homepage Config (Admin configurable, reflected live on storefront!)
+  // Homepage Config (Admin configurable, reflected live on storefront)
   const [homepageConfig, setHomepageConfig] = useState<HomepageConfig>(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEYS.HOMEPAGE);
     if (saved) {
@@ -316,7 +320,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const newOrder: Order = {
       ...orderData,
       id: `ord-${Math.floor(100000 + Math.random() * 900000)}`,
-      orderNumber: `NT-${Math.floor(100000 + Math.random() * 900000)}`,
+      orderNumber: `CS-${Math.floor(100000 + Math.random() * 900000)}`,
       date: new Date().toISOString(),
     };
     setOrders(prev => [newOrder, ...prev]);
@@ -337,25 +341,25 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       {
         id: 'enq-001',
         createdAt: '2024-10-22T10:14:00Z',
-        customerName: 'Marcus Vance',
-        email: 'marcus.v@studioapex.design',
-        phone: '+1 (555) 234-8901',
-        companyName: 'Apex Visual Studios',
+        customerName: 'Karan Sharma',
+        email: 'karan.sharma@example.com',
+        phone: '+91 98765 12345',
+        companyName: 'Apex Creative Studio',
         enquiryType: 'custom_pc_build',
-        targetBudget: '$6,500 - $8,000',
-        message: 'Need 3 dual-GPU workstations for Unreal Engine 5 real-time ray-tracing and DaVinci Resolve rendering.',
+        targetBudget: '₹1,50,000 - ₹2,00,000',
+        message: 'Looking for a custom workstation build for 4K video editing in DaVinci Resolve and Blender 3D rendering.',
         status: 'In Review',
       },
       {
         id: 'enq-002',
         createdAt: '2024-10-23T15:40:00Z',
-        customerName: 'Sarah Lin',
-        email: 'sarah.lin@techstart.io',
-        phone: '+1 (555) 890-1234',
-        companyName: 'TechStart Labs',
+        customerName: 'Priya Nair',
+        email: 'priya.nair@example.com',
+        phone: '+91 98450 67890',
+        companyName: 'TechVibe Solutions',
         enquiryType: 'bulk_procurement',
-        targetBudget: '$15,000+',
-        message: 'Looking to purchase 10 units of ROG Strix SCAR 16 laptops for our mobile AI dev team.',
+        targetBudget: '₹5,00,000+',
+        message: 'Requesting quote for 5 units of high-performance laptops for engineering development team.',
         status: 'New',
       },
     ];
@@ -376,7 +380,9 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   // Keyboard navigation & search focus
-  const [isCategoryNavOpen, setIsCategoryNavOpen] = useState(false);
+  const [isNavWheelOpen, setIsNavWheelOpen] = useState(false);
+  const isCategoryNavOpen = isNavWheelOpen;
+  const setIsCategoryNavOpen = setIsNavWheelOpen;
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
   const [focusedProductId, setFocusedProductId] = useState<string | null>(null);
   const [searchInputRefState, setSearchInputRefState] = useState<React.RefObject<HTMLInputElement> | null>(null);
@@ -426,6 +432,8 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         createOrder,
         enquiries,
         submitEnquiry,
+        isNavWheelOpen,
+        setIsNavWheelOpen,
         isCategoryNavOpen,
         setIsCategoryNavOpen,
         isShortcutsModalOpen,

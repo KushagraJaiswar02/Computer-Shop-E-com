@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, ArrowRight, Shield, Zap, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { KeycapButton } from '../common/KeycapButton';
 
@@ -13,7 +13,7 @@ export const HeroBanner: React.FC = () => {
     if (activeSlides.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentSlideIndex(prev => (prev + 1) % activeSlides.length);
-    }, 6500);
+    }, 7000);
     return () => clearInterval(interval);
   }, [activeSlides.length]);
 
@@ -26,63 +26,46 @@ export const HeroBanner: React.FC = () => {
     setCurrentSlideIndex(prev => (prev - 1 + activeSlides.length) % activeSlides.length);
 
   return (
-    <section className="relative overflow-hidden bg-slate-900 text-white border-b border-slate-800">
-      {/* Subtle background tech grid pattern */}
-      <div 
-        className="absolute inset-0 opacity-10 pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(circle at 1px 1px, #60a5fa 1px, transparent 0)',
-          backgroundSize: '24px 24px'
-        }}
-      />
-
-      {/* Decorative gradient blur */}
-      <div className="absolute -top-40 -right-40 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-sky-500/15 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 relative z-10">
+    <section className="relative overflow-hidden bg-gradient-to-br from-slate-100 via-white to-blue-50/40 dark:from-slate-900 dark:via-slate-900 dark:to-slate-850 border-b border-slate-200 dark:border-slate-800 transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Text Column */}
-          <div className="lg:col-span-7 space-y-6">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium tracking-wide bg-brand-950/80 text-brand-400 border border-brand-800/80 backdrop-blur-xs">
-              <Zap className="w-3.5 h-3.5" />
-              <span>{slide.badge}</span>
-            </div>
+          <div className="lg:col-span-7 space-y-4">
+            {/* Category / Badge Tag */}
+            {slide.badge && (
+              <span className="inline-block px-2.5 py-1 rounded-md text-xs font-semibold tracking-wide bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                {slide.badge}
+              </span>
+            )}
 
             {/* Title */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight font-sans">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
               {slide.title}
             </h1>
 
             {/* Subtitle */}
-            <p className="text-sm sm:text-base text-slate-300 max-w-xl leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-xl leading-relaxed">
               {slide.subtitle}
             </p>
 
-            {/* Featured Hardware Specs pills */}
+            {/* Hardware highlights if available */}
             {slide.featuredSpecs && slide.featuredSpecs.length > 0 && (
-              <div className="pt-2">
-                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block mb-2 font-medium">
-                  Architecture Highlights
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {slide.featuredSpecs.map((spec, idx) => (
-                    <span
-                      key={idx}
-                      className="text-xs font-mono px-3 py-1 rounded-md bg-slate-800/90 text-slate-200 border border-slate-700/80 shadow-xs"
-                    >
-                      {spec}
-                    </span>
-                  ))}
-                </div>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {slide.featuredSpecs.map((spec, idx) => (
+                  <span
+                    key={idx}
+                    className="text-xs px-2.5 py-1 rounded-md bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-xs"
+                  >
+                    {spec}
+                  </span>
+                ))}
               </div>
             )}
 
             {/* Actions */}
-            <div className="flex flex-wrap items-center gap-3 pt-4">
+            <div className="flex flex-wrap items-center gap-3 pt-3">
               <Link to={slide.ctaLink}>
-                <KeycapButton variant="primary" size="lg" className="font-semibold shadow-elevated">
+                <KeycapButton variant="primary" size="lg" className="font-semibold">
                   <span>{slide.ctaText}</span>
                   <ArrowRight className="w-4 h-4 ml-1.5" />
                 </KeycapButton>
@@ -90,7 +73,7 @@ export const HeroBanner: React.FC = () => {
 
               {slide.secondaryCtaText && slide.secondaryCtaLink && (
                 <Link to={slide.secondaryCtaLink}>
-                  <KeycapButton variant="outline" size="lg" className="border-slate-700 text-slate-200 hover:bg-slate-800">
+                  <KeycapButton variant="secondary" size="lg">
                     <span>{slide.secondaryCtaText}</span>
                   </KeycapButton>
                 </Link>
@@ -98,56 +81,47 @@ export const HeroBanner: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Hardware Image Column */}
-          <div className="lg:col-span-5 relative flex items-center justify-center">
-            <div className="relative w-full max-w-md aspect-4/3 rounded-2xl overflow-hidden border border-slate-700/80 bg-slate-800/60 shadow-2xl backdrop-blur-xs group">
+          {/* Right Showcase Image Column */}
+          <div className="lg:col-span-5 flex items-center justify-center">
+            <div className="relative w-full max-w-md aspect-4/3 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 shadow-sm group">
               <img
                 src={slide.imageUrl}
                 alt={slide.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-300"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
-
-              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs text-slate-300">
-                <div className="flex items-center gap-1.5">
-                  <Shield className="w-4 h-4 text-emerald-400" />
-                  <span className="font-medium text-[11px]">Factory Sealed & Tested</span>
-                </div>
-                <span className="font-mono text-[10px] text-slate-400">Authentic Retail</span>
-              </div>
             </div>
           </div>
         </div>
 
-        {/* Slide Indicators and navigation controls */}
+        {/* Slide Indicators and Arrows */}
         {activeSlides.length > 1 && (
-          <div className="flex items-center justify-between pt-8 sm:pt-10 border-t border-slate-800/80 mt-10">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between pt-6 mt-6 border-t border-slate-200/70 dark:border-slate-800">
+            <div className="flex items-center gap-1.5">
               {activeSlides.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentSlideIndex(idx)}
                   className={`h-2 rounded-full transition-all ${
                     idx === currentSlideIndex
-                      ? 'w-8 bg-brand-500'
-                      : 'w-2 bg-slate-700 hover:bg-slate-500'
+                      ? 'w-6 bg-blue-600'
+                      : 'w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400'
                   }`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
               ))}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <button
                 onClick={prevSlide}
-                className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors"
+                className="p-1.5 rounded-md bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-xs transition-colors"
                 aria-label="Previous slide"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={nextSlide}
-                className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors"
+                className="p-1.5 rounded-md bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-xs transition-colors"
                 aria-label="Next slide"
               >
                 <ChevronRight className="w-4 h-4" />

@@ -20,8 +20,8 @@ export const RegisterPage: React.FC = () => {
         <div className="bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 p-6 sm:p-8 shadow-soft-card">
           <div className="text-center mb-6">
             <Link to="/" className="inline-flex items-center gap-2 mb-3">
-              <div className="w-9 h-9 rounded-lg bg-slate-900 dark:bg-brand-600 flex items-center justify-center text-white font-mono font-bold text-lg shadow-keycap">
-                <span>NX</span>
+              <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-mono font-bold text-lg shadow-keycap">
+                <span>CS</span>
               </div>
             </Link>
             <h1 className="text-xl font-bold text-slate-900 dark:text-white">

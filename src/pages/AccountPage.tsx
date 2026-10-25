@@ -31,20 +31,20 @@ export const AccountPage: React.FC = () => {
         {/* Customer Header Strip */}
         <div className="bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 p-6 shadow-soft-card mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-brand-600 text-white font-mono font-bold text-xl flex items-center justify-center shadow-keycap">
-              AW
+            <div className="w-14 h-14 rounded-2xl bg-blue-600 text-white font-mono font-bold text-xl flex items-center justify-center shadow-keycap">
+              RS
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-                  Alexander Wright
+                  Rahul Sharma
                 </h1>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300 font-semibold border border-brand-200 dark:border-brand-800">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 font-semibold border border-blue-200 dark:border-blue-800">
                   Enthusiast Member (Demo)
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                alex.wright@example.com • Member since Jan 2024
+                rahul.sharma@example.com • Member since Jan 2024
               </p>
             </div>
           </div>

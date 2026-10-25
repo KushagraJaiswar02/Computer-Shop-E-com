@@ -10,7 +10,7 @@ export const EnquiryPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [enquiryType, setEnquiryType] = useState<'custom_pc_build' | 'bulk_procurement' | 'compatibility_check' | 'component_availability'>('custom_pc_build');
-  const [targetBudget, setTargetBudget] = useState('$3,000 - $5,000');
+  const [targetBudget, setTargetBudget] = useState('₹1,50,000 - ₹2,50,000');
   const [message, setMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -144,7 +144,7 @@ export const EnquiryPage: React.FC = () => {
                     type="text"
                     value={targetBudget}
                     onChange={e => setTargetBudget(e.target.value)}
-                    placeholder="e.g. $4,000 or Open"
+                    placeholder="e.g. ₹1,50,000 or Open"
                     className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-surface-800 border border-slate-300 dark:border-surface-700 text-slate-900 dark:text-white font-mono"
                   />
                 </div>

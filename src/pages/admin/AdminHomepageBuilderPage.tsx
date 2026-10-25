@@ -18,6 +18,7 @@ import {
 import { useStore } from '../../context/StoreContext';
 import { HomepageSection, HeroSlide } from '../../types';
 import { KeycapButton } from '../../components/common/KeycapButton';
+import { formatPrice } from '../../lib/utils';
 
 export const AdminHomepageBuilderPage: React.FC = () => {
   const { homepageConfig, updateHomepageConfig, resetHomepageConfig, products } = useStore();
@@ -497,7 +498,7 @@ export const AdminHomepageBuilderPage: React.FC = () => {
                     <div>
                       <span className="font-bold text-white block">{prod.name}</span>
                       <span className="text-slate-400 font-mono text-[10px]">
-                        SKU: {prod.sku} • {prod.brandName} • ${prod.price}
+                        SKU: {prod.sku} • {prod.brandName} • {formatPrice(prod.price)}
                       </span>
                     </div>
                   </div>

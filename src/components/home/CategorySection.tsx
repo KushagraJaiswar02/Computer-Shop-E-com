@@ -20,55 +20,42 @@ export const CategorySection: React.FC = () => {
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-surface-50 dark:bg-surface-900 border-b border-slate-200 dark:border-surface-800 transition-colors">
+    <section className="py-10 sm:py-12 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
-              System Architecture
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
-              Shop by Hardware Category
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+              Shop by Category
             </h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Explore hardware components and systems by category
+            </p>
           </div>
           <Link
             to="/shop"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
+            className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
           >
-            <span>View All Components</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>All Categories</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
           {categories.map(category => (
             <Link
               key={category.id}
               to={`/category/${category.id}`}
-              className="group relative bg-white dark:bg-surface-850 rounded-xl border border-slate-200 dark:border-surface-750 p-4 sm:p-5 flex flex-col justify-between overflow-hidden shadow-soft-card hover:shadow-elevated hover:border-brand-300 dark:hover:border-brand-700 transition-all"
+              className="group bg-slate-50 dark:bg-slate-850 hover:bg-white dark:hover:bg-slate-800 rounded-xl border border-slate-200/80 dark:border-slate-800 p-3.5 flex flex-col items-center text-center transition-all hover:border-blue-500 hover:shadow-xs"
             >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="p-2.5 rounded-lg bg-brand-50 dark:bg-surface-800 text-brand-600 dark:text-brand-400 border border-brand-100 dark:border-surface-700 group-hover:scale-110 transition-transform">
-                    {getIcon(category.iconName)}
-                  </div>
-                  <span className="text-[11px] font-mono text-slate-400">
-                    {category.subcategories.length} Types
-                  </span>
-                </div>
-
-                <h3 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mb-1">
-                  {category.name}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                  {category.description}
-                </p>
+              <div className="w-11 h-11 rounded-lg bg-blue-50 dark:bg-slate-800 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
+                {getIcon(category.iconName)}
               </div>
-
-              <div className="pt-4 mt-3 border-t border-slate-100 dark:border-surface-750 flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-300 group-hover:text-brand-600 dark:group-hover:text-brand-400">
-                <span>Explore</span>
-                <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
-              </div>
+              <h3 className="font-semibold text-xs text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
+                {category.name}
+              </h3>
+              <span className="text-[10px] text-slate-400 mt-0.5">
+                {category.subcategories.length} types
+              </span>
             </Link>
           ))}
         </div>

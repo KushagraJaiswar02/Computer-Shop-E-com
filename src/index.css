@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-page: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-secondary: #f1f5f9;
+  --bg-elevated: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border-color: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --accent-primary: #2563eb;
+  --accent-hover: #1d4ed8;
+  --ring-terracotta: #cb6142;
+  --ring-terracotta-subtle: rgba(203, 97, 66, 0.15);
+  --wheel-inner: #fbfaf8;
+  --backdrop-color: rgba(15, 23, 42, 0.5);
+}
+
+.dark {
+  --bg-page: #0c121e;
+  --bg-surface: #131c2a;
+  --bg-surface-secondary: #1a2332;
+  --bg-elevated: #202b3d;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border-color: #202b3d;
+  --border-subtle: #1a2332;
+  --accent-primary: #3b82f6;
+  --accent-hover: #60a5fa;
+  --ring-terracotta: #e3947b;
+  --ring-terracotta-subtle: rgba(227, 148, 123, 0.2);
+  --wheel-inner: #101724;
+  --backdrop-color: rgba(4, 7, 13, 0.75);
+}
+
 @layer base {
   body {
     @apply antialiased text-slate-800 bg-surface-50 dark:bg-surface-900 dark:text-slate-100;
@@ -17,10 +53,10 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 dark:bg-surface-700 rounded-full;
+    @apply bg-slate-300 dark:bg-slate-700 rounded-full;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-400 dark:bg-surface-700;
+    @apply bg-slate-400 dark:bg-slate-600;
   }
 }
 
@@ -54,6 +90,36 @@
   }
 }
 
+/* Smooth radial wheel entry and exit */
+@keyframes wheelEmerge {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-40%) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0) scale(1);
+  }
+}
+
+@keyframes wheelItemPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateX(-15px);
+  }
+  70% {
+    transform: scale(1.04) translateX(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+}
+
+.animate-wheel-emerge {
+  animation: wheelEmerge 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 .animate-slide-left {
   animation: slideLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -64,6 +130,68 @@
 
 .animate-fade-in {
   animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Compact floating navigation wheel. Its visible diameter is set by the SVG radius. */
+.wheel-ring {
+  color: var(--ring-terracotta);
+}
+
+.wheel-assembly {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 220ms ease;
+  animation: wheel-assembly-enter 280ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.wheel-assembly-closing {
+  transform: translateX(-150px);
+  opacity: 0;
+}
+
+.wheel-icon:not(.wheel-icon-selected) {
+  animation: wheel-icon-enter 240ms ease-out both;
+}
+
+.wheel-icon-selected:focus-visible {
+  opacity: 1;
+}
+
+.wheel-assembly-closing .wheel-icon {
+  opacity: 0;
+  transform: translate(-50%, -50%) translateX(-12px);
+}
+
+.wheel-assembly-closing .wheel-pill {
+  opacity: 0;
+  transform: translateY(-50%) translateX(-24px) scaleX(0.82);
+  transform-origin: left center;
+}
+
+.wheel-catcher-closing {
+  pointer-events: none;
+  background-color: transparent !important;
+  backdrop-filter: blur(0) !important;
+}
+
+.wheel-catcher {
+  background-color: rgba(15, 23, 42, 0.035);
+  backdrop-filter: blur(2px);
+  transition: background-color 220ms ease, backdrop-filter 220ms ease;
+}
+
+.dark .wheel-catcher {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+@keyframes wheel-assembly-enter {
+  from { transform: translateX(-150px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes wheel-icon-enter {
+  from { opacity: 0; transform: translate(-50%, -50%) translateX(-8px); }
+  to { opacity: 1; transform: translate(-50%, -50%) translateX(0); }
 }
 
 /* Reduced motion preference respect */

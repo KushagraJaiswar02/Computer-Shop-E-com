@@ -194,8 +194,8 @@ export interface Order {
   total: number;
   shippingAddress: CustomerAddress;
   status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
-  paymentMethod: 'card_demo' | 'wire_transfer' | 'in_store_pickup' | 'cod';
-  paymentStatus: 'Simulated Paid' | 'Payment Pending' | 'Demo Success';
+  paymentMethod: 'upi_demo' | 'card_demo' | 'wire_transfer' | 'in_store_pickup' | 'cod';
+  paymentStatus: 'Simulated Paid' | 'Payment Pending' | 'Demo Success' | 'Demo Confirmed';
   trackingNumber?: string;
   estimatedDelivery?: string;
 }
