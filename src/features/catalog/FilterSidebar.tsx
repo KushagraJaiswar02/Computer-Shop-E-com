@@ -148,7 +148,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <input
           type="range"
           min="1000"
-          max="350000"
+          max="500000"
           step="5000"
           value={priceRange[1]}
           onChange={e => onPriceChange(Number(e.target.value))}
@@ -156,7 +156,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
         />
         <div className="flex justify-between text-[10px] font-mono text-slate-400 mt-0.5">
           <span>₹1,000</span>
-          <span>₹3,50,000+</span>
+          <span>₹5,00,000+</span>
         </div>
       </div>
 

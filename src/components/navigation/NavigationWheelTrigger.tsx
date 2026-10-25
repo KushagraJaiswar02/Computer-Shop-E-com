@@ -33,7 +33,7 @@ export const NavigationWheelTrigger = forwardRef<HTMLButtonElement, NavigationWh
         </div>
 
         {/* Text Label */}
-        <span className="text-xs font-semibold tracking-tight">Explore</span>
+        <span className="hidden text-xs font-semibold tracking-tight min-[420px]:inline">Explore</span>
 
         {/* Keyboard shortcut hint */}
         <KeyBadge className="hidden sm:inline-flex text-[10px] px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 group-hover:border-terracotta-300">

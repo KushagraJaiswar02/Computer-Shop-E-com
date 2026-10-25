@@ -122,10 +122,10 @@ export const AdminLayout: React.FC = () => {
         <header className="h-16 border-b border-slate-800 px-6 flex items-center justify-between bg-slate-950/40">
           <div className="flex items-center gap-3">
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-800 text-emerald-400 font-bold">
-              ● PROTOTYPE ENVIRONMENT
+              ● DEMO · NO ADMIN AUTHORIZATION
             </span>
             <span className="text-xs text-slate-400 hidden sm:inline">
-              Changes persist in browser local storage and update storefront immediately.
+              Changes stay in this browser only. This route is public and is not production admin access.
             </span>
           </div>
 

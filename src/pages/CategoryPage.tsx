@@ -43,7 +43,7 @@ export const CategoryPage: React.FC = () => {
         <div className="relative rounded-2xl bg-slate-900 text-white overflow-hidden p-6 sm:p-10 mb-8 border border-slate-800">
           <div className="relative z-10 max-w-2xl">
             <span className="text-xs font-mono uppercase tracking-wider text-brand-400 font-bold block mb-1">
-              Architecture Domain
+              Hardware category
             </span>
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2">
               {category.name}

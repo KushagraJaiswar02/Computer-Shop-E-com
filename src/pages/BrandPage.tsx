@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { ProductCard } from '../components/product/ProductCard';
-import { ArrowRight, ShieldCheck, Tag } from 'lucide-react';
+import { ArrowRight, Tag } from 'lucide-react';
 
 export const BrandPage: React.FC = () => {
   const { brandId, seriesId } = useParams<{ brandId: string; seriesId?: string }>();
@@ -51,8 +51,8 @@ export const BrandPage: React.FC = () => {
         <div className="rounded-2xl bg-slate-900 text-white p-6 sm:p-10 mb-8 border border-slate-800">
           <div className="max-w-3xl">
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-brand-400 font-bold mb-1">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Official Authorized Distribution</span>
+              <Tag className="w-4 h-4" />
+              <span>Brand catalog · demonstration data</span>
             </div>
             <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
               {brand.name} {activeSeries ? `• ${activeSeries.name}` : ''}

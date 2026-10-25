@@ -103,6 +103,9 @@ const normalizeHomepageConfig = (stored: any): HomepageConfig => {
   return {
     ...base,
     ...stored,
+    announcement: stored?.announcement?.text === 'Free shipping on orders over ₹2,999 | Genuine brand warranty support on all components'
+      ? { ...stored.announcement, text: base.announcement.text, highlightText: 'STORE DEMO' }
+      : stored?.announcement || base.announcement,
     heroIntervalMs: Number.isFinite(stored?.heroIntervalMs) ? stored.heroIntervalMs : base.heroIntervalMs,
     heroSlides: slides.map((slide: any, index: number) => {
       const matchingDefaultImage = Object.keys(defaultHeroImageMigrations).find(imageUrl => slide.imageUrl === imageUrl);

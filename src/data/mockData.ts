@@ -930,7 +930,7 @@ export const SAMPLE_REVIEWS: Review[] = [
 export const DEFAULT_HOMEPAGE_CONFIG: HomepageConfig = {
   announcement: {
     enabled: true,
-    text: 'Free shipping on orders over ₹2,999 | Genuine brand warranty support on all components',
+      text: 'Example catalog and storefront demo · Retailer fulfillment and warranty details are being configured',
     highlightText: 'STORE DEMO',
     linkText: 'View Deals',
     linkUrl: '/shop?deal=true',

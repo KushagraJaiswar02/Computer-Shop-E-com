@@ -150,20 +150,8 @@ export const ComparePage: React.FC = () => {
                     Availability
                   </td>
                   {compareProducts.map(p => (
-                    <td key={p.id} className="p-3.5 font-semibold text-emerald-600">
-                      {p.stockStatus === 'in_stock' ? `In Stock (${p.stock})` : 'Limited Stock'}
-                    </td>
-                  ))}
-                </tr>
-
-                {/* Warranty */}
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-surface-800/40">
-                  <td className="p-3.5 font-mono text-slate-500 font-semibold bg-slate-50/30 dark:bg-surface-900/30">
-                    Warranty Duration
-                  </td>
-                  {compareProducts.map(p => (
-                    <td key={p.id} className="p-3.5 font-mono text-slate-800 dark:text-slate-200">
-                      {p.warrantyMonths} Months Direct RMA
+                    <td key={p.id} className={`p-3.5 font-semibold ${p.stockStatus === 'out_of_stock' ? 'text-slate-500' : p.stockStatus === 'backorder' ? 'text-amber-600' : 'text-emerald-600'}`}>
+                      {p.stockStatus === 'in_stock' ? `In Stock (${p.stock})` : p.stockStatus === 'low_stock' ? `Low stock (${p.stock})` : p.stockStatus === 'backorder' ? 'Backorder' : 'Out of stock'}
                     </td>
                   ))}
                 </tr>

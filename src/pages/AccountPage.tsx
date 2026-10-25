@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { formatPrice, formatDate } from '../lib/utils';
-import { SAMPLE_CUSTOMER_ADDRESS } from '../data/mockData';
 import { KeycapButton } from '../components/common/KeycapButton';
 
 export const AccountPage: React.FC = () => {
@@ -32,19 +31,19 @@ export const AccountPage: React.FC = () => {
         <div className="bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 p-6 shadow-soft-card mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-blue-600 text-white font-mono font-bold text-xl flex items-center justify-center shadow-keycap">
-              RS
+              DEMO
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-                  Rahul Sharma
+                  Demo account
                 </h1>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 font-semibold border border-blue-200 dark:border-blue-800">
-                  Enthusiast Member (Demo)
+                  No customer session
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                rahul.sharma@example.com • Member since Jan 2024
+                Authentication and customer profiles are not connected.
               </p>
             </div>
           </div>
@@ -52,7 +51,7 @@ export const AccountPage: React.FC = () => {
           <div className="flex items-center gap-2">
             <Link to="/auth/login">
               <KeycapButton variant="secondary" size="sm">
-                Switch Demo Account
+                View demo sign-in
               </KeycapButton>
             </Link>
           </div>
@@ -119,7 +118,7 @@ export const AccountPage: React.FC = () => {
                     Customer Order History
                   </h3>
                   <p className="text-xs text-slate-500 mb-6">
-                    Track courier shipments, examine component manifests, or download invoices.
+                    Example records only. This demo does not provide customer order history, shipment tracking or invoices.
                   </p>
 
                   <div className="space-y-4">
@@ -165,7 +164,7 @@ export const AccountPage: React.FC = () => {
                           <div>
                             <Link to={`/order-confirmation/${order.id}`}>
                               <KeycapButton size="sm" variant="secondary">
-                                View Receipt
+                                View Demo Record
                               </KeycapButton>
                             </Link>
                           </div>
@@ -209,43 +208,8 @@ export const AccountPage: React.FC = () => {
                   Customer Profile
                 </h3>
                 <p className="text-xs text-slate-500 mb-6">
-                  Personal profile details (demonstration preview).
+                  Customer profile data is not connected in this storefront demo.
                 </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                  <div>
-                    <label className="block text-slate-500 mb-1">Full Name</label>
-                    <input
-                      readOnly
-                      value="Alexander Wright"
-                      className="w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-surface-800 border text-slate-800 dark:text-slate-200"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-500 mb-1">Email Address</label>
-                    <input
-                      readOnly
-                      value="alex.wright@example.com"
-                      className="w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-surface-800 border text-slate-800 dark:text-slate-200"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-500 mb-1">Phone Number</label>
-                    <input
-                      readOnly
-                      value="+1 (206) 555-0199"
-                      className="w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-surface-800 border text-slate-800 dark:text-slate-200 font-mono"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-500 mb-1">Customer Tier</label>
-                    <input
-                      readOnly
-                      value="Enthusiast Verified Rig"
-                      className="w-full px-3 py-2 rounded-lg bg-slate-100 dark:bg-surface-800 border text-emerald-600 font-semibold"
-                    />
-                  </div>
-                </div>
               </div>
             )}
 
@@ -255,24 +219,8 @@ export const AccountPage: React.FC = () => {
                   Saved Shipping Addresses
                 </h3>
                 <p className="text-xs text-slate-500 mb-6">
-                  Manage primary delivery locations for hardware packages.
+                  Saved customer addresses are not available in this demo.
                 </p>
-
-                <div className="p-4 rounded-xl border border-brand-200 dark:border-brand-800 bg-brand-50/30 dark:bg-brand-950/20 max-w-md text-xs space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-900 dark:text-white">
-                      {SAMPLE_CUSTOMER_ADDRESS.fullName}
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-600 text-white font-bold">
-                      Default
-                    </span>
-                  </div>
-                  <p className="text-slate-600 dark:text-slate-300">{SAMPLE_CUSTOMER_ADDRESS.street}</p>
-                  <p className="text-slate-600 dark:text-slate-300">
-                    {SAMPLE_CUSTOMER_ADDRESS.city}, {SAMPLE_CUSTOMER_ADDRESS.state} {SAMPLE_CUSTOMER_ADDRESS.postalCode}
-                  </p>
-                  <p className="font-mono text-slate-500">{SAMPLE_CUSTOMER_ADDRESS.phone}</p>
-                </div>
               </div>
             )}
           </div>

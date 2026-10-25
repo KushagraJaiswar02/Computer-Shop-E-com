@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import {
   CreditCard,
   Truck,
-  Building,
   ArrowRight,
   Info,
   QrCode,
@@ -17,13 +16,13 @@ export const CheckoutPage: React.FC = () => {
   const { cart, cartSubtotal, createOrder, clearCart } = useStore();
   const navigate = useNavigate();
 
-  const [fullName, setFullName] = useState('Rahul Sharma');
-  const [email, setEmail] = useState('rahul.sharma@example.com');
-  const [phone, setPhone] = useState('+91 98765 43210');
-  const [street, setStreet] = useState('42 Commercial Street, 2nd Floor');
-  const [city, setCity] = useState('Bengaluru');
-  const [state, setState] = useState('Karnataka');
-  const [postalCode, setPostalCode] = useState('560001');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [postalCode, setPostalCode] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'upi_demo' | 'card_demo' | 'in_store_pickup'>('upi_demo');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,8 +40,7 @@ export const CheckoutPage: React.FC = () => {
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      const newOrder = createOrder({
+    const newOrder = createOrder({
         items: cart.map((item) => ({
           productId: item.product.id,
           productName: item.product.name,
@@ -66,17 +64,14 @@ export const CheckoutPage: React.FC = () => {
           phone,
           isDefault: true,
         },
-        status: 'Processing',
+        status: 'Pending',
         paymentMethod,
-        paymentStatus: 'Demo Confirmed',
-        trackingNumber: `CS-TRACK-${Math.floor(10000000 + Math.random() * 90000000)}`,
-        estimatedDelivery: '2 to 4 business days',
+        paymentStatus: 'Payment Pending',
       });
 
-      clearCart();
-      setIsSubmitting(false);
-      navigate(`/order-confirmation/${newOrder.id}`);
-    }, 800);
+    clearCart();
+    setIsSubmitting(false);
+    navigate(`/order-confirmation/${newOrder.id}`);
   };
 
   return (
@@ -90,7 +85,7 @@ export const CheckoutPage: React.FC = () => {
               Demonstration Checkout Flow
             </h4>
             <p className="mt-0.5 leading-relaxed text-slate-600 dark:text-slate-400">
-              This checkout flow is a client prototype. Orders simulate order creation and inventory tracking without charging real payment accounts.
+              This local preview stores the entered details in this browser only. No order is sent to a store, inventory is not reserved, and no payment is collected.
             </p>
           </div>
         </div>
@@ -231,7 +226,7 @@ export const CheckoutPage: React.FC = () => {
                       </span>
                     </div>
                     <span className="text-xs text-slate-500 block mt-0.5">
-                      Instant verification via standard UPI QR workflow.
+                      Preview option only. No UPI or payment gateway is connected.
                     </span>
                   </div>
                 </label>
@@ -259,7 +254,7 @@ export const CheckoutPage: React.FC = () => {
                       </span>
                     </div>
                     <span className="text-xs text-slate-500 block mt-0.5">
-                      Visa, MasterCard, RuPay and corporate Net Banking supported.
+                      Preview option only. No card or banking provider is connected.
                     </span>
                   </div>
                 </label>
@@ -283,11 +278,11 @@ export const CheckoutPage: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <Store className="w-4 h-4 text-blue-600" />
                       <span className="font-bold text-sm text-slate-900 dark:text-white">
-                        Store Pickup & Pay at Showroom Counter
+                        Store Pickup (Demo Option)
                       </span>
                     </div>
                     <span className="text-xs text-slate-500 block mt-0.5">
-                      Collect assembled parts directly at our retail showroom counter.
+                      No pickup location or collection service has been configured.
                     </span>
                   </div>
                 </label>
@@ -334,15 +329,15 @@ export const CheckoutPage: React.FC = () => {
                   <span>Hardware Subtotal</span>
                   <span className="font-mono">{formatPrice(cartSubtotal)}</span>
                 </div>
-                <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                  <span>Delivery Shipping</span>
+              <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                    <span>Sample shipping estimate</span>
                   <span className="font-mono text-emerald-600 font-medium">
                     {freeShipping ? 'FREE' : formatPrice(shippingCost)}
                   </span>
                 </div>
                 <div className="flex justify-between text-slate-500 dark:text-slate-400 text-[11px]">
-                  <span>GST (18% inclusive)</span>
-                  <span className="font-mono">Included</span>
+                  <span>Taxes</span>
+                  <span className="font-mono">Not configured</span>
                 </div>
                 <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between items-baseline font-bold text-slate-900 dark:text-white text-base">
                   <span>Total Amount</span>
@@ -359,7 +354,7 @@ export const CheckoutPage: React.FC = () => {
                 isLoading={isSubmitting}
                 className="w-full justify-center font-bold"
               >
-                <span>Confirm Order</span>
+                <span>Create Demo Order Preview</span>
                 <ArrowRight className="w-4 h-4 ml-2" />
               </KeycapButton>
             </div>

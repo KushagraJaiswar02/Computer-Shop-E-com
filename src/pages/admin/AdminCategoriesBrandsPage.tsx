@@ -50,7 +50,7 @@ export const AdminCategoriesBrandsPage: React.FC = () => {
         <div className="bg-slate-950 rounded-2xl border border-slate-800 p-6 space-y-4">
           <div className="flex items-center gap-2 text-white font-bold text-base pb-3 border-b border-slate-800">
             <ShieldCheck className="w-5 h-5 text-brand-400" />
-            <span>Authorized Brands & Lines ({brands.length})</span>
+            <span>Brands & Product Lines ({brands.length})</span>
           </div>
 
           <div className="divide-y divide-slate-800 text-xs">

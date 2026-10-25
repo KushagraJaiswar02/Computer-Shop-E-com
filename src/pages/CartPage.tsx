@@ -37,12 +37,9 @@ export const CartPage: React.FC = () => {
 
     if (code === 'TECH10') {
       setDiscountPercent(10);
-      setCouponSuccess('10% hardware discount applied successfully!');
-    } else if (code === 'BUILDER15') {
-      setDiscountPercent(15);
-      setCouponSuccess('15% PC builder discount applied!');
+      setCouponSuccess('10% demo discount preview applied.');
     } else {
-      setCouponError('Invalid coupon code. Try "TECH10" for 10% discount.');
+      setCouponError('Invalid demo code. The sample code is TECH10.');
     }
   };
 
@@ -55,7 +52,7 @@ export const CartPage: React.FC = () => {
               Shopping Cart
             </h1>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-              Review selected hardware components and estimate delivery before checkout.
+              Review example catalog items. This demo does not create live orders or apply retailer shipping terms.
             </p>
           </div>
 
@@ -164,9 +161,7 @@ export const CartPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   <span className="text-slate-700 dark:text-slate-300 font-medium">
-                    {isFreeShipping
-                      ? 'You have qualified for Free Express Delivery!'
-                      : `Add ${formatPrice(freeShippingThreshold - cartSubtotal)} more to qualify for Free Shipping.`}
+                    Sample calculation: ₹149 shipping below ₹2,999, then free. Actual retailer rates are not configured.
                   </span>
                 </div>
               </div>
@@ -189,21 +184,21 @@ export const CartPage: React.FC = () => {
 
                   {discountPercent > 0 && (
                     <div className="flex justify-between text-emerald-600 dark:text-emerald-400 font-medium">
-                      <span>Coupon Discount ({discountPercent}%)</span>
+                      <span>Demo coupon preview ({discountPercent}%)</span>
                       <span className="font-mono">-{formatPrice(discountAmount)}</span>
                     </div>
                   )}
 
                   <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                    <span>Shipping</span>
+                    <span>Sample shipping estimate</span>
                     <span className="font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
                       {isFreeShipping ? 'FREE' : formatPrice(shippingFee)}
                     </span>
                   </div>
 
                   <div className="flex justify-between text-slate-500 dark:text-slate-400 text-[11px]">
-                    <span>GST (18% inclusive)</span>
-                    <span className="font-mono">Included</span>
+                    <span>Taxes</span>
+                    <span className="font-mono">Not configured</span>
                   </div>
 
                   <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-between items-baseline text-sm sm:text-base font-bold text-slate-900 dark:text-white">
@@ -221,7 +216,7 @@ export const CartPage: React.FC = () => {
                       type="text"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      placeholder="Coupon (e.g. TECH10)"
+                      placeholder="Demo coupon (TECH10)"
                       className="flex-1 px-3 py-1.5 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white font-mono uppercase focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                     <KeycapButton type="submit" size="sm" variant="outline">
@@ -252,7 +247,7 @@ export const CartPage: React.FC = () => {
                 </KeycapButton>
 
                 <p className="text-[11px] text-center text-slate-400 leading-tight">
-                  Official tax invoice and brand warranty documents generated on completion.
+                  Demo checkout does not create an invoice, confirm warranty coverage, or send an order.
                 </p>
               </div>
             </div>

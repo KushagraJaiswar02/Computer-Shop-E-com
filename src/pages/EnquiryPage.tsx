@@ -10,7 +10,7 @@ export const EnquiryPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [enquiryType, setEnquiryType] = useState<'custom_pc_build' | 'bulk_procurement' | 'compatibility_check' | 'component_availability'>('custom_pc_build');
-  const [targetBudget, setTargetBudget] = useState('₹1,50,000 - ₹2,50,000');
+  const [targetBudget, setTargetBudget] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -51,10 +51,10 @@ export const EnquiryPage: React.FC = () => {
                 <CheckCircle2 className="w-8 h-8" />
               </div>
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
-                Consultation Request Submitted
+                Demo enquiry saved locally
               </h3>
               <p className="text-sm text-slate-500 max-w-md mx-auto">
-                Thank you, {customerName}. Your hardware enquiry has been routed to our technical support team and logged into the Admin Enquiries dashboard.
+                This example enquiry is stored only in this browser. It has not been sent to a retailer or support team.
               </p>
               <div className="pt-4">
                 <KeycapButton variant="primary" onClick={() => setIsSubmitted(false)}>
@@ -64,6 +64,7 @@ export const EnquiryPage: React.FC = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6 text-xs">
+              <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">Demo only: submitted details stay in this browser's local storage and are not sent to a retailer. Do not enter sensitive information.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">

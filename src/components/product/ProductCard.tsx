@@ -28,7 +28,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       onMouseLeave={() => setFocusedProductId(null)}
       onFocus={() => setFocusedProductId(product.id)}
       onBlur={() => setFocusedProductId(null)}
-      tabIndex={0}
       className={`group relative bg-white dark:bg-slate-850 rounded-xl border transition-all duration-200 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md ${
         isFocused
           ? 'border-blue-500 ring-1 ring-blue-500/20'
@@ -57,7 +56,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               : 'bg-white/90 dark:bg-slate-800/90 border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 hover:border-rose-200'
           }`}
           title={isSaved ? 'Remove from wishlist (L)' : 'Save to wishlist (L)'}
-          aria-label="Wishlist toggle"
+          aria-label={isSaved ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
         >
           <Heart className={`w-3.5 h-3.5 ${isSaved ? 'fill-rose-500 text-rose-500' : ''}`} />
         </button>

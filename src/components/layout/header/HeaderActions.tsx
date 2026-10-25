@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, ShoppingBag, Sun, Moon, User, HelpCircle } from 'lucide-react';
+import { Heart, ShoppingBag, Sun, Moon, User, HelpCircle, Menu, X } from 'lucide-react';
 import { useStore } from '../../../context/StoreContext';
 import { KeyBadge } from '../../common/KeyBadge';
 
-export const HeaderActions: React.FC = () => {
+export const HeaderActions: React.FC<{ mobileNavOpen: boolean; onToggleMobileNav: () => void }> = ({ mobileNavOpen, onToggleMobileNav }) => {
   const {
     theme,
     toggleTheme,
@@ -66,6 +66,10 @@ export const HeaderActions: React.FC = () => {
       >
         <User className="w-5 h-5" />
       </Link>
+
+      <button type="button" onClick={onToggleMobileNav} className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-slate-300 dark:hover:bg-slate-800 lg:hidden" aria-label={mobileNavOpen ? 'Close store navigation' : 'Open store navigation'} aria-expanded={mobileNavOpen} aria-controls="mobile-store-navigation">
+        {mobileNavOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+      </button>
 
       {/* Theme Toggle */}
       <button

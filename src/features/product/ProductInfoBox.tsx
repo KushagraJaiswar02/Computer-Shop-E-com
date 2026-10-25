@@ -4,15 +4,11 @@ import {
   Heart,
   ShoppingBag,
   Scale,
-  ShieldCheck,
-  Truck,
-  RotateCcw,
   CheckCircle2,
   AlertTriangle,
   Minus,
   Plus,
   HelpCircle,
-  Star,
 } from 'lucide-react';
 import { Product } from '../../types';
 import { formatPrice } from '../../lib/utils';
@@ -63,28 +59,6 @@ export const ProductInfoBox: React.FC<ProductInfoBoxProps> = ({
         {product.name}
       </h1>
 
-      {/* Rating & Review Count */}
-      {product.rating ? (
-        <div className="flex items-center gap-2 text-xs">
-          <div className="flex items-center text-amber-400">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                className={`w-3.5 h-3.5 ${
-                  i < Math.floor(product.rating || 5)
-                    ? 'fill-amber-400 text-amber-400'
-                    : 'text-slate-200 dark:text-slate-700'
-                }`}
-              />
-            ))}
-          </div>
-          <span className="font-mono font-bold text-slate-900 dark:text-white">
-            {product.rating.toFixed(1)}
-          </span>
-          <span className="text-slate-400">({product.reviewCount || 0} reviews)</span>
-        </div>
-      ) : null}
-
       {/* Short Summary Description */}
       <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-lg border border-slate-200 dark:border-slate-800">
         {product.shortDescription}
@@ -130,7 +104,7 @@ export const ProductInfoBox: React.FC<ProductInfoBoxProps> = ({
           </div>
 
           <span className="text-slate-500 font-mono text-[11px]">
-            {product.warrantyMonths} Months Warranty
+            Demo catalog data
           </span>
         </div>
       </div>
@@ -210,24 +184,8 @@ export const ProductInfoBox: React.FC<ProductInfoBoxProps> = ({
         </div>
       </div>
 
-      {/* Trust & Guarantee points */}
-      <div className="pt-4 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 gap-2.5 text-xs text-slate-600 dark:text-slate-400">
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>{product.warrantyMonths}M Manufacturer Warranty</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Truck className="w-4 h-4 text-blue-600 shrink-0" />
-          <span>Free Express over ₹2,999</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <RotateCcw className="w-4 h-4 text-slate-500 shrink-0" />
-          <span>7-Day Replacement Support</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-slate-500 shrink-0" />
-          <span>100% Genuine Sealed Unit</span>
-        </div>
+      <div className="border-t border-slate-200 pt-3 text-xs leading-relaxed text-slate-500 dark:border-slate-800 dark:text-slate-400">
+        Example catalog information. Verify specifications, price, availability and warranty terms with the retailer before purchase.
       </div>
     </div>
   );

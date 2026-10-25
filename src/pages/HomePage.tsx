@@ -7,7 +7,6 @@ import { DealsSection } from '../components/home/DealsSection';
 import { BestsellersSection } from '../components/home/BestsellersSection';
 import { NewArrivalsSection } from '../components/home/NewArrivalsSection';
 import { BrandsSection } from '../components/home/BrandsSection';
-import { ReviewsSection } from '../components/home/ReviewsSection';
 import { TrustSection } from '../components/home/TrustSection';
 
 export const HomePage: React.FC = () => {
@@ -35,7 +34,8 @@ export const HomePage: React.FC = () => {
       case 'brands':
         return <BrandsSection key="brands" />;
       case 'reviews':
-        return <ReviewsSection key="reviews" />;
+        // The current dataset contains sample reviews. Show them only after genuine reviews are connected.
+        return null;
       case 'trust_support':
         return <TrustSection key="trust_support" />;
       default:

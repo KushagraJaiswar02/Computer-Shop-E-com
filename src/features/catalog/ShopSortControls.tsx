@@ -28,7 +28,6 @@ export const ShopSortControls: React.FC<ShopSortControlsProps> = ({
           <option value="price-asc">Price: Low to High</option>
           <option value="price-desc">Price: High to Low</option>
           <option value="newest">Newest Releases</option>
-          <option value="rating">Customer Rating</option>
           <option value="discount">Biggest Discount</option>
         </select>
       </div>

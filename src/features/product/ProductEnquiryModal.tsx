@@ -45,11 +45,10 @@ export const ProductEnquiryModal: React.FC<ProductEnquiryModalProps> = ({
           <div className="py-6 text-center space-y-3">
             <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
             <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              Hardware Consultation Submitted
+              Demo request previewed · not sent
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-              Our hardware specialist will review your question regarding{' '}
-              <strong>{product.name}</strong> and get back to you with build compatibility advice shortly.
+              This sample request about <strong>{product.name}</strong> was not transmitted or saved. No retailer support channel is connected.
             </p>
             <div className="pt-3">
               <KeycapButton variant="primary" onClick={handleClose}>
@@ -58,14 +57,14 @@ export const ProductEnquiryModal: React.FC<ProductEnquiryModalProps> = ({
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="font-bold text-base text-slate-900 dark:text-white">
-                  Technical Compatibility Question
+                  Product question · demo only
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Consult our tech team regarding {product.name} (SKU: {product.sku})
+                  Preview a question about {product.name} (SKU: {product.sku}). No support channel is connected.
                 </p>
               </div>
               <button
@@ -76,6 +75,8 @@ export const ProductEnquiryModal: React.FC<ProductEnquiryModalProps> = ({
                 <X className="w-5 h-5" />
               </button>
             </div>
+
+            <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">Demo only: this form does not send or save your message.</p>
 
             <div className="space-y-3 text-xs">
               <div>

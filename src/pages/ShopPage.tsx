@@ -24,8 +24,12 @@ export const ShopPage: React.FC = () => {
   const activeSearch = searchParams.get('q') || '';
   const isDealOnly = searchParams.get('deal') === 'true';
   const isBestsellerOnly = searchParams.get('bestseller') === 'true';
-  const minPriceParam = Number(searchParams.get('minPrice')) || 0;
-  const maxPriceParam = Number(searchParams.get('maxPrice')) || DEFAULT_MAX_PRICE;
+  const requestedMinPrice = Number(searchParams.get('minPrice'));
+  const requestedMaxPrice = Number(searchParams.get('maxPrice'));
+  const minPriceParam = Number.isFinite(requestedMinPrice) ? Math.max(0, Math.min(DEFAULT_MAX_PRICE, requestedMinPrice)) : 0;
+  const maxPriceParam = Number.isFinite(requestedMaxPrice) && requestedMaxPrice > 0
+    ? Math.max(minPriceParam, Math.min(DEFAULT_MAX_PRICE, requestedMaxPrice))
+    : DEFAULT_MAX_PRICE;
   const inStockOnly = searchParams.get('inStock') === 'true';
   const sortBy = searchParams.get('sort') || 'featured';
 
@@ -42,7 +46,10 @@ export const ShopPage: React.FC = () => {
   // Update URL search parameters
   const updateFilter = (key: string, value: string | null) => {
     const next = new URLSearchParams(searchParams);
-    if (value === null || value === '' || (key === 'deal' && value === 'false')) {
+    if (key === 'price') {
+      next.delete('minPrice');
+      next.delete('maxPrice');
+    } else if (value === null || value === '' || (key === 'deal' && value === 'false')) {
       next.delete(key);
     } else {
       next.set(key, value);
@@ -71,8 +78,9 @@ export const ShopPage: React.FC = () => {
     if (activeBrand) count++;
     if (activeSeries) count++;
     if (isDealOnly) count++;
+    if (isBestsellerOnly) count++;
     if (inStockOnly) count++;
-    if (priceRange[1] < DEFAULT_MAX_PRICE) count++;
+    if (priceRange[0] > 0 || priceRange[1] < DEFAULT_MAX_PRICE) count++;
     if (activeSearch) count++;
     return count;
   }, [
@@ -81,6 +89,7 @@ export const ShopPage: React.FC = () => {
     activeBrand,
     activeSeries,
     isDealOnly,
+    isBestsellerOnly,
     inStockOnly,
     priceRange,
     activeSearch,
@@ -163,7 +172,12 @@ export const ShopPage: React.FC = () => {
               activeCategory={activeCategory}
               activeSubcategory={activeSubcategory}
               activeBrand={activeBrand}
+              activeSeries={activeSeries}
               isDealOnly={isDealOnly}
+              isBestsellerOnly={isBestsellerOnly}
+              inStockOnly={inStockOnly}
+              minPrice={priceRange[0]}
+              maxPrice={priceRange[1]}
               categories={categories}
               brands={brands}
               onRemoveFilter={(key) => updateFilter(key, null)}

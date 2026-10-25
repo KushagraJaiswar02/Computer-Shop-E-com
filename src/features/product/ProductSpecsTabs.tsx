@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
-import { Star } from 'lucide-react';
-import { Product, Review } from '../../types';
+import { Product } from '../../types';
 
 interface ProductSpecsTabsProps {
   product: Product;
-  reviews: Review[];
 }
 
-export const ProductSpecsTabs: React.FC<ProductSpecsTabsProps> = ({
-  product,
-  reviews,
-}) => {
-  const [activeTab, setActiveTab] = useState<'specs' | 'description' | 'reviews'>('specs');
+export const ProductSpecsTabs: React.FC<ProductSpecsTabsProps> = ({ product }) => {
+  const [activeTab, setActiveTab] = useState<'specs' | 'description'>('specs');
 
   // Group attributes by section
   const groupedAttributes: Record<string, typeof product.attributes> = {};
@@ -43,17 +38,7 @@ export const ProductSpecsTabs: React.FC<ProductSpecsTabsProps> = ({
               : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
           }`}
         >
-          Overview & Packaging
-        </button>
-        <button
-          onClick={() => setActiveTab('reviews')}
-          className={`py-3 px-5 text-xs sm:text-sm font-semibold border-b-2 transition-all ${
-            activeTab === 'reviews'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-850'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-          }`}
-        >
-          Customer Reviews ({reviews.length})
+          Product overview
         </button>
       </div>
 
@@ -90,55 +75,12 @@ export const ProductSpecsTabs: React.FC<ProductSpecsTabsProps> = ({
         {activeTab === 'description' && (
           <div className="max-w-3xl space-y-4 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             <p>{product.description}</p>
-            <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-750">
-              <h4 className="font-bold text-slate-900 dark:text-white mb-1 text-xs">
-                Genuine Brand Packaging & Warranty Support
-              </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                All components are dispatched in official factory sealed packaging with serial number tracking on GST invoices. Warranty can be claimed at authorized brand service centers across India.
-              </p>
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+              Example catalog content is shown for review. Confirm specifications, availability and warranty with the retailer before purchase.
             </div>
           </div>
         )}
 
-        {/* Reviews Tab */}
-        {activeTab === 'reviews' && (
-          <div className="space-y-4">
-            {reviews.length === 0 ? (
-              <p className="text-xs sm:text-sm text-slate-500 italic">
-                No customer reviews submitted yet for this product.
-              </p>
-            ) : (
-              reviews.map((rev) => (
-                <div
-                  key={rev.id}
-                  className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 space-y-1.5"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                        {rev.authorName}
-                      </span>
-                      <span className="text-[10px] text-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 dark:text-emerald-400 px-1.5 py-0.5 rounded font-mono">
-                        Verified Purchase
-                      </span>
-                    </div>
-                    <span className="text-xs font-mono text-slate-400">{rev.date}</span>
-                  </div>
-                  <div className="flex text-amber-400">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star key={i} className="w-3 h-3 fill-amber-400" />
-                    ))}
-                  </div>
-                  <h4 className="font-semibold text-slate-800 dark:text-slate-200 text-xs sm:text-sm">
-                    "{rev.title}"
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-300">{rev.comment}</p>
-                </div>
-              ))
-            )}
-          </div>
-        )}
       </div>
     </div>
   );

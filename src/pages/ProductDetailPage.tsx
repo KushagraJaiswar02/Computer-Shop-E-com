@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
-import { SAMPLE_REVIEWS } from '../data/mockData';
 import { KeycapButton } from '../components/common/KeycapButton';
 import { ProductGallery } from '../features/product/ProductGallery';
 import { ProductInfoBox } from '../features/product/ProductInfoBox';
@@ -48,8 +47,6 @@ export const ProductDetailPage: React.FC = () => {
     product.compatibleAccessories?.includes(p.id)
   );
 
-  // Filter reviews for current product
-  const productReviews = SAMPLE_REVIEWS.filter((r) => r.productId === product.id);
 
   return (
     <div className="min-h-screen bg-slate-50/70 dark:bg-slate-900/50 py-6 sm:py-8">
@@ -102,7 +99,7 @@ export const ProductDetailPage: React.FC = () => {
         </div>
 
         {/* Detailed Tabs: Specs, Architecture Overview, Reviews */}
-        <ProductSpecsTabs product={product} reviews={productReviews} />
+        <ProductSpecsTabs product={product} />
 
         {/* Frequently Bought Together & Compatible Accessories */}
         <CompatibleProductsSection

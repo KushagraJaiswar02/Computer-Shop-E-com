@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CheckCircle2, PackageCheck, Printer, ArrowRight, ShieldCheck, Truck, Home } from 'lucide-react';
+import { Info, Printer, ArrowRight, Home } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { formatPrice, formatDate } from '../lib/utils';
 import { KeycapButton } from '../components/common/KeycapButton';
@@ -9,7 +9,7 @@ export const OrderConfirmationPage: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const { orders } = useStore();
 
-  const order = orders.find(o => o.id === orderId) || orders[0];
+  const order = orders.find(o => o.id === orderId);
 
   if (!order) {
     return (
@@ -25,37 +25,21 @@ export const OrderConfirmationPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-surface-50 dark:bg-surface-900 py-12 transition-colors">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Success Card */}
-        <div className="bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 p-6 sm:p-10 shadow-soft-card text-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-500 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center mx-auto mb-4 animate-bounce">
-            <CheckCircle2 className="w-8 h-8" />
+        <div className="bg-blue-50 dark:bg-slate-850 rounded-2xl border border-blue-200 dark:border-slate-750 p-6 sm:p-8 text-center mb-8">
+          <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-900 text-blue-600 border border-blue-200 dark:border-slate-700 flex items-center justify-center mx-auto mb-3">
+            <Info className="w-6 h-6" />
           </div>
 
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-            Order Demonstration Simulated
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300">
+            Local Demo Preview · Not Submitted
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
-            Thank You, {order.shippingAddress.fullName.split(' ')[0]}!
+            Demo order preview
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
-            Your simulated order #{order.orderNumber} has been received and logged to the demo order management database.
+            Preview #{order.orderNumber} is stored only in this browser. No order was sent, no stock was reserved, and no payment or shipment was created.
           </p>
 
-          {/* Tracking Bar */}
-          <div className="mt-8 p-4 rounded-xl bg-slate-50 dark:bg-surface-900/60 border border-slate-200 dark:border-surface-750 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-            <div className="text-left">
-              <span className="text-slate-400 text-[10px] uppercase font-mono block">Simulated Tracking Number</span>
-              <span className="font-mono font-bold text-slate-800 dark:text-slate-200 text-sm">
-                {order.trackingNumber || 'CS-TRACK-9948201'}
-              </span>
-            </div>
-            <div className="text-left sm:text-right">
-              <span className="text-slate-400 text-[10px] uppercase font-mono block">Estimated Arrival</span>
-              <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                {order.estimatedDelivery || '3 to 5 business days'}
-              </span>
-            </div>
-          </div>
         </div>
 
         {/* Order Details & Summary Card */}
@@ -69,7 +53,7 @@ export const OrderConfirmationPage: React.FC = () => {
               className="inline-flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300 hover:text-slate-900 font-medium"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>Print Invoice</span>
+              <span>Print Preview</span>
             </button>
           </div>
 
@@ -104,17 +88,17 @@ export const OrderConfirmationPage: React.FC = () => {
               <span className="font-mono">{formatPrice(order.subtotal)}</span>
             </div>
             <div className="flex justify-between text-slate-500">
-              <span>Insured Shipping</span>
+              <span>Sample shipping amount</span>
               <span className="font-mono text-emerald-600">
                 {order.shipping === 0 ? 'FREE' : formatPrice(order.shipping)}
               </span>
             </div>
             <div className="flex justify-between text-slate-500">
-              <span>Sales Tax (8.5%)</span>
+              <span>Example tax value</span>
               <span className="font-mono">{formatPrice(order.tax)}</span>
             </div>
             <div className="pt-2 border-t border-slate-200 dark:border-surface-750 flex justify-between font-bold text-base text-slate-900 dark:text-white">
-              <span>Total Paid (Simulated)</span>
+              <span>Total (Preview Only)</span>
               <span className="font-mono text-brand-600 dark:text-brand-400 text-lg">
                 {formatPrice(order.total)}
               </span>
@@ -138,16 +122,12 @@ export const OrderConfirmationPage: React.FC = () => {
 
             <div>
               <span className="font-mono text-[10px] uppercase text-slate-400 font-bold block mb-1">
-                Payment Verification
+                Demo Payment Status
               </span>
               <p className="font-semibold text-slate-800 dark:text-slate-200">
-                {order.paymentMethod === 'card_demo'
-                  ? 'Demo Credit Card (Authorized)'
-                  : order.paymentMethod === 'wire_transfer'
-                  ? 'Wire Transfer (Pending Receipt)'
-                  : 'Counter Pickup'}
+                {{ upi_demo: 'UPI demo option', card_demo: 'Card demo option', wire_transfer: 'Wire transfer demo option', in_store_pickup: 'Pickup demo option', cod: 'Cash on delivery demo option' }[order.paymentMethod]}
               </p>
-              <span className="inline-block mt-1 px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 text-[10px] font-mono">
+              <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-mono ${order.paymentStatus === 'Payment Pending' ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'}`}>
                 Status: {order.paymentStatus}
               </span>
             </div>
@@ -164,7 +144,7 @@ export const OrderConfirmationPage: React.FC = () => {
 
             <Link to="/account/orders" className="w-full sm:w-auto">
               <KeycapButton variant="primary" className="w-full">
-                <span>View in Customer Orders</span>
+                <span>View Demo Orders</span>
                 <ArrowRight className="w-4 h-4 ml-1.5" />
               </KeycapButton>
             </Link>

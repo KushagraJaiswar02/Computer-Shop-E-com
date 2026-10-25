@@ -5,8 +5,8 @@ import { KeycapButton } from '../components/common/KeycapButton';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('rahul.sharma@example.com');
-  const [password, setPassword] = useState('••••••••••••');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ export const LoginPage: React.FC = () => {
           </div>
 
           <div className="mb-6 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs">
-            <strong>Demonstration Notice:</strong> This authentication interface is a visual prototype for shop review. Any demo credentials can be used.
+            <strong>Demonstration only:</strong> No credentials are checked, saved or transmitted. Do not enter a real password.
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4 text-xs">
@@ -71,7 +71,7 @@ export const LoginPage: React.FC = () => {
 
             <div className="pt-2">
               <KeycapButton type="submit" variant="primary" size="md" className="w-full font-bold">
-                <span>Enter Demonstration Account</span>
+                <span>Open Demo Account Preview</span>
                 <ArrowRight className="w-4 h-4 ml-1.5" />
               </KeycapButton>
             </div>

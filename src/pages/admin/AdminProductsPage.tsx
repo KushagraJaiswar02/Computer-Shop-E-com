@@ -25,12 +25,12 @@ export const AdminProductsPage: React.FC = () => {
 
   // Form states for creating / editing
   const [formName, setFormName] = useState('');
-  const [formBrandId, setFormBrandId] = useState('asus');
-  const [formCategoryId, setFormCategoryId] = useState('graphics-cards');
+  const [formBrandId, setFormBrandId] = useState('');
+  const [formCategoryId, setFormCategoryId] = useState('');
   const [formSku, setFormSku] = useState('');
-  const [formPrice, setFormPrice] = useState(999.99);
-  const [formStock, setFormStock] = useState(10);
-  const [formStockStatus, setFormStockStatus] = useState<StockStatus>('in_stock');
+  const [formPrice, setFormPrice] = useState(0);
+  const [formStock, setFormStock] = useState(0);
+  const [formStockStatus, setFormStockStatus] = useState<StockStatus>('out_of_stock');
   const [formShortDesc, setFormShortDesc] = useState('');
   const [formImageUrl, setFormImageUrl] = useState('');
 
@@ -51,14 +51,14 @@ export const AdminProductsPage: React.FC = () => {
   const openCreateModal = () => {
     setEditingProduct(null);
     setFormName('');
-    setFormBrandId('asus');
-    setFormCategoryId('graphics-cards');
-    setFormSku(`SKU-${Math.floor(10000 + Math.random() * 90000)}`);
-    setFormPrice(799.99);
-    setFormStock(15);
-    setFormStockStatus('in_stock');
-    setFormShortDesc('Enthusiast-grade component featuring premium cooling and high sustained boost frequencies.');
-    setFormImageUrl('https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&w=800&q=80');
+    setFormBrandId('');
+    setFormCategoryId('');
+    setFormSku('');
+    setFormPrice(0);
+    setFormStock(0);
+    setFormStockStatus('out_of_stock');
+    setFormShortDesc('');
+    setFormImageUrl('');
     setIsModalOpen(true);
   };
 
@@ -96,13 +96,12 @@ export const AdminProductsPage: React.FC = () => {
         stock: formStock,
         stockStatus: formStockStatus,
         shortDescription: formShortDesc,
-        description: `${formName}. Built with premium hardware silicon and backed by official warranty.`,
-        images: [formImageUrl],
+        description: formShortDesc,
+        images: formImageUrl ? [formImageUrl] : [],
         attributes: [
           { name: 'Model SKU', value: formSku, group: 'General' },
-          { name: 'Factory Condition', value: 'Brand New Sealed Retail', group: 'General' },
         ],
-        warrantyMonths: 36,
+        warrantyMonths: 0,
         createdAt: new Date().toISOString(),
       };
       addProduct(newProd);
@@ -132,7 +131,7 @@ export const AdminProductsPage: React.FC = () => {
             Product Catalog Inventory ({products.length} SKUs)
           </h1>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Manage live computer hardware SKUs, prices, stock allocations, and technical details.
+            Demo only: edits stay in this browser and do not change a live catalog, price or inventory.
           </p>
         </div>
 
@@ -315,10 +314,12 @@ export const AdminProductsPage: React.FC = () => {
                 <div>
                   <label className="block text-slate-400 mb-1">Brand</label>
                   <select
+                    required
                     value={formBrandId}
                     onChange={e => setFormBrandId(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white"
                   >
+                    <option value="">Choose a brand</option>
                     {brands.map(b => (
                       <option key={b.id} value={b.id}>
                         {b.name}
@@ -330,10 +331,12 @@ export const AdminProductsPage: React.FC = () => {
                 <div>
                   <label className="block text-slate-400 mb-1">Category</label>
                   <select
+                    required
                     value={formCategoryId}
                     onChange={e => setFormCategoryId(e.target.value)}
                     className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white"
                   >
+                    <option value="">Choose a category</option>
                     {categories.map(c => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -359,6 +362,7 @@ export const AdminProductsPage: React.FC = () => {
                   <label className="block text-slate-400 mb-1">Price (₹ INR)</label>
                   <input
                     type="number"
+                    min="0"
                     step="0.01"
                     required
                     value={formPrice}
@@ -371,6 +375,7 @@ export const AdminProductsPage: React.FC = () => {
                   <label className="block text-slate-400 mb-1">Stock Units</label>
                   <input
                     type="number"
+                    min="0"
                     required
                     value={formStock}
                     onChange={e => setFormStock(Number(e.target.value))}

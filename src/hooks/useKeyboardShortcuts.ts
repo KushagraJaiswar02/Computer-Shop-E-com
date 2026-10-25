@@ -51,6 +51,9 @@ export const useKeyboardShortcuts = () => {
         }
       }
 
+      // Let open overlays own their keyboard interaction; Escape above remains global.
+      if (isShortcutsModalOpen || isCartOpen || isNavWheelOpen) return;
+
       if (isInput) {
         return;
       }
@@ -115,6 +118,7 @@ export const useKeyboardShortcuts = () => {
     focusedProductId,
     toggleWishlist,
     navigate,
-    location,
+    location.pathname,
+    location.search,
   ]);
 };

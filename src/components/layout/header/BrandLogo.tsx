@@ -10,14 +10,14 @@ export const BrandLogo: React.FC = () => {
       </div>
       <div className="flex flex-col">
         <div className="flex items-center gap-1.5">
-          <span className="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">
+          <span className="font-extrabold text-sm min-[420px]:text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">
             Computer<span className="text-blue-600 dark:text-blue-400">Shop</span>
           </span>
-          <span className="text-[9px] font-mono uppercase px-1.5 py-0.2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded border border-slate-200 dark:border-slate-700">
+          <span className="hidden text-[9px] font-mono uppercase px-1.5 py-0.2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded border border-slate-200 dark:border-slate-700 sm:inline-block">
             Storefront
           </span>
         </div>
-        <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-wide">
+        <span className="hidden text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-wide sm:inline">
           PC Hardware & Systems
         </span>
       </div>

@@ -83,8 +83,6 @@ export function filterAndSortProducts(
           return b.price - a.price;
         case 'newest':
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        case 'rating':
-          return (b.rating || 0) - (a.rating || 0);
         case 'discount':
           return (b.discountPercent || 0) - (a.discountPercent || 0);
         default:

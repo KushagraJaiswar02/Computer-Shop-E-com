@@ -114,7 +114,7 @@ export const HeroBanner: React.FC = () => {
               className={`absolute inset-0 h-full w-full object-cover ${!reducedMotion ? 'animate-fade-in' : ''}`}
               style={{ objectPosition: content.imagePosition || 'center center' }}
               onError={() => setImageFailedId(content.id)}
-              fetchPriority={activeIndex === 0 ? 'high' : 'auto'}
+              ref={image => image?.setAttribute('fetchpriority', activeIndex === 0 ? 'high' : 'auto')}
             />
           </picture>
         ) : (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Trash2, ShoppingBag, ArrowRight, Plus, Minus, ShieldCheck } from 'lucide-react';
+import { X, Trash2, ShoppingBag, ArrowRight, Plus, Minus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../../context/StoreContext';
 import { formatPrice } from '../../lib/utils';
@@ -179,7 +179,7 @@ export const CartDrawer: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                  <span>Shipping</span>
+                  <span>Sample shipping estimate</span>
                   <span className="font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
                     {isFreeShipping ? 'FREE' : formatPrice(standardShippingFee)}
                   </span>
@@ -192,9 +192,8 @@ export const CartDrawer: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 justify-center">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>GST invoice with official manufacturer warranty</span>
+              <div className="text-center text-[11px] text-slate-500 dark:text-slate-400">
+                Sample rate: ₹149 below ₹2,999, then free. Actual retailer shipping terms are not configured.
               </div>
 
               <div className="grid grid-cols-2 gap-2 pt-1">
