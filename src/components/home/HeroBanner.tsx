@@ -92,9 +92,9 @@ export const HeroBanner: React.FC = () => {
   const failed = Boolean(content.imageUrl) && imageFailedId === content.id;
 
   return (
-    <section className="w-full bg-white px-3 py-4 transition-colors dark:bg-slate-950 sm:px-5 sm:py-5 lg:px-8 lg:py-6">
+    <section className="w-full bg-white/55 px-3 py-4 transition-colors dark:bg-slate-950/45 sm:px-5 sm:py-5 lg:px-8 lg:py-6">
       <div
-        className="relative mx-auto h-[min(78vw,340px)] min-h-[280px] max-h-[460px] w-full max-w-[1440px] overflow-hidden rounded-xl bg-slate-100 shadow-sm dark:bg-slate-900 sm:h-[380px] lg:h-[min(34vw,440px)]"
+        className="relative mx-auto h-[min(78vw,340px)] min-h-[360px] max-h-[460px] w-full max-w-[1440px] overflow-hidden rounded-xl bg-slate-100 shadow-sm dark:bg-slate-900 sm:h-[380px] sm:min-h-[280px] lg:h-[min(34vw,440px)]"
         onMouseEnter={() => setInteracting(true)}
         onMouseLeave={() => setInteracting(false)}
         onFocusCapture={() => setInteracting(true)}
@@ -131,7 +131,7 @@ export const HeroBanner: React.FC = () => {
           />
         )}
 
-        <div className={`relative z-10 flex h-full items-center px-6 py-10 sm:px-10 lg:px-16 ${textOnRight ? 'justify-end text-right' : 'justify-start text-left'}`}>
+          <div className={`relative z-10 flex h-full items-center px-6 py-10 sm:px-10 lg:px-16 ${textOnRight ? 'justify-end text-right' : 'justify-start text-left'}`}>
           <div key={content.id} className={`w-full max-w-[540px] ${textOnRight ? 'ml-auto' : ''} ${!reducedMotion && !isFallback ? 'animate-fade-in' : ''}`}>
             {content.eyebrow && <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-blue-700 dark:text-blue-300">{content.eyebrow}</p>}
             <h1 className="max-w-[18ch] text-3xl font-bold leading-[1.08] tracking-tight text-slate-950 dark:text-white sm:text-4xl lg:text-5xl">{content.title}</h1>
@@ -141,8 +141,8 @@ export const HeroBanner: React.FC = () => {
         </div>
 
         {slides.length > 1 && (
-          <div className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-between sm:inset-x-8 sm:bottom-6">
-            <div className="flex items-center gap-2" role="group" aria-label="Choose promotional slide">
+          <div className="pointer-events-none absolute inset-x-4 bottom-4 z-20 flex items-center justify-between sm:inset-x-8 sm:bottom-6">
+            <div className="pointer-events-auto flex items-center gap-2" role="group" aria-label="Choose promotional slide">
               {slides.map((item, index) => (
                 <button
                   key={item.id}
@@ -154,7 +154,7 @@ export const HeroBanner: React.FC = () => {
                 />
               ))}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="pointer-events-auto flex items-center gap-2">
               <button type="button" onClick={() => setManuallyPaused(value => !value)} aria-label={manuallyPaused ? 'Resume automatic slide rotation' : 'Pause automatic slide rotation'} className="rounded-full border border-slate-300 bg-white/90 p-2 text-slate-700 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white">
                 {manuallyPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
               </button>

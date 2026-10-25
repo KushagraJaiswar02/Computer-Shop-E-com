@@ -16,7 +16,7 @@ export const BestsellersSection: React.FC = () => {
   if (displayProducts.length === 0) return null;
 
   return (
-    <section className="py-10 sm:py-12 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <section className="py-10 sm:py-12 bg-slate-50/65 dark:bg-slate-900/45 border-b border-slate-200 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-6">
           <div>

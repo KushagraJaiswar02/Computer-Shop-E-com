@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export const Footer: React.FC = () => (
-  <footer className="border-t border-slate-800 bg-slate-900 text-xs text-slate-300">
+export const Footer: React.FC<{ homeBackground?: boolean }> = ({ homeBackground = false }) => (
+  <footer className={`relative z-10 border-t border-slate-800 ${homeBackground ? 'bg-slate-900/90' : 'bg-slate-900'} text-xs text-slate-300`}>
     <div className="mx-auto max-w-7xl px-4 py-9 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-3 sm:col-span-2">
