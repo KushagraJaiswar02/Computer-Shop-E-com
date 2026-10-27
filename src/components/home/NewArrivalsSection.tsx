@@ -13,11 +13,11 @@ export const NewArrivalsSection: React.FC = () => {
   const newProducts = (markedNewProducts.length ? markedNewProducts : datedProducts(products)).slice(0, 4);
 
   return (
-    <section className="py-10 sm:py-12 bg-white/65 dark:bg-slate-900/45 border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <section className="border-b border-slate-200/80 bg-white/55 py-7 transition-colors dark:border-slate-800/80 dark:bg-slate-900/35 sm:py-9">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-4 flex items-center justify-between gap-4 sm:mb-5">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white sm:text-xl">
               New Arrivals
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -33,7 +33,7 @@ export const NewArrivalsSection: React.FC = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
           {newProducts.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}

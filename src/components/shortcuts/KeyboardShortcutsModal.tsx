@@ -10,7 +10,7 @@ export const KeyboardShortcutsModal: React.FC = () => {
 
   const shortcuts = [
     { key: '/', description: 'Focus product search bar anywhere on the site' },
-    { key: 'C', description: 'Open Left-Side Radial Navigation Wheel (Explore)' },
+    { key: 'C', description: 'Open product comparison' },
     { key: 'W', description: 'Navigate directly to your Saved Wishlist' },
     { key: 'K', description: 'Open or close the Quick Shopping Cart drawer' },
     { key: 'L', description: 'Add/remove currently focused hardware product to Wishlist' },

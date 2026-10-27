@@ -66,7 +66,7 @@ export const HeaderSearch: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative mx-0 w-full max-w-none sm:mx-6 sm:max-w-md" role="search">
+    <form onSubmit={handleSubmit} className="relative min-w-0 w-full flex-1" role="search">
       <div className="relative">
         <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
@@ -83,13 +83,14 @@ export const HeaderSearch: React.FC = () => {
           onFocus={() => query.trim().length >= 2 && setIsOpen(true)}
           onKeyDown={handleKeyDown}
           onBlur={() => window.setTimeout(() => setIsOpen(false), 120)}
-          placeholder="Search products, GPUs, laptops, processors..."
-          className="w-full pl-9 pr-12 py-2 text-xs sm:text-sm bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all"
+          placeholder="Search for products..."
+          className="h-9 w-full rounded-md border border-slate-200 bg-slate-50 pl-9 pr-20 text-xs text-slate-900 transition-colors placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-100 sm:text-sm"
         />
-        {query && <button type="button" onClick={() => { setQuery(''); setIsOpen(false); setActiveIndex(-1); searchInputRef.current?.focus(); }} aria-label="Clear search" className="absolute right-9 top-1/2 -translate-y-1/2 rounded p-1 text-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:hover:text-white"><X className="h-3.5 w-3.5" /></button>}
-        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+        {query && <button type="button" onClick={() => { setQuery(''); setIsOpen(false); setActiveIndex(-1); searchInputRef.current?.focus(); }} aria-label="Clear search" className="absolute right-11 top-1/2 -translate-y-1/2 rounded p-1 text-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:hover:text-white"><X className="h-3.5 w-3.5" /></button>}
+        <div className={`pointer-events-none absolute right-11 top-1/2 -translate-y-1/2 ${query ? 'hidden' : ''}`}>
           <KeyBadge>/</KeyBadge>
         </div>
+        <button type="submit" aria-label="Search products" title="Search products" className="absolute right-1 top-1/2 flex h-7 w-8 -translate-y-1/2 items-center justify-center rounded text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-blue-300"><Search className="h-4 w-4" /></button>
       </div>
       {isOpen && query.trim().length >= 2 && (
         <div className="absolute inset-x-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900" onMouseDown={event => event.preventDefault()}>

@@ -7,8 +7,6 @@ export const useKeyboardShortcuts = () => {
   const location = useLocation();
   const {
     focusSearch,
-    setIsNavWheelOpen,
-    isNavWheelOpen,
     setIsCartOpen,
     isCartOpen,
     isShortcutsModalOpen,
@@ -40,8 +38,10 @@ export const useKeyboardShortcuts = () => {
           e.preventDefault();
           return;
         }
-        if (isNavWheelOpen) {
-          setIsNavWheelOpen(false);
+        const openNavigationMenus = document.querySelectorAll<HTMLElement>('header details[open]');
+        if (openNavigationMenus.length) {
+          openNavigationMenus.forEach(menu => menu.removeAttribute('open'));
+          openNavigationMenus[0].querySelector<HTMLElement>('summary')?.focus();
           e.preventDefault();
           return;
         }
@@ -52,7 +52,7 @@ export const useKeyboardShortcuts = () => {
       }
 
       // Let open overlays own their keyboard interaction; Escape above remains global.
-      if (isShortcutsModalOpen || isCartOpen || isNavWheelOpen) return;
+      if (isShortcutsModalOpen || isCartOpen) return;
 
       if (isInput) {
         return;
@@ -72,7 +72,7 @@ export const useKeyboardShortcuts = () => {
         case 'c':
         case 'C': {
           e.preventDefault();
-          setIsNavWheelOpen(prev => !prev);
+          navigate('/compare');
           break;
         }
         case 'w':
@@ -109,8 +109,6 @@ export const useKeyboardShortcuts = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [
     focusSearch,
-    setIsNavWheelOpen,
-    isNavWheelOpen,
     setIsCartOpen,
     isCartOpen,
     isShortcutsModalOpen,

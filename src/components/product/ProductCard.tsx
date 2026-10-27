@@ -31,14 +31,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       onMouseLeave={() => setFocusedProductId(null)}
       onFocus={() => setFocusedProductId(product.id)}
       onBlur={() => setFocusedProductId(null)}
-      className={`group relative bg-white dark:bg-slate-850 rounded-xl border transition-all duration-200 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-md ${
+      className={`group relative flex h-full flex-col justify-between overflow-hidden rounded-xl border bg-white shadow-xs transition-all duration-200 hover:shadow-md dark:bg-surface-850 ${
         isFocused
           ? 'border-blue-500 ring-1 ring-blue-500/20'
           : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
       }`}
     >
       {/* Top Image Container */}
-      <div className="relative p-4 bg-slate-50/60 dark:bg-slate-900/40 flex items-center justify-center h-48 border-b border-slate-100 dark:border-slate-800/80">
+      <div className="relative flex h-44 items-center justify-center border-b border-slate-100 bg-slate-50/60 p-3 dark:border-slate-800/80 dark:bg-slate-900/40 sm:h-48">
         {/* Subtle Discount Badge */}
         {product.discountPercent && product.discountPercent > 0 && product.originalPrice && product.originalPrice > product.price ? (
           <span className="absolute top-2.5 left-2.5 z-10 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-600 text-white shadow-xs">
@@ -46,42 +46,42 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </span>
         ) : null}
 
-        {/* Wishlist Button */}
-        <button
-          onClick={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleWishlist(product.id);
-          }}
-          className={`absolute top-2.5 right-2.5 z-10 p-2 rounded-full border transition-all shadow-xs ${
+        <div className="absolute right-2.5 top-2.5 z-10 flex items-center gap-1 rounded-full border border-slate-200/90 bg-white/90 p-1 shadow-xs backdrop-blur-sm dark:border-slate-700 dark:bg-slate-900/90">
+          <button
+            onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleWishlist(product.id);
+            }}
+            className={`rounded-full p-1.5 transition-colors ${
             isSaved
-              ? 'bg-rose-50 border-rose-200 text-rose-600 dark:bg-rose-950/60 dark:border-rose-900 dark:text-rose-400'
-              : 'bg-white/90 dark:bg-slate-800/90 border-slate-200 dark:border-slate-700 text-slate-400 hover:text-rose-500 hover:border-rose-200'
+              ? 'text-rose-600 dark:text-rose-400'
+              : 'text-slate-400 hover:text-rose-500'
           }`}
-          title={isSaved ? 'Remove from wishlist (L)' : 'Save to wishlist (L)'}
-          aria-label={isSaved ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
-        >
-          <Heart className={`w-3.5 h-3.5 ${isSaved ? 'fill-rose-500 text-rose-500' : ''}`} />
-        </button>
+            title={isSaved ? 'Remove from wishlist (L)' : 'Save to wishlist (L)'}
+            aria-label={isSaved ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
+          >
+            <Heart className={`h-3.5 w-3.5 ${isSaved ? 'fill-rose-500 text-rose-500' : ''}`} />
+          </button>
 
-        {/* Compare Button */}
-        <button
-          onClick={e => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleCompare(product.id);
-          }}
-          aria-pressed={isCompared}
-          className={`absolute top-12 right-2.5 z-10 rounded-full border p-2 shadow-xs transition-all ${
+          <button
+            onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleCompare(product.id);
+            }}
+            aria-pressed={isCompared}
+            className={`rounded-full p-1.5 transition-colors ${
             isCompared
-              ? 'border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-900 dark:bg-violet-950/60 dark:text-violet-300'
-              : 'border-slate-200 bg-white/90 text-slate-400 hover:border-violet-200 hover:text-violet-600 dark:border-slate-700 dark:bg-slate-800/90 dark:hover:border-violet-900 dark:hover:text-violet-300'
+              ? 'text-violet-700 dark:text-violet-300'
+              : 'text-slate-400 hover:text-violet-600 dark:hover:text-violet-300'
           }`}
-          title={isCompared ? 'Remove from comparison' : 'Add to comparison'}
-          aria-label={isCompared ? `Remove ${product.name} from comparison` : `Add ${product.name} to comparison`}
-        >
-          <GitCompareArrows className="h-3.5 w-3.5" />
-        </button>
+            title={isCompared ? 'Remove from comparison' : 'Add to comparison'}
+            aria-label={isCompared ? `Remove ${product.name} from comparison` : `Add ${product.name} to comparison`}
+          >
+            <GitCompareArrows className="h-3.5 w-3.5" />
+          </button>
+        </div>
 
         {/* Product Image */}
         <Link
@@ -98,14 +98,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
 
       {/* Product Content Details */}
-      <div className="p-4 flex-1 flex flex-col justify-between">
+      <div className="flex flex-1 flex-col justify-between p-3.5 sm:p-4">
         <div>
           {/* Brand & Category */}
-          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium mb-1.5">
-            <span className="uppercase tracking-wider font-mono">
+          <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px] font-medium text-slate-500 dark:text-slate-400">
+            <span className="truncate font-mono uppercase tracking-wider">
               {product.brandName}
             </span>
-            <span className="text-[10px] text-slate-400">
+            <span className="truncate text-right text-[10px] text-slate-400">
               {product.categoryName}
             </span>
           </div>
@@ -113,21 +113,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {/* Title */}
           <Link
             to={`/product/${product.slug}`}
-            className="block text-sm font-semibold text-slate-900 dark:text-slate-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors line-clamp-2 leading-snug mb-2"
+          className="mb-2 line-clamp-2 block text-[13px] font-semibold leading-snug text-slate-900 transition-colors hover:text-blue-600 dark:text-slate-100 dark:hover:text-blue-400 sm:text-sm"
           >
             {product.name}
           </Link>
         </div>
 
         {/* Pricing, Stock & Action */}
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
-          <div className="flex items-baseline justify-between mb-3">
+        <div className="border-t border-slate-100 pt-2.5 dark:border-slate-800">
+          <div className="mb-2.5 flex items-baseline justify-between gap-2">
             <div>
               <div className="flex items-baseline gap-2">
-                <span className="text-base sm:text-lg font-bold font-mono text-slate-900 dark:text-white">
+                  <span className="font-mono text-base font-bold text-slate-900 dark:text-white sm:text-lg">
                   {formatPrice(product.price)}
                 </span>
-                {product.originalPrice && product.originalPrice > product.price && (
+                {product.originalPrice !== undefined && product.originalPrice > product.price && (
                   <span className="text-xs font-mono text-slate-400 line-through">
                     {formatPrice(product.originalPrice)}
                   </span>

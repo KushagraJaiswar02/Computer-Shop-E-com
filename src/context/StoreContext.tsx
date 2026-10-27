@@ -65,10 +65,6 @@ interface StoreContextType {
   submitEnquiry: (enquiry: Omit<HardwareEnquiry, 'id' | 'createdAt' | 'status'>) => void;
 
   // Shortcuts & UI focus
-  isNavWheelOpen: boolean;
-  setIsNavWheelOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
-  isCategoryNavOpen: boolean;
-  setIsCategoryNavOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   isShortcutsModalOpen: boolean;
   setIsShortcutsModalOpen: (open: boolean | ((prev: boolean) => boolean)) => void;
   focusedProductId: string | null;
@@ -109,7 +105,7 @@ const legacyDefaultHomepageSectionOrder: Record<string, number> = {
   trust_support: 8,
 };
 
-const referenceHomepageSectionOrder: Record<string, number> = {
+const previousDefaultHomepageSectionOrder: Record<string, number> = {
   hero: 0,
   deals: 1,
   brands: 2,
@@ -121,12 +117,26 @@ const referenceHomepageSectionOrder: Record<string, number> = {
   trust_support: 8,
 };
 
+const referenceHomepageSectionOrder: Record<string, number> = {
+  hero: 0,
+  categories: 1,
+  featured_products: 2,
+  deals: 3,
+  bestsellers: 4,
+  new_arrivals: 5,
+  brands: 6,
+  reviews: 7,
+  trust_support: 8,
+};
+
 const normalizeHomepageConfig = (stored: any): HomepageConfig => {
   const base = DEFAULT_HOMEPAGE_CONFIG;
   const slides = Array.isArray(stored?.heroSlides) ? stored.heroSlides : base.heroSlides;
   const sections = Array.isArray(stored?.sections) ? stored.sections : base.sections;
   const hasLegacyDefaultOrder = sections.length === Object.keys(legacyDefaultHomepageSectionOrder).length &&
     sections.every((section: any) => legacyDefaultHomepageSectionOrder[section.id] === section.order);
+  const hasPreviousDefaultOrder = sections.length === Object.keys(previousDefaultHomepageSectionOrder).length &&
+    sections.every((section: any) => previousDefaultHomepageSectionOrder[section.id] === section.order);
   return {
     ...base,
     ...stored,
@@ -136,7 +146,7 @@ const normalizeHomepageConfig = (stored: any): HomepageConfig => {
     heroIntervalMs: Number.isFinite(stored?.heroIntervalMs) ? stored.heroIntervalMs : base.heroIntervalMs,
     sections: sections.map((section: any) => ({
       ...section,
-      order: hasLegacyDefaultOrder
+      order: hasLegacyDefaultOrder || hasPreviousDefaultOrder
         ? referenceHomepageSectionOrder[section.id] ?? section.order
         : section.order,
     })),
@@ -454,9 +464,6 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   // Keyboard navigation & search focus
-  const [isNavWheelOpen, setIsNavWheelOpen] = useState(false);
-  const isCategoryNavOpen = isNavWheelOpen;
-  const setIsCategoryNavOpen = setIsNavWheelOpen;
   const [isShortcutsModalOpen, setIsShortcutsModalOpen] = useState(false);
   const [focusedProductId, setFocusedProductId] = useState<string | null>(null);
   const [searchInputRefState, setSearchInputRefState] = useState<React.RefObject<HTMLInputElement> | null>(null);
@@ -506,10 +513,6 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         createOrder,
         enquiries,
         submitEnquiry,
-        isNavWheelOpen,
-        setIsNavWheelOpen,
-        isCategoryNavOpen,
-        setIsCategoryNavOpen,
         isShortcutsModalOpen,
         setIsShortcutsModalOpen,
         focusedProductId,
