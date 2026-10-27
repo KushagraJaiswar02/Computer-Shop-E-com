@@ -32,9 +32,9 @@ export const BrandsSection: React.FC = () => {
             <Link
               key={brand.id}
               to={`/brand/${brand.id}`}
-              className="group bg-white dark:bg-slate-850 hover:border-blue-500 rounded-xl border border-slate-200 dark:border-slate-800 p-4 flex flex-col items-center justify-center text-center shadow-xs transition-all hover:shadow-sm"
+              className="group flex min-h-28 flex-col items-center justify-center rounded-xl border border-slate-200 bg-white p-4 text-center shadow-xs transition-all hover:border-blue-500 hover:shadow-sm dark:border-slate-800 dark:bg-slate-850"
             >
-              <span className="text-sm font-bold font-mono tracking-tight text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              <span className="flex min-h-9 items-center justify-center text-sm font-bold font-mono tracking-tight text-slate-800 transition-colors group-hover:text-blue-600 dark:text-slate-200 dark:group-hover:text-blue-400">
                 {brand.name}
               </span>
               <span className="text-[10px] text-slate-400 mt-1">

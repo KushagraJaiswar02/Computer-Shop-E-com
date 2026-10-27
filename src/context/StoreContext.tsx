@@ -97,9 +97,36 @@ const defaultHeroImageMigrations: Record<string, string> = {
   'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=80': 'https://images.unsplash.com/photo-1691580438246-a6e5cb35ca05?auto=format&fit=crop&w=2000&q=85',
 };
 
+const legacyDefaultHomepageSectionOrder: Record<string, number> = {
+  hero: 0,
+  categories: 1,
+  featured_products: 2,
+  deals: 3,
+  bestsellers: 4,
+  new_arrivals: 5,
+  brands: 6,
+  reviews: 7,
+  trust_support: 8,
+};
+
+const referenceHomepageSectionOrder: Record<string, number> = {
+  hero: 0,
+  deals: 1,
+  brands: 2,
+  categories: 3,
+  featured_products: 4,
+  bestsellers: 5,
+  new_arrivals: 6,
+  reviews: 7,
+  trust_support: 8,
+};
+
 const normalizeHomepageConfig = (stored: any): HomepageConfig => {
   const base = DEFAULT_HOMEPAGE_CONFIG;
   const slides = Array.isArray(stored?.heroSlides) ? stored.heroSlides : base.heroSlides;
+  const sections = Array.isArray(stored?.sections) ? stored.sections : base.sections;
+  const hasLegacyDefaultOrder = sections.length === Object.keys(legacyDefaultHomepageSectionOrder).length &&
+    sections.every((section: any) => legacyDefaultHomepageSectionOrder[section.id] === section.order);
   return {
     ...base,
     ...stored,
@@ -107,6 +134,12 @@ const normalizeHomepageConfig = (stored: any): HomepageConfig => {
       ? { ...stored.announcement, text: base.announcement.text, highlightText: 'STORE DEMO' }
       : stored?.announcement || base.announcement,
     heroIntervalMs: Number.isFinite(stored?.heroIntervalMs) ? stored.heroIntervalMs : base.heroIntervalMs,
+    sections: sections.map((section: any) => ({
+      ...section,
+      order: hasLegacyDefaultOrder
+        ? referenceHomepageSectionOrder[section.id] ?? section.order
+        : section.order,
+    })),
     heroSlides: slides.map((slide: any, index: number) => {
       const matchingDefaultImage = Object.keys(defaultHeroImageMigrations).find(imageUrl => slide.imageUrl === imageUrl);
       const imageUrl = matchingDefaultImage ? defaultHeroImageMigrations[matchingDefaultImage] : slide.imageUrl || '';

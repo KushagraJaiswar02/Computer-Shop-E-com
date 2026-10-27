@@ -2,6 +2,7 @@ import React from 'react';
 import { BrandLogo } from './header/BrandLogo';
 import { HeaderSearch } from './header/HeaderSearch';
 import { HeaderActions } from './header/HeaderActions';
+import { HeaderNav } from './header/HeaderNav';
 import { NavigationWheelTrigger } from '../navigation/NavigationWheelTrigger';
 
 export const Header: React.FC = () => {
@@ -26,6 +27,7 @@ export const Header: React.FC = () => {
           </div>
         </div>
       </div>
+      <HeaderNav />
     </header>
   );
 };

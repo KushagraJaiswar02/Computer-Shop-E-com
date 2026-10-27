@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, ShoppingBag, Check } from 'lucide-react';
+import { GitCompareArrows, Heart, ShoppingBag } from 'lucide-react';
 import { Product } from '../../types';
 import { useStore } from '../../context/StoreContext';
 import { formatPrice } from '../../lib/utils';
@@ -15,11 +15,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     addToCart,
     wishlist,
     toggleWishlist,
+    compareList,
+    toggleCompare,
     focusedProductId,
     setFocusedProductId,
   } = useStore();
 
   const isSaved = wishlist.includes(product.id);
+  const isCompared = compareList.includes(product.id);
   const isFocused = focusedProductId === product.id;
 
   return (
@@ -37,7 +40,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       {/* Top Image Container */}
       <div className="relative p-4 bg-slate-50/60 dark:bg-slate-900/40 flex items-center justify-center h-48 border-b border-slate-100 dark:border-slate-800/80">
         {/* Subtle Discount Badge */}
-        {product.discountPercent && product.discountPercent > 0 ? (
+        {product.discountPercent && product.discountPercent > 0 && product.originalPrice && product.originalPrice > product.price ? (
           <span className="absolute top-2.5 left-2.5 z-10 px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-600 text-white shadow-xs">
             -{product.discountPercent}%
           </span>
@@ -59,6 +62,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           aria-label={isSaved ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
         >
           <Heart className={`w-3.5 h-3.5 ${isSaved ? 'fill-rose-500 text-rose-500' : ''}`} />
+        </button>
+
+        {/* Compare Button */}
+        <button
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleCompare(product.id);
+          }}
+          aria-pressed={isCompared}
+          className={`absolute top-12 right-2.5 z-10 rounded-full border p-2 shadow-xs transition-all ${
+            isCompared
+              ? 'border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-900 dark:bg-violet-950/60 dark:text-violet-300'
+              : 'border-slate-200 bg-white/90 text-slate-400 hover:border-violet-200 hover:text-violet-600 dark:border-slate-700 dark:bg-slate-800/90 dark:hover:border-violet-900 dark:hover:text-violet-300'
+          }`}
+          title={isCompared ? 'Remove from comparison' : 'Add to comparison'}
+          aria-label={isCompared ? `Remove ${product.name} from comparison` : `Add ${product.name} to comparison`}
+        >
+          <GitCompareArrows className="h-3.5 w-3.5" />
         </button>
 
         {/* Product Image */}

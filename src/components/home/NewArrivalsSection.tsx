@@ -7,9 +7,10 @@ import { ProductCard } from '../product/ProductCard';
 export const NewArrivalsSection: React.FC = () => {
   const { products } = useStore();
 
-  const newProducts = [...products]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 4);
+  const datedProducts = (items: typeof products) => [...items]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const markedNewProducts = datedProducts(products.filter(product => product.isNewArrival));
+  const newProducts = (markedNewProducts.length ? markedNewProducts : datedProducts(products)).slice(0, 4);
 
   return (
     <section className="py-10 sm:py-12 bg-white/65 dark:bg-slate-900/45 border-b border-slate-200 dark:border-slate-800 transition-colors">

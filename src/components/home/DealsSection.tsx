@@ -8,7 +8,11 @@ export const DealsSection: React.FC = () => {
   const { products, homepageConfig } = useStore();
   const dealIds = homepageConfig.dealProductIds || [];
 
-  let dealProducts = products.filter(p => dealIds.includes(p.id) || p.isDeal);
+  const dealProducts = products.filter(product =>
+    (dealIds.includes(product.id) || product.isDeal) &&
+    product.originalPrice !== undefined && product.originalPrice > product.price &&
+    product.discountPercent !== undefined && product.discountPercent > 0
+  );
   const sectionConfig = homepageConfig.sections.find(s => s.id === 'deals');
   const limit = sectionConfig?.itemLimit || 4;
   const displayProducts = dealProducts.slice(0, limit);
@@ -25,7 +29,7 @@ export const DealsSection: React.FC = () => {
             </span>
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
-                Promotional Deals
+                Hot Deals
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Special discounts on selected computing hardware
@@ -36,7 +40,7 @@ export const DealsSection: React.FC = () => {
             to="/shop?deal=true"
             className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
           >
-            <span>All Deals</span>
+            <span>View All Deals</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>

@@ -130,7 +130,11 @@ export const NavigationWheel: React.FC = () => {
   const [frames, setFrames] = useState<WheelFrame[]>([{ id: 'main', title: 'Explore', choices: ROOT_CHOICES, selectedIndex: 0 }]);
   const [isClosing, setIsClosing] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [viewport, setViewport] = useState({ width: window.innerWidth, height: window.innerHeight });
+  const [viewport, setViewport] = useState(() => ({
+    width: window.innerWidth,
+    height: window.innerHeight,
+    headerBottom: Math.ceil(document.querySelector('header')?.getBoundingClientRect().bottom || (window.innerWidth < 640 ? 96 : 104)),
+  }));
   const triggerRef = useRef<HTMLElement | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const ringRef = useRef<HTMLDivElement | null>(null);
@@ -149,9 +153,22 @@ export const NavigationWheel: React.FC = () => {
   }), [categories, brands]);
 
   useEffect(() => {
-    const resize = () => setViewport({ width: window.innerWidth, height: window.innerHeight });
-    window.addEventListener('resize', resize);
-    return () => window.removeEventListener('resize', resize);
+    const updateViewport = () => {
+      const fallback = window.innerWidth < 640 ? 96 : 104;
+      const measuredHeaderBottom = document.querySelector('header')?.getBoundingClientRect().bottom;
+      setViewport({
+        width: window.innerWidth,
+        height: window.innerHeight,
+        headerBottom: Math.ceil(measuredHeaderBottom || fallback),
+      });
+    };
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+    window.addEventListener('scroll', updateViewport, { passive: true });
+    return () => {
+      window.removeEventListener('resize', updateViewport);
+      window.removeEventListener('scroll', updateViewport);
+    };
   }, []);
 
   useEffect(() => {
@@ -242,7 +259,7 @@ export const NavigationWheel: React.FC = () => {
   const thickness = isMobile ? 42 : 50;
   const spacing = isMobile ? 70 : 80;
   const baseRadius = isMobile ? 145 : 195;
-  const headerBottom = isMobile ? 96 : 104;
+  const headerBottom = viewport.headerBottom;
   const safeBottom = isMobile ? 80 : 120;
   const depthRadius = (depth: number) => (baseRadius + depth * spacing) * scale;
   const activeVisibleDepth = visibleFrames.length - 1;

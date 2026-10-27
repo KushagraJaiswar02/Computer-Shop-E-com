@@ -7,11 +7,14 @@ import { ProductCard } from '../product/ProductCard';
 export const FeaturedSection: React.FC = () => {
   const { products, homepageConfig } = useStore();
   const featuredIds = homepageConfig.featuredProductIds || [];
+  const dealIds = new Set([
+    ...(homepageConfig.dealProductIds || []),
+    ...products.filter(product => product.isDeal).map(product => product.id),
+  ]);
 
-  let featuredProducts = products.filter(p => featuredIds.includes(p.id));
-  if (featuredProducts.length === 0) {
-    featuredProducts = products.filter(p => p.isFeatured).slice(0, 8);
-  }
+  const featuredProducts = products.filter(product =>
+    (featuredIds.includes(product.id) || product.isFeatured) && !dealIds.has(product.id)
+  );
 
   const sectionConfig = homepageConfig.sections.find(s => s.id === 'featured_products');
   const limit = sectionConfig?.itemLimit || 8;
@@ -26,14 +29,14 @@ export const FeaturedSection: React.FC = () => {
               Featured Hardware
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Handpicked components and laptops currently in stock
+              Products selected as featured in this demo catalog
             </p>
           </div>
           <Link
-            to="/shop"
+            to="/shop?featured=true"
             className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
           >
-            <span>View All ({products.length})</span>
+            <span>View All Featured</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>

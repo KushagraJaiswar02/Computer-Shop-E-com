@@ -30,7 +30,7 @@ export const HeaderActions: React.FC = () => {
         <UserRound className="h-5 w-5" />
         <span className="hidden md:inline text-xs font-semibold">Sign in</span>
       </Link>
-      <Link to="/auth/register" className="hidden xl:inline rounded-lg px-1.5 py-2 text-xs font-semibold text-slate-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-slate-300 dark:hover:text-blue-300">Register</Link>
+      <Link to="/auth/register" className="hidden lg:inline-flex rounded-lg px-1.5 py-2 text-xs font-semibold text-slate-600 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-slate-300 dark:hover:text-blue-300">Register</Link>
       <button
         type="button"
         onClick={() => setIsCartOpen(true)}

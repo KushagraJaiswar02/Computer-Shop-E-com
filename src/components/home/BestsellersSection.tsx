@@ -7,8 +7,15 @@ import { ProductCard } from '../product/ProductCard';
 export const BestsellersSection: React.FC = () => {
   const { products, homepageConfig } = useStore();
   const bestsellerIds = homepageConfig.bestsellerProductIds || [];
+  const featuredAndDealIds = new Set([
+    ...(homepageConfig.featuredProductIds || []),
+    ...(homepageConfig.dealProductIds || []),
+    ...products.filter(product => product.isFeatured || product.isDeal).map(product => product.id),
+  ]);
 
-  let bestsellerProducts = products.filter(p => bestsellerIds.includes(p.id) || p.isBestseller);
+  const bestsellerProducts = products.filter(product =>
+    (bestsellerIds.includes(product.id) || product.isBestseller) && !featuredAndDealIds.has(product.id)
+  );
   const sectionConfig = homepageConfig.sections.find(s => s.id === 'bestsellers');
   const limit = sectionConfig?.itemLimit || 4;
   const displayProducts = bestsellerProducts.slice(0, limit);
@@ -21,17 +28,17 @@ export const BestsellersSection: React.FC = () => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
-              Popular Hardware
+              Popular Hardware · Demo Picks
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Top selected components and systems
+              Selected examples from this demo catalog; not based on live sales.
             </p>
           </div>
           <Link
             to="/shop?bestseller=true"
             className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
           >
-            <span>View All</span>
+            <span>Browse Demo Picks</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>

@@ -393,3 +393,12 @@
     scroll-behavior: auto !important;
   }
 }
+
+.store-nav-scroll {
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.store-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
