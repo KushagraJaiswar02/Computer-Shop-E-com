@@ -1,32 +1,49 @@
 .brand-directory-card {
-  transition: background-color 280ms ease-out, border-color 280ms ease-out, box-shadow 280ms ease-out;
+  --directory-accent: var(--directory-accent-color);
+  --directory-button-bg: color-mix(in srgb, var(--directory-accent) 80%, black);
+  --directory-button-ink: white;
+  --directory-accent-ink: color-mix(in srgb, var(--directory-accent) 75%, black);
+  background: var(--bg-surface);
+  border-color: var(--border-color);
+  animation: brand-directory-enter 420ms ease-out both;
+  animation-delay: var(--directory-entry-delay, 0ms);
+}
+
+.dark .brand-directory-card {
+  --directory-accent: var(--directory-accent-dark);
+  --directory-button-bg: var(--directory-accent);
+  --directory-button-ink: #0f172a;
+  --directory-accent-ink: var(--directory-accent);
+}
+
+.brand-directory-card[data-expanded="true"] {
+  background: color-mix(in srgb, var(--directory-accent) 7%, var(--bg-surface));
+  border-color: color-mix(in srgb, var(--directory-accent) 70%, var(--border-color));
+  box-shadow: 0 8px 28px -16px color-mix(in srgb, var(--directory-accent) 45%, transparent), 0 1px 3px rgb(0 0 0 / 0.04);
 }
 
 .brand-directory-logo {
-  color: var(--text-muted);
-  transition: color 280ms ease-out;
+  color: var(--directory-brand-color);
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  transition: transform 200ms ease-out;
 }
 
-.brand-directory-logo svg {
+.brand-directory-header:hover .brand-directory-logo,
+.brand-directory-header:focus-visible .brand-directory-logo {
+  transform: scale(1.04);
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--directory-accent-color) 18%, transparent);
+}
+
+.brand-directory-logo svg,
+.brand-directory-hero-logo svg {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-.brand-directory-card[data-expanded="true"]:not(.brand-directory-empty) .brand-directory-logo {
-  color: var(--directory-brand-color);
-}
-
-.dark .brand-directory-card[data-expanded="true"]:not(.brand-directory-empty) .brand-directory-logo {
-  color: var(--directory-brand-color-dark);
-}
-
 .brand-directory-empty {
   border-style: dashed;
-}
-
-.brand-directory-empty .brand-directory-logo {
-  opacity: 0.6;
 }
 
 .brand-directory-chevron {
@@ -47,15 +64,118 @@
   grid-template-rows: 1fr;
 }
 
-.brand-directory-details {
+.brand-directory-text {
   opacity: 0;
-  transform: translateY(-6px);
+  transform: translateY(8px);
   transition: opacity 280ms ease-out, transform 280ms ease-out;
 }
 
-.brand-directory-panel[data-expanded="true"] .brand-directory-details {
+.brand-directory-panel[data-expanded="true"] .brand-directory-text {
   opacity: 1;
   transform: translateY(0);
+}
+
+.brand-directory-panel[data-expanded="true"] .brand-directory-title { transition-delay: 50ms; }
+.brand-directory-panel[data-expanded="true"] .brand-directory-description { transition-delay: 100ms; }
+.brand-directory-panel[data-expanded="true"] .brand-directory-series { transition-delay: 150ms; }
+.brand-directory-panel[data-expanded="true"] .brand-directory-actions { transition-delay: 200ms; }
+
+.brand-directory-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  max-width: 100%;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  background: var(--bg-surface);
+  color: #475569;
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.dark .brand-directory-pill { color: #cbd5e1; }
+
+.brand-directory-chip {
+  color: var(--directory-accent-ink);
+  border-color: color-mix(in srgb, var(--directory-accent) 35%, var(--border-color));
+  background: var(--bg-surface);
+}
+
+.brand-directory-chip:hover {
+  border-color: var(--directory-accent);
+}
+
+.brand-directory-browse {
+  color: var(--directory-button-ink);
+  background: var(--directory-button-bg);
+  transition: opacity 200ms ease-out;
+}
+
+.brand-directory-browse:hover { opacity: 0.92; }
+.brand-directory-browse svg { transition: transform 200ms ease-out; }
+.brand-directory-browse:hover svg,
+.brand-directory-browse:focus-visible svg { transform: translateX(3px); }
+
+.brand-directory-hero {
+  background: linear-gradient(145deg, #dce1e8, #f8fafc 78%);
+  isolation: isolate;
+}
+
+.brand-directory-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 7px rgb(255 255 255 / 0.9);
+  pointer-events: none;
+}
+
+.dark .brand-directory-hero { background: linear-gradient(145deg, #283548, #475569 78%); }
+.dark .brand-directory-hero::after { box-shadow: inset 0 0 0 7px #334155; }
+
+.brand-directory-hero-image {
+  opacity: 0;
+  transform: translateX(24px) scale(1.04);
+  transition: opacity 280ms ease-out, transform 280ms ease-out;
+}
+
+.brand-directory-panel[data-expanded="true"] .brand-directory-hero-image {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  transition-delay: 50ms;
+}
+
+.brand-directory-hero-shadow {
+  background: radial-gradient(ellipse, rgb(15 23 42 / 0.32), transparent 70%);
+  opacity: 0;
+  transition: opacity 280ms ease-out;
+}
+
+.dark .brand-directory-hero-shadow { background: radial-gradient(ellipse, rgb(0 0 0 / 0.5), transparent 70%); }
+.brand-directory-panel[data-expanded="true"] .brand-directory-hero-shadow { opacity: 1; transition-delay: 180ms; }
+
+/* Existing catalog photography may have a background; soften its edges until a cutout is supplied. */
+.brand-directory-hero-catalog {
+  mask-image: radial-gradient(ellipse, black 48%, transparent 74%);
+}
+
+.brand-directory-hero-fallback {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--directory-accent-color) 80%, white), var(--directory-accent-color) 40%, color-mix(in srgb, var(--directory-accent-color) 25%, #070b13));
+}
+
+.brand-directory-hero-pattern {
+  background-image: radial-gradient(circle, rgb(255 255 255 / 0.17) 1px, transparent 1px);
+  background-size: 18px 18px;
+  mask-image: linear-gradient(135deg, black, transparent 85%);
+}
+
+@keyframes brand-directory-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -63,11 +183,25 @@
   .brand-directory-logo,
   .brand-directory-chevron,
   .brand-directory-panel,
-  .brand-directory-details {
+  .brand-directory-text,
+  .brand-directory-hero-image,
+  .brand-directory-hero-shadow,
+  .brand-directory-browse,
+  .brand-directory-browse svg {
+    animation: none;
+    animation-delay: 0ms;
     transition: none;
+    transition-delay: 0ms !important;
   }
 
-  .brand-directory-details {
+  .brand-directory-card,
+  .brand-directory-logo,
+  .brand-directory-header:hover .brand-directory-logo,
+  .brand-directory-header:focus-visible .brand-directory-logo,
+  .brand-directory-text,
+  .brand-directory-hero-image,
+  .brand-directory-browse:hover svg,
+  .brand-directory-browse:focus-visible svg {
     transform: none;
   }
 }

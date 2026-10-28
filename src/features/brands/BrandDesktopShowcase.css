@@ -1,0 +1,80 @@
+.brand-showcase {
+  position: relative;
+  isolation: isolate;
+  height: 680px;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: #080d17;
+  color: white;
+  animation: brand-showcase-fade 500ms ease-out both;
+}
+
+.brand-showcase:focus-visible { outline: 3px solid #60a5fa; outline-offset: 4px; }
+.brand-showcase-backdrop { position: absolute; inset: 0; background: linear-gradient(120deg, color-mix(in srgb, var(--showcase-accent) 75%, #101827), color-mix(in srgb, var(--showcase-accent) 20%, #050810)); animation: brand-showcase-fade 500ms ease-out both; }
+.brand-showcase-backdrop-previous { animation: none; }
+.brand-showcase-background-image,
+.brand-showcase-card-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.brand-showcase-pattern { position: absolute; inset: 0; background-image: radial-gradient(circle, rgb(255 255 255 / 0.16) 1px, transparent 1px); background-size: 22px 22px; }
+.brand-showcase-watermark { position: absolute; right: 4%; top: 8%; width: 64%; height: 42%; color: white; opacity: 0.09; }
+.brand-showcase-logo { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; }
+.brand-showcase-logo svg { display: block; width: 100%; height: 100%; }
+.brand-showcase-product { position: absolute; right: -4%; bottom: -6%; width: 66%; height: 100%; object-fit: contain; filter: drop-shadow(0 24px 28px rgb(0 0 0 / 0.4)); mask-image: radial-gradient(ellipse, black 40%, transparent 72%); }
+.brand-showcase-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(3 7 18 / 0.96), rgb(3 7 18 / 0.82) 38%, rgb(3 7 18 / 0.25) 72%, rgb(3 7 18 / 0.12)), linear-gradient(0deg, rgb(3 7 18 / 0.6), transparent 35%); }
+
+.brand-showcase-content { position: relative; z-index: 1; display: flex; align-items: center; width: 46%; height: 100%; padding: 44px 24px 44px 44px; pointer-events: none; }
+.brand-showcase-content > div { min-width: 0; }
+.brand-showcase-text { animation: brand-showcase-rise 450ms ease-out both; }
+.brand-showcase-eyebrow { margin-bottom: 18px; color: #cbd5e1; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.brand-showcase-title { font-size: clamp(3rem, 5.2vw, 5.5rem); font-weight: 800; line-height: 0.98; letter-spacing: -0.055em; overflow-wrap: anywhere; animation-delay: 50ms; }
+.brand-showcase-tagline { margin-top: 16px; color: #cbd5e1; font-size: clamp(1.25rem, 2vw, 2rem); line-height: 1.2; font-weight: 400; letter-spacing: -0.025em; animation-delay: 100ms; }
+.brand-showcase-description { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; margin-top: 20px; color: #cbd5e1; font-size: 14px; line-height: 1.7; animation-delay: 150ms; }
+.brand-showcase-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; animation-delay: 200ms; }
+.brand-showcase-pills > span { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgb(255 255 255 / 0.2); border-radius: 9999px; background: rgb(15 23 42 / 0.65); padding: 7px 10px; color: #e2e8f0; font-size: 10px; line-height: 1.4; }
+.brand-showcase-pills svg { width: 12px; height: 12px; flex-shrink: 0; }
+.brand-showcase-action { margin-top: 28px; animation-delay: 250ms; pointer-events: auto; }
+.brand-showcase-browse { display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding: 12px 18px; border-radius: 12px; color: #0f172a; background: var(--showcase-highlight); font-size: 14px; font-weight: 700; }
+.brand-showcase-browse svg { width: 18px; height: 18px; transition: transform 200ms ease-out; }
+.brand-showcase-browse:hover svg { transform: translateX(4px); }
+.brand-showcase-coming-soon { display: inline-block; border: 1px solid rgb(255 255 255 / 0.25); border-radius: 12px; padding: 12px 18px; color: #cbd5e1; background: rgb(15 23 42 / 0.65); font-size: 14px; font-weight: 600; }
+
+.brand-showcase-rail { position: absolute; z-index: 2; right: 0; top: 51%; display: flex; align-items: center; gap: 18px; width: 52%; padding: 32px 24px 28px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; transform: translateY(-50%); }
+.brand-showcase-rail::-webkit-scrollbar { display: none; }
+.brand-showcase-card-entry { flex: 0 0 180px; scroll-snap-align: center; animation: brand-showcase-card-enter 450ms ease-out both; animation-delay: var(--showcase-card-delay); }
+.brand-showcase-card { position: relative; display: block; width: 180px; aspect-ratio: 9 / 13; overflow: hidden; border: 1px solid rgb(255 255 255 / 0.25); border-radius: 20px; background: linear-gradient(145deg, color-mix(in srgb, var(--showcase-accent) 80%, #334155), color-mix(in srgb, var(--showcase-accent) 35%, #080d17)); color: white; text-align: left; transition: transform 250ms ease-out; }
+.brand-showcase-card:hover { transform: translateY(-4px); box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--showcase-highlight) 45%, transparent); }
+.brand-showcase-card[aria-current="true"] { transform: translateY(-12px); border-color: var(--showcase-highlight); box-shadow: 0 0 0 3px var(--showcase-highlight), 0 16px 32px -14px color-mix(in srgb, var(--showcase-highlight) 60%, transparent); }
+.brand-showcase-card-logo { position: absolute; inset: 25px 22px 94px; color: white; filter: drop-shadow(0 2px 8px rgb(0 0 0 / 0.3)); }
+.brand-showcase-card-caption { position: absolute; inset: auto 0 0; display: flex; flex-direction: column; gap: 6px; min-height: 90px; padding: 20px 16px 16px; background: linear-gradient(transparent, rgb(3 7 18 / 0.9)); }
+.brand-showcase-card-caption strong { font-size: 15px; line-height: 1.2; }
+.brand-showcase-card-caption > span { color: #cbd5e1; font-size: 11px; }
+.brand-showcase-controls { position: absolute; z-index: 3; right: 32px; bottom: 32px; display: flex; align-items: center; gap: 10px; }
+.brand-showcase-counter { display: inline-flex; align-items: center; gap: 10px; margin-right: 12px; font-variant-numeric: tabular-nums; }
+.brand-showcase-counter > span:first-child { display: inline-block; font-size: 28px; font-weight: 700; animation: brand-showcase-rise 350ms ease-out both; }
+.brand-showcase-counter > span:last-child { color: #cbd5e1; font-size: 13px; }
+.brand-showcase-controls button { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid rgb(255 255 255 / 0.4); border-radius: 50%; background: rgb(15 23 42 / 0.6); }
+.brand-showcase-controls button:hover { background: #334155; }
+.brand-showcase-controls svg { width: 18px; height: 18px; }
+.brand-showcase button:focus-visible,
+.brand-showcase-browse:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+
+@keyframes brand-showcase-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes brand-showcase-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes brand-showcase-card-enter { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+
+@media (min-width: 1280px) {
+  .brand-showcase { height: 700px; }
+  .brand-showcase-content { padding-left: 56px; padding-right: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-showcase,
+  .brand-showcase-backdrop,
+  .brand-showcase-text,
+  .brand-showcase-card-entry,
+  .brand-showcase-card,
+  .brand-showcase-browse svg,
+  .brand-showcase-counter > span:first-child { animation: none; transition: none; }
+  .brand-showcase-card:hover,
+  .brand-showcase-card[aria-current="true"],
+  .brand-showcase-browse:hover svg { transform: none; }
+}
