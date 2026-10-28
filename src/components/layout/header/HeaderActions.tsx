@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeftRight, Heart, PackagePlus, ShoppingBag, UserRound } from 'lucide-react';
+import { ArrowLeftRight, Heart, ShoppingBag, UserRound } from 'lucide-react';
 import { useStore } from '../../../context/StoreContext';
 
 const utilityClass = 'relative inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-transparent text-slate-600 transition-colors hover:border-slate-200 hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:bg-slate-800 dark:hover:text-white';
@@ -10,9 +10,6 @@ export const HeaderActions: React.FC = () => {
 
   return (
     <div className="flex shrink-0 items-center gap-0.5 sm:gap-1">
-      <Link to="/enquiry?request=product" title="Request a Product" aria-label="Request a Product" className="hidden h-9 shrink-0 items-center gap-1.5 rounded-md border border-blue-200 px-2 text-xs font-semibold text-blue-700 transition-colors hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:border-blue-900 dark:text-blue-300 dark:hover:bg-slate-800 lg:inline-flex">
-        <PackagePlus className="h-4 w-4" />Request a Product
-      </Link>
       <Link to="/auth/login" className={utilityClass} title="Login or open your account" aria-label="Login or open your account">
         <UserRound className="h-4 w-4" />
       </Link>

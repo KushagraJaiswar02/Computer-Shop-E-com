@@ -98,6 +98,8 @@ export interface Review {
   systemConfig?: string; // e.g. "Ryzen 7 7800X3D + RTX 4080 Build"
 }
 
+export type HeroMode = 'hot_deals' | 'brands' | 'new_arrivals';
+
 export interface CartItem {
   product: Product;
   quantity: number;
@@ -112,6 +114,9 @@ export interface WishlistItem {
 
 export interface HeroSlide {
   id: string;
+  heroMode?: HeroMode;
+  useCustomCopy?: boolean;
+  useCustomImage?: boolean;
   title: string;
   description: string;
   eyebrow?: string;

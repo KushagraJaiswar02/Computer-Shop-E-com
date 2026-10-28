@@ -7,6 +7,7 @@ import {
   HomepageConfig,
   Order,
   HardwareEnquiry,
+  HeroMode,
 } from '../types';
 import {
   INITIAL_PRODUCTS,
@@ -119,15 +120,40 @@ const previousDefaultHomepageSectionOrder: Record<string, number> = {
 
 const referenceHomepageSectionOrder: Record<string, number> = {
   hero: 0,
-  categories: 1,
-  featured_products: 2,
+  brands: 1,
+  new_arrivals: 2,
   deals: 3,
-  bestsellers: 4,
-  new_arrivals: 5,
-  brands: 6,
+  featured_products: 4,
+  bestsellers: 5,
+  categories: 6,
   reviews: 7,
   trust_support: 8,
 };
+
+const heroModeSequence: HeroMode[] = ['hot_deals', 'brands', 'new_arrivals'];
+const legacyDefaultHeroSlides = [
+  {
+    title: 'High-Performance Gaming Laptops & Workstations',
+    description: 'Explore powerful gaming laptops built for demanding play and creative work.',
+    ctaLabel: 'Shop gaming laptops',
+    ctaUrl: '/category/laptops',
+    imageFragment: 'photo-1603302576837-37561b2e2302',
+  },
+  {
+    title: 'High-Efficiency Desktop Processors & Motherboards',
+    description: 'Choose the core components for your next custom PC build.',
+    ctaLabel: 'Shop processors',
+    ctaUrl: '/category/processors',
+    imageFragment: 'photo-1555680202-c86f0e12f086',
+  },
+  {
+    title: 'Fast OLED & High-Refresh Gaming Monitors',
+    description: 'Find a display with smooth motion and detail for work and gaming.',
+    ctaLabel: 'Shop monitors',
+    ctaUrl: '/category/monitors',
+    imageFragment: 'photo-1691580438246-a6e5cb35ca05',
+  },
+];
 
 const normalizeHomepageConfig = (stored: any): HomepageConfig => {
   const base = DEFAULT_HOMEPAGE_CONFIG;
@@ -152,9 +178,26 @@ const normalizeHomepageConfig = (stored: any): HomepageConfig => {
     })),
     heroSlides: slides.map((slide: any, index: number) => {
       const matchingDefaultImage = Object.keys(defaultHeroImageMigrations).find(imageUrl => slide.imageUrl === imageUrl);
-      const imageUrl = matchingDefaultImage ? defaultHeroImageMigrations[matchingDefaultImage] : slide.imageUrl || '';
+      const migratedImageUrl = matchingDefaultImage ? defaultHeroImageMigrations[matchingDefaultImage] : slide.imageUrl || '';
+      const legacySlide = legacyDefaultHeroSlides[index];
+      const isUnchangedLegacySlide = legacySlide && slide.title === legacySlide.title &&
+        slide.description === legacySlide.description && slide.ctaLabel === legacySlide.ctaLabel &&
+        slide.ctaUrl === legacySlide.ctaUrl;
+      const heroMode: HeroMode = heroModeSequence.includes(slide.heroMode) ? slide.heroMode : heroModeSequence[index % heroModeSequence.length];
+      const modeTemplate = base.heroSlides.find((item: any) => item.heroMode === heroMode) || base.heroSlides[index % base.heroSlides.length];
+      const imageUrl = isUnchangedLegacySlide && migratedImageUrl.includes(legacySlide.imageFragment)
+        ? modeTemplate.imageUrl
+        : migratedImageUrl;
       return {
         ...slide,
+        ...(isUnchangedLegacySlide ? {
+          title: modeTemplate.title,
+          description: modeTemplate.description,
+          eyebrow: modeTemplate.eyebrow,
+          ctaLabel: modeTemplate.ctaLabel,
+          ctaUrl: modeTemplate.ctaUrl,
+        } : {}),
+        heroMode,
         id: slide.id || `slide-${index + 1}`,
         title: slide.title || '',
         description: slide.description ?? slide.subtitle ?? '',

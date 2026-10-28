@@ -16,12 +16,15 @@ import {
   Save,
 } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
-import { HomepageSection, HeroSlide } from '../../types';
+import { HomepageSection, HeroMode, HeroSlide } from '../../types';
 import { KeycapButton } from '../../components/common/KeycapButton';
 import { formatPrice } from '../../lib/utils';
 
 const emptyHeroSlide = (sortOrder: number): HeroSlide => ({
   id: `hero-${typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : Date.now()}`,
+  heroMode: 'hot_deals',
+  useCustomCopy: false,
+  useCustomImage: false,
   title: '',
   description: '',
   eyebrow: '',
@@ -35,6 +38,12 @@ const emptyHeroSlide = (sortOrder: number): HeroSlide => ({
   isActive: true,
   sortOrder,
 });
+
+const heroModeLabels: Record<HeroMode, string> = {
+  hot_deals: 'Hot Deals',
+  brands: 'Brands',
+  new_arrivals: 'New Arrivals',
+};
 
 const isValidHttpUrl = (value: string) => {
   try {
@@ -128,20 +137,20 @@ export const AdminHomepageBuilderPage: React.FC = () => {
   const handleSaveSlide = () => {
     if (!editingSlide) return;
     const errors: Record<string, string> = {};
-    if (!editingSlide.title.trim()) errors.title = 'Enter a campaign headline.';
-    if (!editingSlide.description.trim()) errors.description = 'Enter a short description.';
-    if (!editingSlide.ctaLabel.trim()) errors.ctaLabel = 'Enter CTA button text.';
+    if (editingSlide.useCustomCopy && !editingSlide.title.trim()) errors.title = 'Enter a campaign headline.';
+    if (editingSlide.useCustomCopy && !editingSlide.description.trim()) errors.description = 'Enter a short description.';
+    if (editingSlide.useCustomCopy && !editingSlide.ctaLabel.trim()) errors.ctaLabel = 'Enter CTA button text.';
     const destination = editingSlide.ctaUrl.trim();
-    if (!destination || (!destination.startsWith('/') && !/^https?:\/\//i.test(destination))) {
+    if (editingSlide.useCustomCopy && (!destination || (!destination.startsWith('/') && !/^https?:\/\//i.test(destination)))) {
       errors.ctaUrl = 'Use a site path (for example /shop) or a full http(s) URL.';
-    } else if (destination.startsWith('//')) {
+    } else if (editingSlide.useCustomCopy && destination.startsWith('//')) {
       errors.ctaUrl = 'Use a site path beginning with one slash, or a full http(s) URL.';
-    } else if (!destination.startsWith('/')) {
+    } else if (editingSlide.useCustomCopy && !destination.startsWith('/')) {
       try { new URL(destination); } catch { errors.ctaUrl = 'Enter a valid http(s) URL.'; }
     }
-    if (!editingSlide.imageUrl.trim()) errors.imageUrl = 'Add a desktop campaign image URL or upload.';
-    else if (!editingSlide.imageUrl.startsWith('data:image/') && !isValidHttpUrl(editingSlide.imageUrl)) errors.imageUrl = 'Enter a valid http(s) image URL.';
-    if (editingSlide.mobileImageUrl && !editingSlide.mobileImageUrl.startsWith('data:image/') && !isValidHttpUrl(editingSlide.mobileImageUrl)) errors.mobileImageUrl = 'Enter a valid http(s) image URL.';
+    if (editingSlide.useCustomImage && !editingSlide.imageUrl.trim()) errors.imageUrl = 'Add a desktop campaign image URL or upload.';
+    else if (editingSlide.useCustomImage && !editingSlide.imageUrl.startsWith('data:image/') && !isValidHttpUrl(editingSlide.imageUrl)) errors.imageUrl = 'Enter a valid http(s) image URL.';
+    if (editingSlide.useCustomImage && editingSlide.mobileImageUrl && !editingSlide.mobileImageUrl.startsWith('data:image/') && !isValidHttpUrl(editingSlide.mobileImageUrl)) errors.mobileImageUrl = 'Enter a valid http(s) image URL.';
     setSlideErrors(errors);
     if (Object.keys(errors).length) return;
     const exists = orderedSlides.some(slide => slide.id === editingSlide.id);
@@ -152,7 +161,7 @@ export const AdminHomepageBuilderPage: React.FC = () => {
       setImageError('These images exceed the browser storage limit for this prototype. Use smaller images or image URLs.');
       return;
     }
-    updateHomepageConfig({ heroSlides: updated.map((slide, sortOrder) => ({ ...slide, sortOrder })) });
+    updateHomepageConfig({ heroSlides: updated.map((slide, sortOrder) => ({ ...slide, ctaUrl: slide.ctaUrl || '/shop', sortOrder })) });
     setEditingSlide(null);
     setSlideErrors({});
     setImageError('');
@@ -164,7 +173,7 @@ export const AdminHomepageBuilderPage: React.FC = () => {
     setImageError('');
     try {
       const imageUrl = await compressHeroImage(file, field === 'imageUrl' ? 1800 : 1000);
-      setEditingSlide({ ...editingSlide, [field]: imageUrl, ...(field === 'imageUrl' && !editingSlide.imageAlt ? { imageAlt: file.name.replace(/\.[^.]+$/, '') } : {}) });
+      setEditingSlide({ ...editingSlide, [field]: imageUrl, ...(field === 'imageUrl' ? { useCustomImage: true } : {}), ...(field === 'imageUrl' && !editingSlide.imageAlt ? { imageAlt: file.name.replace(/\.[^.]+$/, '') } : {}) });
     } catch (error) {
       setImageError(error instanceof Error ? error.message : 'The image could not be processed.');
     }
@@ -412,6 +421,7 @@ export const AdminHomepageBuilderPage: React.FC = () => {
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Slide {index + 1}</span>
+                      {slide.heroMode && <span className="rounded-full bg-blue-950 px-2 py-0.5 text-[10px] font-bold text-blue-300">{heroModeLabels[slide.heroMode]}</span>}
                       <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${slide.isActive ? 'bg-emerald-950 text-emerald-300' : 'bg-slate-800 text-slate-400'}`}>{slide.isActive ? 'Active' : 'Disabled'}</span>
                     </div>
                     <p className="mt-1 truncate text-sm font-semibold text-white">{slide.title || 'Untitled slide'}</p>
@@ -437,6 +447,22 @@ export const AdminHomepageBuilderPage: React.FC = () => {
                   <button type="button" onClick={() => { setEditingSlide(null); setSlideErrors({}); setImageError(''); }} className="text-xs text-slate-400 hover:text-white">Cancel</button>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="text-xs text-slate-300 sm:col-span-2">Hero selector group
+                    <select value={editingSlide.heroMode || 'hot_deals'} onChange={event => setEditingSlide({ ...editingSlide, heroMode: event.target.value as HeroMode })} className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none">
+                      <option value="hot_deals">Hot Deals</option>
+                      <option value="brands">Brands</option>
+                      <option value="new_arrivals">New Arrivals</option>
+                    </select>
+                    <span className="mt-1 block text-[10px] text-slate-500">The slide appears when shoppers choose this hero option.</span>
+                  </label>
+                  <label className="flex items-start gap-2 text-xs text-slate-300 sm:col-span-2">
+                    <input type="checkbox" checked={Boolean(editingSlide.useCustomCopy)} onChange={event => setEditingSlide({ ...editingSlide, useCustomCopy: event.target.checked })} className="mt-0.5 accent-blue-500" />
+                    <span>Use this slide’s custom headline, description, and CTA instead of catalog-driven content.</span>
+                  </label>
+                  <label className="flex items-start gap-2 text-xs text-slate-300 sm:col-span-2">
+                    <input type="checkbox" checked={Boolean(editingSlide.useCustomImage)} onChange={event => setEditingSlide({ ...editingSlide, useCustomImage: event.target.checked })} className="mt-0.5 accent-blue-500" />
+                    <span>Use this slide’s custom image instead of the selected product or brand image.</span>
+                  </label>
                   <label className="text-xs text-slate-300 sm:col-span-2">Headline *
                     <input value={editingSlide.title} maxLength={90} onChange={event => setEditingSlide({ ...editingSlide, title: event.target.value })} className="mt-1 w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-2 text-sm text-white focus:border-blue-500 focus:outline-none" />
                     {slideErrors.title && <span className="mt-1 block text-rose-400">{slideErrors.title}</span>}
