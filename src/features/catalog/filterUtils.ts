@@ -7,6 +7,7 @@ export interface CatalogFilterCriteria {
   brand?: string;
   series?: string;
   isDealOnly?: boolean;
+  dealProductIds?: string[];
   isBestsellerOnly?: boolean;
   isFeaturedOnly?: boolean;
   isSaleOnly?: boolean;
@@ -27,6 +28,7 @@ export function filterAndSortProducts(
     brand = '',
     series = '',
     isDealOnly = false,
+    dealProductIds = [],
     isBestsellerOnly = false,
     isFeaturedOnly = false,
     isSaleOnly = false,
@@ -66,7 +68,10 @@ export function filterAndSortProducts(
       if (series && product.seriesId !== series) return false;
 
       // Deal
-      if (isDealOnly && !product.isDeal && (!product.discountPercent || product.discountPercent <= 0)) {
+      if (isDealOnly && !(
+        (product.isDeal || dealProductIds.includes(product.id)) &&
+        (product.originalPrice || 0) > product.price && (product.discountPercent || 0) > 0
+      )) {
         return false;
       }
 

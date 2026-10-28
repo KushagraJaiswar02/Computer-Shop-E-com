@@ -84,7 +84,7 @@ export const HeaderSearch: React.FC = () => {
           onKeyDown={handleKeyDown}
           onBlur={() => window.setTimeout(() => setIsOpen(false), 120)}
           placeholder="Search for products..."
-          className="h-9 w-full rounded-md border border-slate-200 bg-slate-50 pl-9 pr-20 text-xs text-slate-900 transition-colors placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-100 sm:text-sm"
+          className="h-11 w-full rounded-md border border-slate-200 bg-slate-50 pl-9 pr-20 text-xs text-slate-900 transition-colors placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-100 sm:text-sm"
         />
         {query && <button type="button" onClick={() => { setQuery(''); setIsOpen(false); setActiveIndex(-1); searchInputRef.current?.focus(); }} aria-label="Clear search" className="absolute right-11 top-1/2 -translate-y-1/2 rounded p-1 text-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:hover:text-white"><X className="h-3.5 w-3.5" /></button>}
         <div className={`pointer-events-none absolute right-11 top-1/2 -translate-y-1/2 ${query ? 'hidden' : ''}`}>

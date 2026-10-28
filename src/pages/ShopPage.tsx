@@ -13,7 +13,7 @@ import { EmptyResultsState } from '../features/catalog/EmptyResultsState';
 const DEFAULT_MAX_PRICE = 500000;
 
 export const ShopPage: React.FC = () => {
-  const { products, categories, brands } = useStore();
+  const { products, categories, brands, homepageConfig } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // URL search params
@@ -110,6 +110,7 @@ export const ShopPage: React.FC = () => {
       brand: activeBrand,
       series: activeSeries,
       isDealOnly,
+      dealProductIds: homepageConfig.dealProductIds,
       isBestsellerOnly,
       isFeaturedOnly,
       isSaleOnly,
@@ -120,6 +121,7 @@ export const ShopPage: React.FC = () => {
     });
   }, [
     products,
+    homepageConfig.dealProductIds,
     activeSearch,
     activeCategory,
     activeSubcategory,

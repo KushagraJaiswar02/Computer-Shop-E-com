@@ -13,7 +13,7 @@ export const BrandLogo: React.FC = () => {
           <span className="text-sm font-extrabold tracking-tight text-slate-900 dark:text-white min-[420px]:text-base lg:text-lg">
             Computer<span className="text-blue-600 dark:text-blue-400">Shop</span>
           </span>
-          <span className="hidden rounded border border-slate-200 bg-slate-100 px-1.5 py-0.2 font-mono text-[9px] uppercase text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 xl:inline-block">
+          <span className="hidden rounded border border-slate-200 bg-slate-100 px-1.5 py-0.2 font-mono text-[9px] uppercase text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 2xl:inline-block">
             Storefront
           </span>
         </div>
