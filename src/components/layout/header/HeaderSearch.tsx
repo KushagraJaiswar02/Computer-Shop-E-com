@@ -5,6 +5,7 @@ import { useStore } from '../../../context/StoreContext';
 import { KeyBadge } from '../../common/KeyBadge';
 import { formatPrice } from '../../../lib/utils';
 import type { Product } from '../../../types';
+import { useCategoryDirectory } from '../../../features/catalog/useCategoryDirectory';
 
 type SearchSuggestion = { id: string; kind: string; label: string; detail: string; to: string; product?: Product };
 
@@ -12,7 +13,8 @@ export const HeaderSearch: React.FC = () => {
   const [query, setQuery] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const { registerSearchInputRef, products, categories, brands } = useStore();
+  const { registerSearchInputRef, products, brands } = useStore();
+  const categories = useCategoryDirectory();
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const listboxId = 'header-search-suggestions';
@@ -25,9 +27,9 @@ export const HeaderSearch: React.FC = () => {
         .some(value => value.toLocaleLowerCase().includes(normalizedQuery)))
       .slice(0, 6)
       .map(product => ({ id: `product-${product.id}`, kind: 'Product', label: product.name, detail: `${product.brandName} · ${product.categoryName} · ${product.sku}`, to: `/product/${product.slug}`, product }));
-    const matchingCategories: SearchSuggestion[] = categories.filter(category => [category.name, category.description, ...category.subcategories.map(subcategory => subcategory.name)].some(value => value.toLocaleLowerCase().includes(normalizedQuery)))
+    const matchingCategories: SearchSuggestion[] = categories.filter(category => category.count > 0 && [category.name, category.description, ...category.subcategories.map(subcategory => subcategory.name)].some(value => value.toLocaleLowerCase().includes(normalizedQuery)))
       .slice(0, 3)
-      .map(category => ({ id: `category-${category.id}`, kind: 'Category', label: category.name, detail: 'Browse category and subcategories', to: `/category/${category.id}` }));
+      .map(category => ({ id: `category-${category.id}`, kind: 'Category', label: category.name, detail: 'Browse category and subcategories', to: category.href }));
     const matchingBrands: SearchSuggestion[] = brands.filter(brand => [brand.name, brand.description, ...brand.seriesList.map(series => series.name)].some(value => value.toLocaleLowerCase().includes(normalizedQuery)))
       .slice(0, 3)
       .map(brand => ({ id: `brand-${brand.id}`, kind: 'Brand', label: brand.name, detail: 'Browse brand catalog', to: `/brand/${brand.id}` }));

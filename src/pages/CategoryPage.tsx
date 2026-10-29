@@ -3,10 +3,12 @@ import { useParams, Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { ProductCard } from '../components/product/ProductCard';
 import { ArrowRight, Layers, Cpu, ShieldCheck } from 'lucide-react';
+import { useCategoryDirectory } from '../features/catalog/useCategoryDirectory';
 
 export const CategoryPage: React.FC = () => {
   const { categoryId, subcategoryId } = useParams<{ categoryId: string; subcategoryId?: string }>();
-  const { categories, products } = useStore();
+  const { products } = useStore();
+  const categories = useCategoryDirectory();
 
   const category = categories.find(c => c.id === categoryId);
 
@@ -55,7 +57,7 @@ export const CategoryPage: React.FC = () => {
             {/* Subcategory quick pills */}
             <div className="flex flex-wrap gap-2">
               <Link
-                to={`/category/${category.id}`}
+                to={category.href}
                 className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-all ${
                   !subcategoryId
                     ? 'bg-brand-600 border-brand-500 text-white shadow-keycap'
@@ -69,7 +71,7 @@ export const CategoryPage: React.FC = () => {
                 return (
                   <Link
                     key={sub.id}
-                    to={`/category/${category.id}/${sub.id}`}
+                    to={sub.href}
                     className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-all ${
                       isActive
                         ? 'bg-brand-600 border-brand-500 text-white shadow-keycap'
@@ -90,7 +92,7 @@ export const CategoryPage: React.FC = () => {
             Showing <span className="font-mono font-bold text-slate-900 dark:text-white">{catProducts.length}</span> components in stock
           </div>
           <Link
-            to={`/shop?category=${category.id}`}
+            to={category.href}
             className="text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1 font-semibold"
           >
             <span>Open in Full Filter Catalog</span>
@@ -101,7 +103,7 @@ export const CategoryPage: React.FC = () => {
         {catProducts.length === 0 ? (
           <div className="p-12 text-center bg-white dark:bg-surface-850 rounded-xl border border-slate-200 dark:border-surface-750">
             <p className="text-slate-600 dark:text-slate-300 font-medium">No items found in this subcategory.</p>
-            <Link to={`/category/${category.id}`} className="text-xs text-brand-600 hover:underline mt-2 inline-block">
+            <Link to={category.href} className="text-xs text-brand-600 hover:underline mt-2 inline-block">
               View all {category.name}
             </Link>
           </div>

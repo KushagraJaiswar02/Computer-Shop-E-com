@@ -4,6 +4,7 @@ import { PackagePlus } from 'lucide-react';
 import { BrandLogo } from './header/BrandLogo';
 import { HeaderSearch } from './header/HeaderSearch';
 import { HeaderActions } from './header/HeaderActions';
+import { HeaderNav } from './header/HeaderNav';
 
 export const Header: React.FC = () => (
   <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 transition-colors dark:border-slate-800 dark:bg-slate-900/95">
@@ -13,6 +14,7 @@ export const Header: React.FC = () => (
           <BrandLogo />
         </div>
         <div className="col-span-2 row-start-2 flex min-w-0 items-center gap-3 sm:gap-4 xl:order-2 xl:col-span-1 xl:row-start-auto xl:flex-1">
+          <HeaderNav />
           <div className="min-w-0 flex-1">
             <HeaderSearch />
           </div>

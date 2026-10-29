@@ -17,6 +17,14 @@ export const HomePage: React.FC = () => {
     .filter(section => section.enabled)
     .sort((a, b) => a.order - b.order);
 
+  // Keep category discovery before brands, including previously saved section orders.
+  const categoryIndex = orderedSections.findIndex(section => section.id === 'categories');
+  const brandIndex = orderedSections.findIndex(section => section.id === 'brands');
+  if (categoryIndex > brandIndex && brandIndex >= 0) {
+    const [category] = orderedSections.splice(categoryIndex, 1);
+    orderedSections.splice(brandIndex, 0, category);
+  }
+
   const renderSection = (id: string) => {
     switch (id) {
       case 'hero':

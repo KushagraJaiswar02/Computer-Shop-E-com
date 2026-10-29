@@ -7,6 +7,7 @@ import { ProductInfoBox } from '../features/product/ProductInfoBox';
 import { ProductSpecsTabs } from '../features/product/ProductSpecsTabs';
 import { CompatibleProductsSection } from '../features/product/CompatibleProductsSection';
 import { ProductEnquiryModal } from '../features/product/ProductEnquiryModal';
+import { useCategoryDirectory } from '../features/catalog/useCategoryDirectory';
 
 export const ProductDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -20,6 +21,7 @@ export const ProductDetailPage: React.FC = () => {
   } = useStore();
 
   const product = products.find((p) => p.slug === slug);
+  const category = useCategoryDirectory().find(item => item.id === product?.categoryId && item.count > 0);
   const [quantity, setQuantity] = useState(1);
   const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false);
 
@@ -60,9 +62,7 @@ export const ProductDetailPage: React.FC = () => {
             Home
           </Link>
           <span>/</span>
-          <Link to={`/category/${product.categoryId}`} className="hover:text-blue-600">
-            {product.categoryName}
-          </Link>
+          {category ? <Link to={category.href} className="hover:text-blue-600">{category.name}</Link> : <span>{product.categoryName}</span>}
           <span>/</span>
           <Link to={`/brand/${product.brandId}`} className="hover:text-blue-600">
             {product.brandName}

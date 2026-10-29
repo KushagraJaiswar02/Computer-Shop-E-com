@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useCategoryDirectory } from '../../features/catalog/useCategoryDirectory';
 
-export const Footer: React.FC<{ homeBackground?: boolean }> = ({ homeBackground = false }) => (
+export const Footer: React.FC<{ homeBackground?: boolean }> = ({ homeBackground = false }) => {
+  const categories = useCategoryDirectory();
+  return (
   <footer className={`relative z-10 border-t border-slate-800 ${homeBackground ? 'bg-slate-900/90' : 'bg-slate-900'} text-xs text-slate-300`}>
     <div className="mx-auto max-w-7xl px-4 py-9 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -17,12 +20,7 @@ export const Footer: React.FC<{ homeBackground?: boolean }> = ({ homeBackground 
         <nav aria-label="Hardware categories">
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-white">Hardware</h2>
           <ul className="space-y-2 text-slate-400">
-            <li><Link to="/category/laptops" className="hover:text-white">Laptops</Link></li>
-            <li><Link to="/category/graphics-cards" className="hover:text-white">Graphics cards</Link></li>
-            <li><Link to="/category/processors" className="hover:text-white">Processors</Link></li>
-            <li><Link to="/category/memory-ram" className="hover:text-white">Memory</Link></li>
-            <li><Link to="/category/storage-ssd" className="hover:text-white">Storage</Link></li>
-            <li><Link to="/category/monitors" className="hover:text-white">Monitors</Link></li>
+            {categories.filter(category => category.count > 0).map(category => <li key={category.slug}><Link to={category.href} className="hover:text-white">{category.name}</Link></li>)}
             <li><Link to="/shop" className="hover:text-white">All products</Link></li>
           </ul>
         </nav>
@@ -47,3 +45,4 @@ export const Footer: React.FC<{ homeBackground?: boolean }> = ({ homeBackground 
     </div>
   </footer>
 );
+};
