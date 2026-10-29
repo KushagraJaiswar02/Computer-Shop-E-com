@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useStore } from '../../context/StoreContext';
-import type { Series } from '../../types';
+import type { Product, Series } from '../../types';
+import { formatPrice } from '../../lib/utils';
 import asusLogo from '../../assets/brands/asus.svg?raw';
 import lenovoLogo from '../../assets/brands/lenovo.svg?raw';
 import msiLogo from '../../assets/brands/msi.svg?raw';
@@ -22,14 +23,28 @@ interface BrandIdentity {
   darkHoverColor: string;
 }
 
+export interface BrandCategoryLink {
+  id: string;
+  name: string;
+}
+
+export interface BrandPriceRange {
+  min: number;
+  max: number;
+  formatted: string;
+}
+
 export interface BrandDirectoryEntry extends BrandIdentity {
   id: string;
   description: string;
   series: Series[];
   count: number;
   lowestPrice?: number;
+  priceRange?: BrandPriceRange;
   productImage?: string;
   categories: string[];
+  categoryLinks: BrandCategoryLink[];
+  topProducts: Product[];
 }
 
 const brandIdentities: BrandIdentity[] = [
@@ -50,6 +65,39 @@ export const useBrandDirectory = (): BrandDirectoryEntry[] => {
     const identity = brandIdentities.find(item => item.slug === brand.slug);
     const brandProducts = products.filter(product => product.brandId === brand.id);
     const prices = brandProducts.map(product => product.price).filter(price => Number.isFinite(price) && price >= 0);
+
+    let priceRange: BrandPriceRange | undefined = undefined;
+    if (prices.length > 0) {
+      const min = Math.min(...prices);
+      const max = Math.max(...prices);
+      const formatted = min === max ? formatPrice(min) : `${formatPrice(min)} \u2013 ${formatPrice(max)}`;
+      priceRange = { min, max, formatted };
+    }
+
+    const categoryMap = new Map<string, string>();
+    brandProducts.forEach(product => {
+      const cat = categories.find(c => c.id === product.categoryId);
+      const name = cat?.name || product.categoryName;
+      const id = cat?.id || product.categoryId;
+      if (id && name) {
+        categoryMap.set(id, name);
+      }
+    });
+    const categoryLinks: BrandCategoryLink[] = Array.from(categoryMap.entries()).map(([id, name]) => ({ id, name }));
+
+    const topProducts = [...brandProducts]
+      .sort((a, b) => {
+        if (a.isFeatured && !b.isFeatured) return -1;
+        if (!a.isFeatured && b.isFeatured) return 1;
+        if (a.isBestseller && !b.isBestseller) return -1;
+        if (!a.isBestseller && b.isBestseller) return 1;
+        const rA = a.rating ?? 0;
+        const rB = b.rating ?? 0;
+        if (rB !== rA) return rB - rA;
+        return (b.reviewCount ?? 0) - (a.reviewCount ?? 0);
+      })
+      .slice(0, 4);
+
     return {
       id: brand.id,
       name: brand.name,
@@ -65,8 +113,11 @@ export const useBrandDirectory = (): BrandDirectoryEntry[] => {
       series: brand.seriesList,
       count: brandProducts.length,
       lowestPrice: prices.length ? Math.min(...prices) : undefined,
+      priceRange,
       productImage: brandProducts.find(product => product.images[0])?.images[0],
-      categories: [...new Set(brandProducts.map(product => categories.find(category => category.id === product.categoryId)?.name || product.categoryName).filter(Boolean))].slice(0, 2),
+      categories: categoryLinks.map(c => c.name),
+      categoryLinks,
+      topProducts,
     };
   }), [brands, products, categories]);
 };

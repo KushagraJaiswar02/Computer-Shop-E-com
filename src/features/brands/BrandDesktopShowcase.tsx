@@ -1,14 +1,17 @@
 import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Layers3, Package, Tag } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Layers3, Package, ShoppingCart, Tag } from 'lucide-react';
+import type { Product } from '../../types';
 import type { BrandDirectoryEntry } from './useBrandDirectory';
 import { useBrandTransition, type PreparedBrand } from './useBrandTransition';
+import { useStore } from '../../context/StoreContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { formatPrice } from '../../lib/utils';
 import './BrandDesktopShowcase.css';
 
 const countLabel = (count: number) => `${count} ${count === 1 ? 'product' : 'products'}`;
 const brandStyle = (brand: BrandDirectoryEntry): React.CSSProperties => ({ '--showcase-accent': brand.accentColor, '--showcase-highlight': brand.darkHoverColor } as React.CSSProperties);
+
 const BrandLogo = memo(({ brand }: { brand: BrandDirectoryEntry }) => (
   <span aria-hidden="true" className="brand-showcase-logo" dangerouslySetInnerHTML={brand.logo ? { __html: brand.logo } : undefined}>{brand.logo ? undefined : brand.name}</span>
 ));
@@ -35,7 +38,6 @@ interface BrandCopy {
   brand: BrandDirectoryEntry;
   count: string;
   eyebrow: string;
-  price?: string;
   href: string;
 }
 
@@ -44,15 +46,33 @@ const BrandText = memo(({ copy, serial }: { copy: BrandCopy; serial: number }) =
     <div key={serial}>
       {copy.eyebrow && <p className="brand-showcase-text brand-showcase-eyebrow">{copy.eyebrow}</p>}
       <h2 className="brand-showcase-text brand-showcase-title">{copy.brand.name}</h2>
-      <p className="brand-showcase-text brand-showcase-tagline">{copy.brand.tagline}</p>
       <p className="brand-showcase-text brand-showcase-description">{copy.brand.description}</p>
       <div className="brand-showcase-text brand-showcase-pills">
         <span><Package aria-hidden="true" />{copy.count}</span>
-        {copy.brand.categories.map(category => <span key={category}><Layers3 aria-hidden="true" />{category}</span>)}
-        {copy.price && <span><Tag aria-hidden="true" />From {copy.price}</span>}
+        {copy.brand.categoryLinks.map(category => (
+          <Link
+            key={category.id}
+            to={`/shop?brand=${encodeURIComponent(copy.brand.id)}&category=${encodeURIComponent(category.id)}`}
+            className="brand-showcase-pill-link"
+            title={`Browse ${copy.brand.name} ${category.name}`}
+          >
+            <Layers3 aria-hidden="true" />
+            <span>{category.name}</span>
+          </Link>
+        ))}
+        {copy.brand.priceRange && (
+          <span><Tag aria-hidden="true" />{copy.brand.priceRange.formatted}</span>
+        )}
       </div>
       <div className="brand-showcase-text brand-showcase-action">
-        {copy.brand.count ? <Link className="brand-showcase-browse" to={copy.href}>Browse {copy.brand.name}<ArrowRight aria-hidden="true" /></Link> : <span className="brand-showcase-coming-soon">Coming soon</span>}
+        {copy.brand.count > 0 ? (
+          <Link className="brand-showcase-browse" to={copy.href}>
+            Browse {copy.brand.name}
+            <ArrowRight aria-hidden="true" />
+          </Link>
+        ) : (
+          <span className="brand-showcase-coming-soon">Coming soon</span>
+        )}
       </div>
     </div>
   </div>
@@ -110,20 +130,102 @@ const BrandRail = memo(({ brands, index, reducedMotion, canHover, onSelect, onAc
   return <div ref={railRef} className="brand-showcase-rail" role="group" aria-label="Choose a brand">{brands.map((brand, cardIndex) => <RailCard key={brand.id} brand={brand} index={cardIndex} active={cardIndex === index} onHover={hover} onSelect={onActivate} />)}</div>;
 });
 
-const BrandControls = memo(({ index, total, onPrevious, onNext }: { index: number; total: number; onPrevious: () => void; onNext: () => void }) => (
+const BrandControls = memo(({ onPrevious, onNext }: { onPrevious: () => void; onNext: () => void }) => (
   <div className="brand-showcase-controls">
-    <span className="brand-showcase-counter" aria-hidden="true"><span key={index}>{String(index + 1).padStart(2, '0')}</span><span>/ {String(total).padStart(2, '0')}</span></span>
     <button type="button" aria-label="Previous brand" onClick={onPrevious}><ArrowLeft aria-hidden="true" /></button>
     <button type="button" aria-label="Next brand" onClick={onNext}><ArrowRight aria-hidden="true" /></button>
   </div>
 ));
 
+const TopProductCard = memo(({ product, onAddToCart }: { product: Product; onAddToCart: (product: Product, quantity?: number) => void }) => {
+  const [added, setAdded] = useState(false);
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onAddToCart(product, 1);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
+
+  return (
+    <div className="brand-product-card">
+      <Link to={`/product/${product.slug}`} className="brand-product-thumb" tabIndex={0} aria-label={product.name}>
+        <img
+          src={product.images[0]}
+          alt={product.name}
+          loading="lazy"
+          decoding="async"
+        />
+      </Link>
+      <div className="brand-product-meta">
+        <Link to={`/product/${product.slug}`} className="brand-product-title" title={product.name}>
+          {product.name}
+        </Link>
+        <div className="brand-product-footer">
+          <div className="brand-product-price">
+            <span className="brand-product-price-current">{formatPrice(product.price)}</span>
+            {product.originalPrice && product.originalPrice > product.price && (
+              <span className="brand-product-price-original">{formatPrice(product.originalPrice)}</span>
+            )}
+          </div>
+          <button
+            type="button"
+            className={`brand-product-cart-btn ${added ? 'added' : ''}`}
+            onClick={handleAdd}
+            aria-label={`Add ${product.name} to cart`}
+          >
+            {added ? (
+              <>
+                <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Added</span>
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Add</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+const ActiveBrandTopProducts = memo(({ brand, serial, onAddToCart }: { brand: BrandDirectoryEntry; serial: number; onAddToCart: (product: Product, quantity?: number) => void }) => {
+  if (!brand.topProducts || brand.topProducts.length === 0) return null;
+
+  return (
+    <div key={serial} className="brand-showcase-products-section" style={brandStyle(brand)}>
+      <div className="brand-showcase-products-header">
+        <p className="brand-showcase-products-title">Top Products</p>
+        <Link to={`/shop?brand=${encodeURIComponent(brand.id)}`} className="brand-showcase-products-all">
+          <span>View all {countLabel(brand.count)}</span>
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </Link>
+      </div>
+      <div className="brand-showcase-products-grid">
+        {brand.topProducts.map(product => (
+          <TopProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
+        ))}
+      </div>
+    </div>
+  );
+});
+
 export const BrandDesktopShowcase: React.FC<{ brands: BrandDirectoryEntry[] }> = ({ brands }) => {
+  const { addToCart } = useStore();
   const canHover = useMediaQuery('(hover: hover) and (pointer: fine)');
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const { view, select, step, finish } = useBrandTransition(brands, reducedMotion);
   const navigate = useNavigate();
-  const copies = useMemo(() => brands.map(brand => ({ brand, count: countLabel(brand.count), eyebrow: brand.categories.join(' · '), price: brand.lowestPrice !== undefined ? formatPrice(brand.lowestPrice) : undefined, href: `/shop?brand=${encodeURIComponent(brand.id)}` })), [brands]);
+  const copies = useMemo(() => brands.map(brand => ({
+    brand,
+    count: countLabel(brand.count),
+    eyebrow: brand.categoryLinks.map(c => c.name).join(' · '),
+    href: `/shop?brand=${encodeURIComponent(brand.id)}`,
+  })), [brands]);
   const index = Math.max(0, brands.findIndex(brand => brand.id === view.current?.brand.id));
   const currentRef = useRef(view.current);
   currentRef.current = view.current;
@@ -134,7 +236,9 @@ export const BrandDesktopShowcase: React.FC<{ brands: BrandDirectoryEntry[] }> =
   }, [brands, navigate, select]);
   const previous = useCallback(() => step(-1), [step]);
   const next = useCallback(() => step(1), [step]);
+
   if (!view.current || !copies[index]) return <div className="min-h-screen bg-surface-50 p-8 text-slate-600 dark:bg-surface-900 dark:text-slate-300">No brands available yet.</div>;
+
   return (
     <div className="brand-showcase-page bg-surface-50 dark:bg-surface-900">
       <section className="brand-showcase" aria-label="Explore hardware brands" aria-describedby="brand-showcase-description" tabIndex={0} onKeyDown={event => {
@@ -145,14 +249,17 @@ export const BrandDesktopShowcase: React.FC<{ brands: BrandDirectoryEntry[] }> =
         <h1 className="sr-only">Shop by Brand</h1>
         <p id="brand-showcase-description" className="sr-only">Pick a manufacturer to browse its products.</p>
         <div className="brand-showcase-stage mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <BrandText copy={copies[index]} serial={view.serial} />
-          <div className="brand-showcase-rail-column">
-            <div className="brand-showcase-rail-header">
-              <p className="brand-showcase-rail-label">Shop by Brand</p>
-              <BrandControls index={index} total={brands.length} onPrevious={previous} onNext={next} />
+          <div className="brand-showcase-hero-row">
+            <BrandText copy={copies[index]} serial={view.serial} />
+            <div className="brand-showcase-rail-column">
+              <div className="brand-showcase-rail-header">
+                <p className="brand-showcase-rail-label">Shop by Brand</p>
+                <BrandControls onPrevious={previous} onNext={next} />
+              </div>
+              <BrandRail brands={brands} index={index} reducedMotion={reducedMotion} canHover={canHover} onSelect={select} onActivate={activate} />
             </div>
-            <BrandRail brands={brands} index={index} reducedMotion={reducedMotion} canHover={canHover} onSelect={select} onActivate={activate} />
           </div>
+          <ActiveBrandTopProducts brand={copies[index].brand} serial={view.serial} onAddToCart={addToCart} />
         </div>
       </section>
     </div>
