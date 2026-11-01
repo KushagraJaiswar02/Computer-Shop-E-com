@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import { KeycapButton } from '../components/common/KeycapButton';
@@ -7,12 +7,15 @@ import { ProductInfoBox } from '../features/product/ProductInfoBox';
 import { ProductSpecsTabs } from '../features/product/ProductSpecsTabs';
 import { CompatibleProductsSection } from '../features/product/CompatibleProductsSection';
 import { ProductEnquiryModal } from '../features/product/ProductEnquiryModal';
-import { useCategoryDirectory } from '../features/catalog/useCategoryDirectory';
+import { getBrandHref } from '../features/catalog/seriesUtils';
+import { MoreFromSeries } from '../features/product/MoreFromSeries';
+import { StickyCartBar } from '../features/product/StickyCartBar';
 
 export const ProductDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const {
     products,
+    brands,
     addToCart,
     wishlist,
     toggleWishlist,
@@ -21,17 +24,24 @@ export const ProductDetailPage: React.FC = () => {
   } = useStore();
 
   const product = products.find((p) => p.slug === slug);
-  const category = useCategoryDirectory().find(item => item.id === product?.categoryId && item.count > 0);
+  const brand = brands.find(item => item.id === product?.brandId);
   const [quantity, setQuantity] = useState(1);
   const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false);
+  const priceBoxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setQuantity(1);
+    setIsEnquiryModalOpen(false);
+    window.scrollTo(0, 0);
+  }, [product?.id]);
 
   if (!product) {
     return (
       <div className="min-h-[50vh] flex flex-col items-center justify-center p-6 text-center">
-        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-main dark:text-main mb-2">
           Product Not Found
         </h2>
-        <p className="text-sm text-slate-500 mb-6">
+        <p className="text-sm text-muted mb-6">
           The requested hardware item could not be found or may have been unlisted.
         </p>
         <Link to="/shop">
@@ -43,6 +53,10 @@ export const ProductDetailPage: React.FC = () => {
 
   const isSaved = wishlist.includes(product.id);
   const isCompared = compareList.includes(product.id);
+  const handleAddToCart = () => {
+    if (product.stockStatus === 'out_of_stock' || product.stock <= 0) return;
+    addToCart(product, Math.max(1, Math.min(quantity, product.stock)));
+  };
 
   // Filter compatible items
   const compatibleProducts = products.filter((p) =>
@@ -51,24 +65,35 @@ export const ProductDetailPage: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-slate-50/70 dark:bg-slate-900/50 py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-surface-soft/70 dark:bg-surface/50 pt-6 sm:pt-8 pb-24 lg:pb-8">
+      <div className="shop-container ">
         {/* Breadcrumbs */}
         <nav
           aria-label="Breadcrumb"
-          className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mb-6 font-mono overflow-x-auto whitespace-nowrap pb-1"
+          className="flex items-center gap-1.5 text-xs text-muted dark:text-muted mb-6 font-sans overflow-x-auto whitespace-nowrap pb-1"
         >
-          <Link to="/" className="hover:text-blue-600">
+          <Link to="/" className="hover:text-accent">
             Home
           </Link>
           <span>/</span>
-          {category ? <Link to={category.href} className="hover:text-blue-600">{category.name}</Link> : <span>{product.categoryName}</span>}
+          <Link to="/brands" className="hover:text-accent">Brands</Link>
           <span>/</span>
-          <Link to={`/brand/${product.brandId}`} className="hover:text-blue-600">
+          <Link to={brand ? getBrandHref(brand) : "/brands"} className="hover:text-accent">
             {product.brandName}
           </Link>
+          {product.series?.trim() && (
+            <>
+              <span>/</span>
+              <Link
+                to={brand ? getBrandHref(brand, product.series) : "/brands"}
+                className="hover:text-accent font-semibold"
+              >
+                {product.series}
+              </Link>
+            </>
+          )}
           <span>/</span>
-          <span className="text-slate-800 dark:text-slate-200 font-semibold truncate max-w-xs">
+          <span className="text-main dark:text-main font-semibold truncate max-w-xs">
             {product.name}
           </span>
         </nav>
@@ -77,6 +102,7 @@ export const ProductDetailPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-10">
           <div className="lg:col-span-7">
             <ProductGallery
+              key={product.id}
               images={product.images}
               name={product.name}
               discountPercent={product.discountPercent}
@@ -86,9 +112,10 @@ export const ProductDetailPage: React.FC = () => {
           <div className="lg:col-span-5">
             <ProductInfoBox
               product={product}
+              priceBoxRef={priceBoxRef}
               quantity={quantity}
               onQuantityChange={setQuantity}
-              onAddToCart={() => addToCart(product, quantity)}
+              onAddToCart={handleAddToCart}
               isSaved={isSaved}
               onToggleWishlist={() => toggleWishlist(product.id)}
               isCompared={isCompared}
@@ -98,8 +125,10 @@ export const ProductDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Detailed Tabs: Specs, Architecture Overview, Reviews */}
-        <ProductSpecsTabs product={product} />
+        {/* Detailed specifications and product overview */}
+        <ProductSpecsTabs key={product.id} product={product} />
+
+        <MoreFromSeries products={products} current={product} />
 
         {/* Frequently Bought Together & Compatible Accessories */}
         <CompatibleProductsSection
@@ -107,6 +136,14 @@ export const ProductDetailPage: React.FC = () => {
           onAddToCart={(acc) => addToCart(acc, 1)}
         />
       </div>
+
+      <StickyCartBar
+        key={product.id}
+        product={product}
+        priceBoxRef={priceBoxRef}
+        onAddToCart={handleAddToCart}
+        isEnquiryOpen={isEnquiryModalOpen}
+      />
 
       {/* Hardware Compatibility Enquiry Modal */}
       <ProductEnquiryModal

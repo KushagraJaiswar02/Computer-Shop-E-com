@@ -1,35 +1,54 @@
 import React from 'react';
-import { SearchX, RotateCcw } from 'lucide-react';
-import { KeycapButton } from '../../components/common/KeycapButton';
+import { SearchX, RotateCcw, X } from 'lucide-react';
 
 interface EmptyResultsStateProps {
-  onReset: () => void;
   searchQuery?: string;
+  onClearSearch?: () => void;
+  onReset: () => void;
 }
 
-export const EmptyResultsState: React.FC<EmptyResultsStateProps> = ({ onReset, searchQuery }) => {
+export const EmptyResultsState: React.FC<EmptyResultsStateProps> = ({
+  searchQuery,
+  onClearSearch,
+  onReset,
+}) => {
   return (
-    <div className="py-16 px-4 text-center bg-white dark:bg-slate-850 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 flex flex-col items-center justify-center">
-      <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mb-3">
+    <div className="py-14 px-4 text-center bg-surface dark:bg-surface rounded-xl border border-dashed border-border dark:border-border flex flex-col items-center justify-center">
+      <div className="w-12 h-12 rounded-full bg-surface-soft dark:bg-surface-elevated flex items-center justify-center text-muted mb-3">
         <SearchX className="w-6 h-6" />
       </div>
-      <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-1">
-        No hardware products found
+
+      <h3 className="text-base font-bold text-main dark:text-main mb-1">
+        {searchQuery ? `No results for “${searchQuery}”` : 'No hardware products found'}
       </h3>
-      <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-5">
+
+      <p className="text-xs sm:text-sm text-muted dark:text-muted max-w-md mx-auto mb-5 leading-relaxed">
         {searchQuery
-          ? `We couldn't find any products matching "${searchQuery}". Try checking the spelling or clearing your active filters.`
-          : 'No products match the selected criteria. Try resetting price ranges, categories, or brand filters.'}
+          ? `We couldn't find any products matching “${searchQuery}”. Check your spelling or clear the search query to see all catalog products.`
+          : 'No products match the selected filters. Try broadening your price range, unselecting brands, or resetting filters.'}
       </p>
-      <KeycapButton
-        variant="outline"
-        size="sm"
-        onClick={onReset}
-        className="flex items-center gap-1.5"
-      >
-        <RotateCcw className="w-3.5 h-3.5" />
-        <span>Reset all filters</span>
-      </KeycapButton>
+
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        {searchQuery && onClearSearch && (
+          <button
+            type="button"
+            onClick={onClearSearch}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-on-primary hover:bg-primary-hover dark:bg-primary dark:hover:bg-primary-hover shadow-xs transition-colors"
+          >
+            <X className="w-3.5 h-3.5" />
+            <span>Clear search</span>
+          </button>
+        )}
+
+        <button
+          type="button"
+          onClick={onReset}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-border dark:border-border bg-surface dark:bg-surface-elevated text-main dark:text-main hover:border-border dark:hover:border-border shadow-xs transition-colors"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span>Reset all filters</span>
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,141 +1,23 @@
-import React, { useState } from 'react';
-import { ShoppingBag, Truck, Check, Eye, X } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../../context/StoreContext';
 import { Order } from '../../types';
-import { formatPrice, formatDate } from '../../lib/utils';
-import { KeycapButton } from '../../components/common/KeycapButton';
-
+import { formatDate, formatPrice } from '../../lib/utils';
+import { AdminButton, AdminList, AdminModal, Badge, Panel } from './AdminUi';
 export const AdminOrdersPage: React.FC = () => {
-  const { orders } = useStore();
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-
-  return (
-    <div className="space-y-6 max-w-6xl">
-      <div className="pb-6 border-b border-slate-800">
-        <h1 className="text-2xl font-bold text-white tracking-tight">
-          Customer Orders & Shipments ({orders.length})
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
-          Review customer hardware purchases, tracking codes, and simulated payment statuses.
-        </p>
-      </div>
-
-      <div className="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden shadow-soft-card">
-        <table className="w-full text-left text-xs">
-          <thead className="bg-slate-900 border-b border-slate-800 text-slate-400 uppercase font-mono text-[10px]">
-            <tr>
-              <th className="p-3.5">Order Number</th>
-              <th className="p-3.5">Customer & City</th>
-              <th className="p-3.5">Date</th>
-              <th className="p-3.5">Items</th>
-              <th className="p-3.5">Total Amount</th>
-              <th className="p-3.5">Shipment Status</th>
-              <th className="p-3.5 text-right">Details</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-800">
-            {orders.map(order => (
-              <tr key={order.id} className="hover:bg-slate-900/60 transition-colors">
-                <td className="p-3.5 font-mono font-bold text-white">
-                  #{order.orderNumber}
-                </td>
-                <td className="p-3.5">
-                  <span className="font-semibold text-slate-200 block">{order.shippingAddress.fullName}</span>
-                  <span className="text-[11px] text-slate-500 font-mono">
-                    {order.shippingAddress.city}, {order.shippingAddress.state}
-                  </span>
-                </td>
-                <td className="p-3.5 text-slate-400 font-mono">
-                  {formatDate(order.date)}
-                </td>
-                <td className="p-3.5 text-slate-300">
-                  {order.items.reduce((s, i) => s + i.quantity, 0)} component(s)
-                </td>
-                <td className="p-3.5 font-mono font-bold text-brand-400">
-                  {formatPrice(order.total)}
-                </td>
-                <td className="p-3.5">
-                  <span
-                    className={`inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded font-bold ${
-                      order.status === 'Delivered'
-                        ? 'bg-emerald-950 text-emerald-400 border border-emerald-900'
-                        : 'bg-blue-950 text-blue-400 border border-blue-900'
-                    }`}
-                  >
-                    <Truck className="w-3 h-3" />
-                    {order.status}
-                  </span>
-                </td>
-                <td className="p-3.5 text-right">
-                  <button
-                    onClick={() => setSelectedOrder(order)}
-                    className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
-                  >
-                    <Eye className="w-4 h-4" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Order Inspect Modal */}
-      {selectedOrder && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm"
-          onClick={() => setSelectedOrder(null)}
-        >
-          <div
-            className="w-full max-w-lg bg-slate-900 rounded-2xl border border-slate-800 shadow-2xl p-6 text-xs space-y-4"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="font-bold text-sm text-white">
-                Order Manifest #{selectedOrder.orderNumber}
-              </h3>
-              <button onClick={() => setSelectedOrder(null)} className="text-slate-400 hover:text-white">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-[11px] space-y-1">
-                <span className="text-slate-400 font-mono uppercase block">Delivery Target</span>
-                <span className="font-semibold text-white block">{selectedOrder.shippingAddress.fullName}</span>
-                <span className="text-slate-300 block">{selectedOrder.shippingAddress.street}</span>
-                <span className="text-slate-300 block">
-                  {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.postalCode}
-                </span>
-                <span className="text-slate-400 font-mono block">Phone: {selectedOrder.shippingAddress.phone}</span>
-              </div>
-
-              <div>
-                <span className="font-bold text-slate-300 block mb-2">Hardware Items</span>
-                <div className="divide-y divide-slate-800">
-                  {selectedOrder.items.map((item, i) => (
-                    <div key={i} className="py-2 flex justify-between items-center text-slate-300">
-                      <span>{item.productName} (x{item.quantity})</span>
-                      <span className="font-mono font-bold text-white">{formatPrice(item.price * item.quantity)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-slate-800 flex justify-between font-bold text-sm text-white">
-                <span>Grand Total</span>
-                <span className="font-mono text-brand-400">{formatPrice(selectedOrder.total)}</span>
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-slate-800 flex justify-end">
-              <KeycapButton variant="secondary" size="sm" onClick={() => setSelectedOrder(null)}>
-                Close Manifest
-              </KeycapButton>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  const { orders } = useStore(), [params, setParams] = useSearchParams();
+  const [selected, setSelected] = useState<Order | null>(null);
+  const status = params.get('status') || '';
+  const rows = useMemo(() => orders.filter(order => !status || (status === 'new' ? ['Pending', 'Placed', 'Confirmed'].includes(order.status) : order.status === status)), [orders, status]);
+  const order = selected || orders.find(o => o.id === params.get('order'));
+  const close = () => { setSelected(null); setParams(previous => { const next = new URLSearchParams(previous); next.delete('order'); return next; }); };
+  return <><AdminList title="Orders" description="Find a purchase and check what needs delivering." rows={rows} searchText={o => `${o.orderNumber} ${o.shippingAddress.fullName} ${o.shippingAddress.phone} ${o.shippingAddress.city} ${o.id}`} initialSearch={params.get('q') || ''} filters={<select aria-label="Filter order status" value={status} onChange={event => setParams(previous => { const next = new URLSearchParams(previous); event.target.value ? next.set('status', event.target.value) : next.delete('status'); return next; })}><option value="">All statuses</option><option value="new">New orders</option>{Array.from(new Set(orders.map(o => o.status))).map(status => <option key={status}>{status}</option>)}</select>} emptyAction={<AdminButton onClick={() => setParams({})}>Show all orders</AdminButton>} columns={[
+    { key: 'number', label: 'Order', sortValue: o => o.orderNumber, render: o => <strong>#{o.orderNumber}</strong> },
+    { key: 'customer', label: 'Customer', sortValue: o => o.shippingAddress.fullName, render: o => <div>{o.shippingAddress.fullName}<small className="block au-muted">{o.shippingAddress.city}, {o.shippingAddress.state}</small></div> },
+    { key: 'date', label: 'Date', sortValue: o => o.date, render: o => formatDate(o.date) },
+    { key: 'items', label: 'Items', sortValue: o => o.items.reduce((s, i) => s + i.quantity, 0), render: o => o.items.reduce((s, i) => s + i.quantity, 0) },
+    { key: 'total', label: 'Total', sortValue: o => o.total, render: o => formatPrice(o.total) },
+    { key: 'status', label: 'Status', sortValue: o => o.status, render: o => <Badge>{o.status}</Badge> },
+    { key: 'details', label: 'Details', render: o => <AdminButton onClick={() => setSelected(o)}>View order</AdminButton> },
+  ]} />{order && <AdminModal title={`Order #${order.orderNumber}`} onClose={close}><div className="au-stack"><div className="au-actions"><Badge>{order.status}</Badge><span className="au-muted">{formatDate(order.date)}</span></div><Panel title="Delivery address"><p><strong>{order.shippingAddress.fullName}</strong><br />{order.shippingAddress.street}<br />{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postalCode}<br />Phone: {order.shippingAddress.phone}</p></Panel><Panel title="Items">{order.items.map((item, i) => <div className="au-activity" key={i}><span>{item.productName}<small>Quantity: {item.quantity}</small></span><strong>{formatPrice(item.price * item.quantity)}</strong></div>)}</Panel><div className="au-activity"><span>Payment method</span><span>{order.paymentMethod === 'card_demo' ? 'Demo card' : order.paymentMethod}</span></div><div className="au-activity"><strong>Total</strong><strong>{formatPrice(order.total)}</strong></div><AdminButton onClick={close}>Close order</AdminButton></div></AdminModal>}</>;
 };

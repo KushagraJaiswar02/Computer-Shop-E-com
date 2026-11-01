@@ -19,37 +19,37 @@ export const ComparePage: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-900 py-8 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-slate-200 dark:border-surface-750 gap-4">
+    <div className="min-h-screen bg-background dark:bg-background py-8 transition-colors">
+      <div className="shop-container ">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-border dark:border-border gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">
+            <div className="flex items-center gap-2 text-xs font-sans font-bold uppercase tracking-wider text-accent dark:text-accent">
               <Scale className="w-4 h-4" />
               <span>Side-by-Side Architectural Analysis</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-main dark:text-main mt-1">
               Component Comparison ({compareProducts.length}/4)
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs sm:text-sm text-muted dark:text-muted mt-0.5">
               Inspect technical differences, memory bandwidth, clocks, and form-factors side-by-side.
             </p>
           </div>
 
           {compareProducts.length > 0 && (
             <div className="flex items-center gap-3">
-              <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer">
+              <label className="flex items-center gap-2 text-xs text-main dark:text-main cursor-pointer">
                 <input
                   type="checkbox"
                   checked={highlightDifferences}
                   onChange={e => setHighlightDifferences(e.target.checked)}
-                  className="rounded text-brand-600 focus:ring-brand-500"
+                  className="rounded text-accent focus:ring-focus"
                 />
                 <span className="font-medium">Highlight Differences</span>
               </label>
 
               <button
                 onClick={clearCompare}
-                className="text-xs text-rose-600 hover:text-rose-700 dark:text-rose-400 font-medium"
+                className="text-xs text-danger-ink hover:text-danger-ink dark:text-danger-ink font-medium"
               >
                 Clear All
               </button>
@@ -58,14 +58,14 @@ export const ComparePage: React.FC = () => {
         </div>
 
         {compareProducts.length === 0 ? (
-          <div className="py-20 text-center bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 p-8 shadow-soft-card">
-            <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-surface-800 text-slate-400 flex items-center justify-center mx-auto mb-4">
+          <div className="py-20 text-center bg-surface dark:bg-surface rounded-2xl border border-border dark:border-border p-8 shadow-soft-card">
+            <div className="w-16 h-16 rounded-full bg-surface-soft dark:bg-surface-elevated text-muted flex items-center justify-center mx-auto mb-4">
               <Scale className="w-8 h-8" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+            <h3 className="text-lg font-bold text-main dark:text-main mb-2">
               No hardware added to comparison
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-6">
+            <p className="text-xs sm:text-sm text-muted dark:text-muted max-w-sm mx-auto mb-6">
               Browse any product in the catalog and click the scale icon to compare specifications side-by-side.
             </p>
             <Link to="/shop">
@@ -73,12 +73,12 @@ export const ComparePage: React.FC = () => {
             </Link>
           </div>
         ) : (
-          <div className="bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 overflow-x-auto shadow-soft-card">
+          <div className="bg-surface dark:bg-surface rounded-2xl border border-border dark:border-border overflow-x-auto shadow-soft-card">
             <table className="w-full text-xs text-left border-collapse min-w-[700px]">
               {/* Product cards header row */}
               <thead>
-                <tr className="border-b border-slate-200 dark:border-surface-750 bg-slate-50/50 dark:bg-surface-900/50">
-                  <th className="p-4 w-44 font-mono uppercase tracking-wider text-slate-400 text-[11px] align-top">
+                <tr className="border-b border-border dark:border-border bg-surface-soft/50 dark:bg-background/50">
+                  <th className="p-4 w-44 font-sans uppercase tracking-wider text-muted text-[11px] align-top">
                     Hardware Overview
                   </th>
                   {compareProducts.map(prod => (
@@ -86,13 +86,13 @@ export const ComparePage: React.FC = () => {
                       <div className="relative flex flex-col justify-between h-full space-y-3">
                         <button
                           onClick={() => toggleCompare(prod.id)}
-                          className="absolute -top-1 -right-1 p-1 text-slate-400 hover:text-rose-500 rounded-full"
+                          className="absolute -top-1 -right-1 p-1 text-muted hover:text-danger-ink rounded-full"
                           title="Remove from comparison"
                         >
                           <X className="w-4 h-4" />
                         </button>
 
-                        <div className="w-24 h-24 mx-auto p-1 bg-white dark:bg-surface-800 rounded-xl border border-slate-100 dark:border-surface-700 flex items-center justify-center">
+                        <div className="w-24 h-24 mx-auto p-1 bg-surface dark:bg-surface-elevated rounded-xl border border-border dark:border-border flex items-center justify-center">
                           <img
                             src={prod.images[0]}
                             alt={prod.name}
@@ -101,16 +101,16 @@ export const ComparePage: React.FC = () => {
                         </div>
 
                         <div>
-                          <span className="text-[10px] font-mono text-brand-600 dark:text-brand-400 font-bold uppercase">
+                          <span className="text-[10px] font-sans text-accent dark:text-accent font-bold uppercase">
                             {prod.brandName}
                           </span>
                           <Link
                             to={`/product/${prod.slug}`}
-                            className="font-bold text-sm text-slate-900 dark:text-white line-clamp-2 hover:text-brand-600 block mt-0.5"
+                            className="font-bold text-sm text-main dark:text-main line-clamp-2 hover:text-accent block mt-0.5"
                           >
                             {prod.name}
                           </Link>
-                          <span className="font-mono text-base font-extrabold text-slate-900 dark:text-white block mt-1">
+                          <span className="font-sans text-base font-extrabold text-main dark:text-main block mt-1 price">
                             {formatPrice(prod.price)}
                           </span>
                         </div>
@@ -131,26 +131,26 @@ export const ComparePage: React.FC = () => {
               </thead>
 
               {/* Attributes comparison rows */}
-              <tbody className="divide-y divide-slate-100 dark:divide-surface-750">
+              <tbody className="divide-y divide-border dark:divide-border">
                 {/* SKU */}
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-surface-800/40">
-                  <td className="p-3.5 font-mono text-slate-500 font-semibold bg-slate-50/30 dark:bg-surface-900/30">
+                <tr className="hover:bg-surface-soft/50 dark:hover:bg-surface-elevated/40">
+                  <td className="p-3.5 font-sans text-muted font-semibold bg-surface-soft/30 dark:bg-background/30">
                     Product SKU
                   </td>
                   {compareProducts.map(p => (
-                    <td key={p.id} className="p-3.5 font-mono text-slate-800 dark:text-slate-200">
+                    <td key={p.id} className="p-3.5 font-sans text-main dark:text-main">
                       {p.sku}
                     </td>
                   ))}
                 </tr>
 
                 {/* Stock Status */}
-                <tr className="hover:bg-slate-50/50 dark:hover:bg-surface-800/40">
-                  <td className="p-3.5 font-mono text-slate-500 font-semibold bg-slate-50/30 dark:bg-surface-900/30">
+                <tr className="hover:bg-surface-soft/50 dark:hover:bg-surface-elevated/40">
+                  <td className="p-3.5 font-sans text-muted font-semibold bg-surface-soft/30 dark:bg-background/30">
                     Availability
                   </td>
                   {compareProducts.map(p => (
-                    <td key={p.id} className={`p-3.5 font-semibold ${p.stockStatus === 'out_of_stock' ? 'text-slate-500' : p.stockStatus === 'backorder' ? 'text-amber-600' : 'text-emerald-600'}`}>
+                    <td key={p.id} className={`p-3.5 font-semibold ${p.stockStatus === 'out_of_stock' ? 'text-muted' : p.stockStatus === 'backorder' ? 'text-warning-ink' : 'text-success-ink'}`}>
                       {p.stockStatus === 'in_stock' ? `In Stock (${p.stock})` : p.stockStatus === 'low_stock' ? `Low stock (${p.stock})` : p.stockStatus === 'backorder' ? 'Backorder' : 'Out of stock'}
                     </td>
                   ))}
@@ -168,11 +168,11 @@ export const ComparePage: React.FC = () => {
                       key={attrName}
                       className={`transition-colors ${
                         highlightDifferences && isDifferent
-                          ? 'bg-amber-500/10 dark:bg-amber-500/5'
-                          : 'hover:bg-slate-50/50 dark:hover:bg-surface-800/40'
+                          ? 'bg-warning/10 dark:bg-warning/5'
+                          : 'hover:bg-surface-soft/50 dark:hover:bg-surface-elevated/40'
                       }`}
                     >
-                      <td className="p-3.5 font-mono text-slate-500 font-semibold bg-slate-50/30 dark:bg-surface-900/30">
+                      <td className="p-3.5 font-sans text-muted font-semibold bg-surface-soft/30 dark:bg-background/30">
                         {attrName}
                       </td>
                       {values.map((val, idx) => (
@@ -180,8 +180,8 @@ export const ComparePage: React.FC = () => {
                           key={idx}
                           className={`p-3.5 ${
                             val === '—'
-                              ? 'text-slate-400 italic'
-                              : 'text-slate-800 dark:text-slate-200 font-medium'
+                              ? 'text-muted italic'
+                              : 'text-main dark:text-main font-medium'
                           }`}
                         >
                           {val}

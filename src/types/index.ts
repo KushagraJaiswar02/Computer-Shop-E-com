@@ -17,6 +17,8 @@ export interface ProductVariant {
 }
 
 export interface Product {
+  /** Identifies generated browser-only fixture data. */
+  isDemo?: boolean;
   id: string;
   slug: string;
   name: string;
@@ -26,6 +28,7 @@ export interface Product {
   categoryName: string;
   subcategoryId?: string;
   subcategoryName?: string;
+  series?: string;
   seriesId?: string;
   seriesName?: string;
   sku: string;

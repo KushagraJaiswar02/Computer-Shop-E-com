@@ -1,165 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  DollarSign,
-  Package,
-  ShoppingBag,
-  AlertTriangle,
-  ArrowRight,
-  TrendingUp,
-  Sliders,
-  CheckCircle2,
-  Layers,
-} from 'lucide-react';
+import { ArrowUpRight, Plus, Image, Tag, MessageSquare, Package, ShoppingBag, AlertTriangle } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
-import { formatPrice } from '../../lib/utils';
-import { KeycapButton } from '../../components/common/KeycapButton';
-
+import { formatPrice, formatDate } from '../../lib/utils';
+import { Badge, PageHeading, Panel } from './AdminUi';
 export const AdminDashboardOverview: React.FC = () => {
   const { products, orders, enquiries } = useStore();
-
-  const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
-  const lowStockProducts = products.filter(p => p.stockStatus === 'low_stock' || p.stock < 10);
-  const newEnquiries = enquiries.filter(e => e.status === 'New');
-
-  return (
-    <div className="space-y-8 max-w-6xl">
-      {/* Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
-        <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
-            Storefront Operations & Analytics
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Real-time telemetry for hardware inventory, incoming orders, and custom PC enquiries.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Link to="/admin/homepage-builder">
-            <KeycapButton variant="primary" size="sm">
-              <Layers className="w-3.5 h-3.5 mr-1.5" />
-              Open Homepage Builder
-            </KeycapButton>
-          </Link>
-        </div>
-      </div>
-
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <div className="p-5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between text-slate-400 text-xs">
-            <span>Gross Sales (Demo)</span>
-            <span className="p-1.5 rounded-lg bg-emerald-950 text-emerald-400 font-bold">
-              +18.4%
-            </span>
-          </div>
-          <span className="text-2xl font-black font-mono text-white block">
-            {formatPrice(totalRevenue)}
-          </span>
-          <span className="text-[11px] text-slate-500 block">Across {orders.length} registered orders</span>
-        </div>
-
-        <div className="p-5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between text-slate-400 text-xs">
-            <span>Hardware SKUs</span>
-            <span className="text-brand-400 font-mono text-xs">Catalog</span>
-          </div>
-          <span className="text-2xl font-black font-mono text-white block">
-            {products.length}
-          </span>
-          <span className="text-[11px] text-slate-500 block">Across 8 system domains</span>
-        </div>
-
-        <div className="p-5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between text-slate-400 text-xs">
-            <span>Stock Alerts</span>
-            <AlertTriangle className="w-4 h-4 text-amber-400" />
-          </div>
-          <span className="text-2xl font-black font-mono text-amber-400 block">
-            {lowStockProducts.length}
-          </span>
-          <span className="text-[11px] text-slate-500 block">Components below safety threshold</span>
-        </div>
-
-        <div className="p-5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-          <div className="flex items-center justify-between text-slate-400 text-xs">
-            <span>Custom PC Enquiries</span>
-            <span className="text-brand-400 font-mono text-xs">Queue</span>
-          </div>
-          <span className="text-2xl font-black font-mono text-brand-400 block">
-            {newEnquiries.length} New
-          </span>
-          <span className="text-[11px] text-slate-500 block">Awaiting engineering quotes</span>
-        </div>
-      </div>
-
-      {/* Grid: Recent Orders & Stock Watchlist */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left: Recent Orders */}
-        <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-6 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 className="font-bold text-sm text-white">Recent Store Orders</h3>
-            <Link to="/admin/orders" className="text-xs text-brand-400 hover:underline">
-              View All Orders
-            </Link>
-          </div>
-
-          <div className="divide-y divide-slate-800 text-xs">
-            {orders.slice(0, 4).map(o => (
-              <div key={o.id} className="py-3 flex items-center justify-between">
-                <div>
-                  <span className="font-mono font-bold text-white block">
-                    #{o.orderNumber} • {o.shippingAddress.fullName}
-                  </span>
-                  <span className="text-slate-400 text-[11px]">
-                    {o.items.length} item(s) • {o.paymentMethod === 'card_demo' ? 'Card' : 'Wire'}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <span className="font-mono font-bold text-white block">
-                    {formatPrice(o.total)}
-                  </span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400">
-                    {o.status}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right: Low Stock Warnings */}
-        <div className="lg:col-span-5 bg-slate-950 rounded-2xl border border-slate-800 p-6 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <h3 className="font-bold text-sm text-white flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
-              <span>Inventory Threshold Alerts</span>
-            </h3>
-            <Link to="/admin/products" className="text-xs text-brand-400 hover:underline">
-              Manage Stock
-            </Link>
-          </div>
-
-          <div className="divide-y divide-slate-800 text-xs">
-            {lowStockProducts.slice(0, 5).map(p => (
-              <div key={p.id} className="py-2.5 flex items-center justify-between gap-2">
-                <div className="truncate">
-                  <span className="font-medium text-slate-200 truncate block">
-                    {p.name}
-                  </span>
-                  <span className="text-slate-500 font-mono text-[10px]">
-                    SKU: {p.sku}
-                  </span>
-                </div>
-                <span className="font-mono px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-900 flex-shrink-0">
-                  {p.stock} units
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const [period, setPeriod] = useState('all');
+  const after = period === 'all' ? 0 : Date.now() - Number(period) * 86400000;
+  const periodOrders = orders.filter(order => new Date(order.date).getTime() >= after);
+  const revenue = periodOrders.filter(order => order.status !== 'Cancelled').reduce((sum, order) => sum + order.total, 0);
+  const pending = orders.filter(order => order.status === 'Pending');
+  const open = enquiries.filter(item => ['New', 'In Review'].includes(item.status));
+  const stock = products.filter(product => product.stock < 10 || product.stockStatus === 'low_stock');
+  const recentOrders = [...periodOrders].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
+  const recentEnquiries = [...enquiries].filter(e => new Date(e.createdAt).getTime() >= after).sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 4);
+  return <div className="au-stack"><PageHeading title="Your shop at a glance" description="A good place to start your day. See what needs doing and keep your shop moving." />
+    <section><h2 className="mb-4">Needs your attention</h2><div className="au-grid-3">{[
+      { title: 'New orders', count: pending.length, detail: 'Ready for you to review', to: '/admin/orders?status=new', Icon: ShoppingBag },
+      { title: 'Open enquiries', count: open.length, detail: 'Customers waiting to hear from you', to: '/admin/enquiries?status=open', Icon: MessageSquare },
+      { title: 'Low or out of stock', count: stock.length, detail: 'Products to check and restock', to: '/admin/products?stock=low', Icon: AlertTriangle },
+    ].map(card => <Link className="au-panel au-attention" key={card.title} to={card.to}><div className="au-actions justify-between"><card.Icon size={20} className="text-accent" /><ArrowUpRight size={17} className="au-muted" /></div><div className="au-stat">{card.count}</div><h3>{card.title}</h3><p className="mt-1">{card.detail}</p></Link>)}</div></section>
+    <section><h2 className="mb-4">Quick actions</h2><div className="au-quick-actions">{[
+      { label: 'Add product', to: '/admin/products?action=add', Icon: Plus }, { label: 'Change homepage banner', to: '/admin/banners', Icon: Image }, { label: 'Add a deal', to: '/admin/deals', Icon: Tag }, { label: 'View enquiries', to: '/admin/enquiries?status=open', Icon: MessageSquare },
+    ].map(action => <Link key={action.to} className="au-button" to={action.to}><action.Icon size={16} />{action.label}</Link>)}</div></section>
+    <section><div className="au-page-heading mb-4"><h2>Shop snapshot</h2><label className="au-actions text-xs au-muted">Show<select aria-label="Snapshot period" value={period} onChange={event => setPeriod(event.target.value)}><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="all">All time</option></select></label></div><div className="au-grid-4">{[
+      { label: 'Orders', value: periodOrders.length, hint: 'Orders in this period' },
+      { label: 'Revenue', value: formatPrice(revenue), hint: 'Excludes cancelled orders · demo totals' },
+      { label: 'New customers', value: '—', hint: 'Signup dates are not recorded in this demo' },
+      { label: 'Products live', value: products.length, hint: 'Current catalog · archived products excluded' },
+    ].map(stat => <div key={stat.label} className="au-panel"><span className="au-muted text-xs">{stat.label}</span><div className="au-stat">{stat.value}</div><p className="au-muted text-xs">{stat.hint}</p></div>)}</div></section>
+    <div className="au-grid-2"><Panel title="Recent orders">{recentOrders.length ? recentOrders.map(order => <Link className="au-activity" key={order.id} to={`/admin/orders?order=${order.id}`}><div><strong>#{order.orderNumber}</strong><small>{order.shippingAddress.fullName} · {order.items.length} item(s) · {order.paymentMethod === 'card_demo' ? 'Demo card' : order.paymentMethod.replace(/_/g, ' ')}<br />{formatDate(order.date)}</small></div><div className="text-right"><strong>{formatPrice(order.total)}</strong><small>{order.status}</small></div></Link>) : <p className="au-muted mb-4">No orders in this period. Try a longer period.</p>}<Link className="au-link inline-block mt-4 text-xs" to="/admin/orders">View all orders →</Link></Panel><Panel title="Recent enquiries">{recentEnquiries.length ? recentEnquiries.map(enquiry => <Link className="au-activity" key={enquiry.id} to={`/admin/enquiries?enquiry=${enquiry.id}`}><div><strong>{enquiry.customerName}</strong><small>{enquiry.enquiryType.replace(/_/g, ' ')}<br />{formatDate(enquiry.createdAt)}</small></div><Badge>{enquiry.status}</Badge></Link>) : <p className="au-muted mb-4">No enquiries in this period. Try a longer period.</p>}<Link className="au-link inline-block mt-4 text-xs" to="/admin/enquiries">View all enquiries →</Link></Panel></div>
+    <Panel title="Stock to keep an eye on">{stock.slice(0, 5).map(product => <Link className="au-activity" key={product.id} to={`/admin/products?edit=${product.id}`}><div><strong>{product.name}</strong><small>Stock code: {product.sku}</small></div><Badge>{product.stock} units</Badge></Link>)}{!stock.length && <p className="au-muted">All products have healthy stock levels.</p>}<Link className="au-link inline-block mt-4 text-xs" to="/admin/products?stock=low">Review stock →</Link></Panel>
+  </div>;
 };

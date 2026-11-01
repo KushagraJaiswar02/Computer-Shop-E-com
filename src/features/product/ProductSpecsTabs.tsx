@@ -17,15 +17,15 @@ export const ProductSpecsTabs: React.FC<ProductSpecsTabsProps> = ({ product }) =
   });
 
   return (
-    <div className="bg-white dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden mb-10">
+    <div className="bg-surface dark:bg-surface rounded-xl border border-border dark:border-border shadow-xs overflow-hidden mb-10">
       {/* Tab Navigation */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50">
+      <div className="flex border-b border-border dark:border-border bg-surface-soft/70 dark:bg-surface/50">
         <button
           onClick={() => setActiveTab('specs')}
           className={`py-3 px-5 text-xs sm:text-sm font-semibold border-b-2 transition-all ${
             activeTab === 'specs'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-850'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              ? 'border-primary text-accent dark:text-accent bg-surface dark:bg-surface'
+              : 'border-transparent text-muted hover:text-main dark:hover:text-main'
           }`}
         >
           Technical Specifications ({product.attributes.length})
@@ -34,8 +34,8 @@ export const ProductSpecsTabs: React.FC<ProductSpecsTabsProps> = ({ product }) =
           onClick={() => setActiveTab('description')}
           className={`py-3 px-5 text-xs sm:text-sm font-semibold border-b-2 transition-all ${
             activeTab === 'description'
-              ? 'border-blue-600 text-blue-600 dark:text-blue-400 bg-white dark:bg-slate-850'
-              : 'border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              ? 'border-primary text-accent dark:text-accent bg-surface dark:bg-surface'
+              : 'border-transparent text-muted hover:text-main dark:hover:text-main'
           }`}
         >
           Product overview
@@ -48,19 +48,19 @@ export const ProductSpecsTabs: React.FC<ProductSpecsTabsProps> = ({ product }) =
           <div className="space-y-5">
             {Object.entries(groupedAttributes).map(([groupName, attrs]) => (
               <div key={groupName} className="space-y-1.5">
-                <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
+                <h3 className="text-xs font-sans font-bold uppercase tracking-wider text-muted">
                   {groupName}
                 </h3>
-                <div className="rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden divide-y divide-slate-100 dark:divide-slate-800 text-xs sm:text-sm">
+                <div className="rounded-lg border border-border dark:border-border overflow-hidden divide-y divide-border dark:divide-border text-xs sm:text-sm">
                   {attrs.map((attr, i) => (
                     <div
                       key={i}
-                      className="flex flex-col sm:flex-row py-2 px-3.5 bg-white dark:bg-slate-850 hover:bg-slate-50/60 dark:hover:bg-slate-800/40"
+                      className="flex flex-col sm:flex-row py-2 px-3.5 bg-surface dark:bg-surface hover:bg-surface-soft/60 dark:hover:bg-surface-elevated/40"
                     >
-                      <span className="w-full sm:w-1/3 font-medium text-slate-500 dark:text-slate-400 font-mono text-xs">
+                      <span className="w-full sm:w-1/3 font-medium text-muted dark:text-muted font-mono text-xs">
                         {attr.name}
                       </span>
-                      <span className="w-full sm:w-2/3 font-semibold text-slate-800 dark:text-slate-100 mt-0.5 sm:mt-0">
+                      <span className="w-full sm:w-2/3 font-semibold text-main dark:text-main mt-0.5 sm:mt-0">
                         {attr.value}
                       </span>
                     </div>
@@ -73,9 +73,9 @@ export const ProductSpecsTabs: React.FC<ProductSpecsTabsProps> = ({ product }) =
 
         {/* Description Tab */}
         {activeTab === 'description' && (
-          <div className="max-w-3xl space-y-4 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+          <div className="max-w-3xl space-y-4 text-xs sm:text-sm text-main dark:text-main leading-relaxed">
             <p>{product.description}</p>
-            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+            <div className="rounded-lg border border-primary bg-accent/10 p-4 text-xs text-main dark:border-border dark:bg-surface dark:text-main">
               Example catalog content is shown for review. Confirm specifications, availability and warranty with the retailer before purchase.
             </div>
           </div>

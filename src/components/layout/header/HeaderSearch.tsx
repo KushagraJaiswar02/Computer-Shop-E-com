@@ -70,7 +70,7 @@ export const HeaderSearch: React.FC = () => {
   return (
     <form onSubmit={handleSubmit} className="relative min-w-0 w-full flex-1" role="search">
       <div className="relative">
-        <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <Search className="w-4 h-4 text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           ref={searchInputRef}
           type="text"
@@ -86,30 +86,30 @@ export const HeaderSearch: React.FC = () => {
           onKeyDown={handleKeyDown}
           onBlur={() => window.setTimeout(() => setIsOpen(false), 120)}
           placeholder="Search for products..."
-          className="h-11 w-full rounded-md border border-slate-200 bg-slate-50 pl-9 pr-20 text-xs text-slate-900 transition-colors placeholder:text-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-800/80 dark:text-slate-100 sm:text-sm"
+          className="h-11 w-full rounded-md border border-border bg-surface-soft pl-9 pr-20 text-xs text-main transition-colors placeholder:text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-focus/20 dark:border-border dark:bg-surface-elevated/80 dark:text-main sm:text-sm"
         />
-        {query && <button type="button" onClick={() => { setQuery(''); setIsOpen(false); setActiveIndex(-1); searchInputRef.current?.focus(); }} aria-label="Clear search" className="absolute right-11 top-1/2 -translate-y-1/2 rounded p-1 text-slate-500 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:hover:text-white"><X className="h-3.5 w-3.5" /></button>}
+        {query && <button type="button" onClick={() => { setQuery(''); setIsOpen(false); setActiveIndex(-1); searchInputRef.current?.focus(); }} aria-label="Clear search" className="absolute right-11 top-1/2 -translate-y-1/2 rounded p-1 text-muted hover:text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus dark:hover:text-main"><X className="h-3.5 w-3.5" /></button>}
         <div className={`pointer-events-none absolute right-11 top-1/2 -translate-y-1/2 ${query ? 'hidden' : ''}`}>
           <KeyBadge>/</KeyBadge>
         </div>
-        <button type="submit" aria-label="Search products" title="Search products" className="absolute right-1 top-1/2 flex h-7 w-8 -translate-y-1/2 items-center justify-center rounded text-slate-500 transition-colors hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-blue-300"><Search className="h-4 w-4" /></button>
+        <button type="submit" aria-label="Search products" title="Search products" className="absolute right-1 top-1/2 flex h-7 w-8 -translate-y-1/2 items-center justify-center rounded text-muted transition-colors hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus dark:text-main dark:hover:bg-surface-soft dark:hover:text-accent"><Search className="h-4 w-4" /></button>
       </div>
       {isOpen && query.trim().length >= 2 && (
-        <div className="absolute inset-x-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900" onMouseDown={event => event.preventDefault()}>
+        <div className="absolute inset-x-0 top-full z-50 mt-2 overflow-hidden rounded-xl border border-border bg-surface shadow-xl dark:border-border dark:bg-surface" onMouseDown={event => event.preventDefault()}>
           {suggestions.length ? (
             <ul id={listboxId} role="listbox" aria-label="Product, category, and brand suggestions" className="max-h-80 overflow-y-auto p-1.5">
               {suggestions.map((suggestion, index) => (
                 <li key={suggestion.id} id={`header-search-option-${index}`} role="option" aria-selected={index === activeIndex}>
-                  <button type="button" onMouseEnter={() => setActiveIndex(index)} onClick={() => { navigate(suggestion.to); setIsOpen(false); searchInputRef.current?.blur(); }} className={`flex min-h-14 w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left ${index === activeIndex ? 'bg-blue-50 dark:bg-slate-800' : 'hover:bg-slate-50 dark:hover:bg-slate-800/70'}`}>
-                    {suggestion.product ? <img src={suggestion.product.images[0]} alt="" loading="lazy" className="h-10 w-10 shrink-0 rounded-md bg-slate-100 object-contain dark:bg-slate-800" /> : <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-slate-100 text-blue-700 dark:bg-slate-800 dark:text-blue-300"><ArrowUpRight className="h-4 w-4" /></span>}
-                    <span className="min-w-0 flex-1"><span className="block text-[10px] font-bold uppercase tracking-wide text-blue-700 dark:text-blue-300">{suggestion.kind}</span><span className="block truncate text-xs font-semibold text-slate-900 dark:text-slate-100">{suggestion.label}</span><span className="mt-0.5 block truncate text-[11px] text-slate-500">{suggestion.detail}</span></span>
-                    {suggestion.product && <span className="shrink-0 text-xs font-semibold text-slate-700 dark:text-slate-200">{formatPrice(suggestion.product.price)}</span>}
+                  <button type="button" onMouseEnter={() => setActiveIndex(index)} onClick={() => { navigate(suggestion.to); setIsOpen(false); searchInputRef.current?.blur(); }} className={`flex min-h-14 w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left ${index === activeIndex ? 'bg-accent/10 dark:bg-surface-elevated' : 'hover:bg-surface-soft dark:hover:bg-surface-elevated/70'}`}>
+                    {suggestion.product ? <img src={suggestion.product.images[0]} alt="" loading="lazy" className="h-10 w-10 shrink-0 rounded-md bg-surface-soft object-contain dark:bg-surface-elevated" /> : <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-surface-soft text-accent dark:bg-surface-elevated dark:text-accent"><ArrowUpRight className="h-4 w-4" /></span>}
+                    <span className="min-w-0 flex-1"><span className="block text-[10px] font-bold uppercase tracking-wide text-accent dark:text-accent">{suggestion.kind}</span><span className="block truncate text-xs font-semibold text-main dark:text-main">{suggestion.label}</span><span className="mt-0.5 block truncate text-[11px] text-muted">{suggestion.detail}</span></span>
+                    {suggestion.product && <span className="shrink-0 text-xs font-semibold text-main dark:text-main price">{formatPrice(suggestion.product.price)}</span>}
                   </button>
                 </li>
               ))}
             </ul>
-          ) : <p role="status" className="px-4 py-3 text-xs text-slate-600 dark:text-slate-300">No matching products. Press Enter to search the full catalog.</p>}
-          <button type="submit" className="flex min-h-10 w-full items-center gap-2 border-t border-slate-100 px-3 text-xs font-semibold text-blue-700 hover:bg-slate-50 dark:border-slate-800 dark:text-blue-300 dark:hover:bg-slate-800"><Search className="h-3.5 w-3.5" />Search all products for “{query.trim()}”</button>
+          ) : <p role="status" className="px-4 py-3 text-xs text-muted dark:text-main">No matching products. Press Enter to search the full catalog.</p>}
+          <button type="submit" className="flex min-h-10 w-full items-center gap-2 border-t border-border px-3 text-xs font-semibold text-accent hover:bg-surface-soft dark:border-border dark:text-accent dark:hover:bg-surface-elevated"><Search className="h-3.5 w-3.5" />Search all products for “{query.trim()}”</button>
         </div>
       )}
     </form>

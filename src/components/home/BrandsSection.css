@@ -1,5 +1,5 @@
 .home-brand-rail { display: grid; grid-auto-flow: column; grid-auto-columns: 128px; gap: 12px; overflow-x: auto; padding: 4px 4px 8px; margin-inline: -4px; scroll-snap-type: x proximity; }
-.home-brand-chip { display: flex; height: 88px; align-items: center; justify-content: center; padding: 16px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; scroll-snap-align: start; transition: transform 200ms ease-out; }
+.home-brand-chip { display: flex; height: 88px; align-items: center; justify-content: center; padding: 16px; border: 1px solid rgb(var(--color-border)); border-radius:var(--radius-lg); background: rgb(var(--color-media-surface)); scroll-snap-align: start; transition: transform 200ms ease-out; }
 .home-brand-chip:hover,
 .home-brand-chip:focus-visible { transform: translateY(-3px); }
 .home-brand-chip:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }

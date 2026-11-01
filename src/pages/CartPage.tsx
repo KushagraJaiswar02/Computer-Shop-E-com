@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Trash2,
-  Minus,
-  Plus,
   ShoppingBag,
   ArrowRight,
-  ShieldCheck,
   Check,
   AlertCircle,
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { formatPrice } from '../lib/utils';
 import { KeycapButton } from '../components/common/KeycapButton';
+import { MotionList } from '../components/motion/MotionList';
+import { CartItemRow } from '../features/cart/CartItemRow';
+import { availableStock, cartItemKey, cartSavings, FreeShippingProgress } from '../features/cart/cartUiUtils';
+import { cartPreviewConfig } from '../features/cart/cartUiConfig';
 
 export const CartPage: React.FC = () => {
-  const { cart, updateCartQuantity, removeFromCart, clearCart, cartSubtotal } = useStore();
+  const { cart, products, wishlist, toggleWishlist, updateCartQuantity, removeFromCart, clearCart, cartSubtotal } = useStore();
+  const moveToWishlist = (id: string) => { if (!wishlist.includes(id)) toggleWishlist(id); removeFromCart(id); };
   const navigate = useNavigate();
 
   const [couponCode, setCouponCode] = useState('');
@@ -23,9 +24,9 @@ export const CartPage: React.FC = () => {
   const [couponError, setCouponError] = useState('');
   const [couponSuccess, setCouponSuccess] = useState('');
 
-  const freeShippingThreshold = 2999;
+  const freeShippingThreshold = cartPreviewConfig.shippingThreshold;
   const isFreeShipping = cartSubtotal >= freeShippingThreshold;
-  const shippingFee = cart.length === 0 || isFreeShipping ? 0 : 149;
+  const shippingFee = cart.length === 0 || isFreeShipping ? 0 : cartPreviewConfig.shippingFee;
   const discountAmount = Math.round((cartSubtotal * discountPercent) / 100);
   const grandTotal = Math.max(0, cartSubtotal - discountAmount + shippingFee);
 
@@ -35,23 +36,23 @@ export const CartPage: React.FC = () => {
     setCouponSuccess('');
     const code = couponCode.trim().toUpperCase();
 
-    if (code === 'TECH10') {
-      setDiscountPercent(10);
-      setCouponSuccess('10% demo discount preview applied.');
+    if (code === cartPreviewConfig.couponCode) {
+      setDiscountPercent(cartPreviewConfig.couponDiscountPercent);
+      setCouponSuccess(`${cartPreviewConfig.couponDiscountPercent}% demo discount preview applied.`);
     } else {
-      setCouponError('Invalid demo code. The sample code is TECH10.');
+      setCouponError(`Invalid demo code. The sample code is ${cartPreviewConfig.couponCode}.`);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/70 dark:bg-slate-900/50 py-6 sm:py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between pb-4 mb-6 border-b border-slate-200 dark:border-slate-800">
+    <div className="cart-page min-h-screen bg-surface-soft/70 dark:bg-surface/50 py-6 sm:py-8">
+      <div className="shop-container ">
+        <div className="flex items-center justify-between pb-4 mb-6 border-b border-border dark:border-border">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-main dark:text-main">
               Shopping Cart
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs sm:text-sm text-muted dark:text-muted mt-0.5">
               Review example catalog items. This demo does not create live orders or apply retailer shipping terms.
             </p>
           </div>
@@ -59,7 +60,7 @@ export const CartPage: React.FC = () => {
           {cart.length > 0 && (
             <button
               onClick={clearCart}
-              className="text-xs text-rose-600 hover:text-rose-700 dark:text-rose-400 font-medium"
+              className="min-h-10 shrink-0 text-xs text-danger-ink hover:text-danger-ink dark:text-danger-ink font-medium"
             >
               Clear Cart
             </button>
@@ -67,14 +68,14 @@ export const CartPage: React.FC = () => {
         </div>
 
         {cart.length === 0 ? (
-          <div className="py-16 text-center bg-white dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-xs">
-            <div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-3 text-slate-400">
+          <div className="py-16 text-center bg-surface dark:bg-surface rounded-xl border border-border dark:border-border p-8 shadow-xs">
+            <div className="w-14 h-14 rounded-full bg-surface-soft dark:bg-surface-elevated flex items-center justify-center mx-auto mb-3 text-muted">
               <ShoppingBag className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">
+            <h3 className="text-base font-bold text-main dark:text-main mb-1">
               Your cart is currently empty
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-5">
+            <p className="text-xs sm:text-sm text-muted dark:text-muted max-w-sm mx-auto mb-5">
               Explore our selection of laptops, graphics cards, processors, and memory.
             </p>
             <Link to="/shop">
@@ -85,125 +86,53 @@ export const CartPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
             {/* Left Items Table */}
             <div className="lg:col-span-8 space-y-4">
-              <div className="bg-white dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs divide-y divide-slate-100 dark:divide-slate-800">
-                {cart.map((item) => (
-                  <div
-                    key={`${item.product.id}-${item.selectedVariantId || 'default'}`}
-                    className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-                  >
-                    <div className="flex items-center gap-3.5">
-                      <img
-                        src={item.product.images[0]}
-                        alt={item.product.name}
-                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-1.5 flex-shrink-0"
-                      />
-                      <div>
-                        <span className="text-[10px] font-mono text-blue-600 dark:text-blue-400 font-bold uppercase">
-                          {item.product.brandName}
-                        </span>
-                        <Link
-                          to={`/product/${item.product.slug}`}
-                          className="block text-sm font-bold text-slate-900 dark:text-white hover:text-blue-600 line-clamp-1"
-                        >
-                          {item.product.name}
-                        </Link>
-                        <p className="text-xs font-mono text-slate-400 mt-0.5">
-                          SKU: {item.product.sku}
-                        </p>
-                        <span className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300 block sm:hidden mt-1">
-                          {formatPrice(item.unitPrice)} each
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between sm:justify-end gap-5 w-full sm:w-auto">
-                      {/* Quantity stepper */}
-                      <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-850">
-                        <button
-                          onClick={() => updateCartQuantity(item.product.id, item.quantity - 1)}
-                          className="p-1 px-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
-                        >
-                          <Minus className="w-3.5 h-3.5" />
-                        </button>
-                        <span className="px-2 text-xs font-mono font-bold text-slate-800 dark:text-slate-200">
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => updateCartQuantity(item.product.id, item.quantity + 1)}
-                          className="p-1 px-2 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-
-                      {/* Line subtotal */}
-                      <div className="text-right min-w-[90px]">
-                        <span className="text-sm sm:text-base font-bold font-mono text-slate-900 dark:text-white">
-                          {formatPrice(item.unitPrice * item.quantity)}
-                        </span>
-                      </div>
-
-                      {/* Remove item */}
-                      <button
-                        onClick={() => removeFromCart(item.product.id)}
-                        className="text-slate-400 hover:text-rose-600 p-1"
-                        title="Remove product"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Free shipping banner */}
-              <div className="p-3.5 rounded-xl bg-blue-50/60 dark:bg-slate-850 border border-blue-100 dark:border-slate-800 text-xs flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  <span className="text-slate-700 dark:text-slate-300 font-medium">
-                    Sample calculation: ₹149 shipping below ₹2,999, then free. Actual retailer rates are not configured.
-                  </span>
-                </div>
-              </div>
+              <MotionList items={cart} itemKey={cartItemKey} entranceId="cart-page" animateChanges className="space-y-3">
+                {item => <CartItemRow item={item} stock={availableStock(item, products)} onQuantityChange={updateCartQuantity} onRemove={removeFromCart} onMoveToWishlist={moveToWishlist} />}
+              </MotionList>
+              <FreeShippingProgress subtotal={cartSubtotal} itemCount={cart.length} />
             </div>
 
             {/* Right Order Summary & Checkout */}
             <div className="lg:col-span-4 space-y-4">
-              <div className="bg-white dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-xs space-y-4">
-                <h3 className="font-bold text-base text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="bg-surface dark:bg-surface rounded-xl border border-border dark:border-border p-5 shadow-xs space-y-4">
+                <h3 className="font-bold text-base text-main dark:text-main border-b border-border dark:border-border pb-3">
                   Order Summary
                 </h3>
 
                 <div className="space-y-2 text-xs">
-                  <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                  <div className="flex justify-between text-muted dark:text-muted">
                     <span>Hardware Subtotal</span>
-                    <span className="font-mono font-semibold text-slate-900 dark:text-slate-100">
+                    <span className="font-sans font-semibold text-main dark:text-main price">
                       {formatPrice(cartSubtotal)}
                     </span>
                   </div>
 
+                  <div className="flex justify-between text-success-ink dark:text-success-ink">
+                    <span>Product savings</span><span className="font-sans price">{formatPrice(cartSavings(cart))}</span>
+                  </div>
+
                   {discountPercent > 0 && (
-                    <div className="flex justify-between text-emerald-600 dark:text-emerald-400 font-medium">
+                    <div className="flex justify-between text-success-ink dark:text-success-ink font-medium">
                       <span>Demo coupon preview ({discountPercent}%)</span>
-                      <span className="font-mono">-{formatPrice(discountAmount)}</span>
+                      <span className="font-sans">-{formatPrice(discountAmount)}</span>
                     </div>
                   )}
 
-                  <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                  <div className="flex justify-between text-muted dark:text-muted">
                     <span>Sample shipping estimate</span>
-                    <span className="font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
+                    <span className="font-sans text-success-ink dark:text-success-ink font-semibold">
                       {isFreeShipping ? 'FREE' : formatPrice(shippingFee)}
                     </span>
                   </div>
 
-                  <div className="flex justify-between text-slate-500 dark:text-slate-400 text-[11px]">
+                  <div className="flex justify-between text-muted dark:text-muted text-[11px]">
                     <span>Taxes</span>
-                    <span className="font-mono">Not configured</span>
+                    <span className="font-sans">Not configured</span>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-between items-baseline text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                  <div className="pt-3 border-t border-border dark:border-border flex justify-between items-baseline text-sm sm:text-base font-bold text-main dark:text-main">
                     <span>Total Amount</span>
-                    <span className="font-mono text-blue-600 dark:text-blue-400 text-xl font-bold">
+                    <span className="font-sans text-accent dark:text-accent text-xl font-bold price">
                       {formatPrice(grandTotal)}
                     </span>
                   </div>
@@ -216,20 +145,20 @@ export const CartPage: React.FC = () => {
                       type="text"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      placeholder="Demo coupon (TECH10)"
-                      className="flex-1 px-3 py-1.5 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white font-mono uppercase focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      placeholder={`Demo coupon (${cartPreviewConfig.couponCode})`}
+                      className="min-w-0 flex-1 px-3 py-1.5 rounded-lg text-xs bg-surface-soft dark:bg-surface-elevated border border-border dark:border-border text-main dark:text-main font-sans uppercase focus:outline-none focus:ring-1 focus:ring-focus"
                     />
                     <KeycapButton type="submit" size="sm" variant="outline">
                       Apply
                     </KeycapButton>
                   </div>
                   {couponSuccess && (
-                    <p className="text-[11px] text-emerald-600 mt-1.5 flex items-center gap-1 font-medium">
+                    <p className="text-[11px] text-success-ink mt-1.5 flex items-center gap-1 font-medium">
                       <Check className="w-3 h-3" /> {couponSuccess}
                     </p>
                   )}
                   {couponError && (
-                    <p className="text-[11px] text-rose-500 mt-1.5 flex items-center gap-1">
+                    <p className="text-[11px] text-danger-ink mt-1.5 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3" /> {couponError}
                     </p>
                   )}
@@ -242,11 +171,10 @@ export const CartPage: React.FC = () => {
                   onClick={() => navigate('/checkout')}
                   className="w-full justify-center font-bold"
                 >
-                  <span>Proceed to Checkout</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                  <span className="inline-flex items-center gap-1.5">Proceed to Checkout<ArrowRight aria-hidden="true" className="w-4 h-4" /></span>
                 </KeycapButton>
 
-                <p className="text-[11px] text-center text-slate-400 leading-tight">
+                <p className="text-[11px] text-center text-muted leading-tight">
                   Demo checkout does not create an invoice, confirm warranty coverage, or send an order.
                 </p>
               </div>

@@ -17,10 +17,10 @@ export const FloatingThemeToggle: React.FC = () => {
       onClick={toggleTheme}
       title={`Switch to ${nextTheme} mode`}
       aria-label={`Switch to ${nextTheme} mode`}
-      className="floating-theme-toggle fixed z-[15] flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-700 shadow-md transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:border-slate-700 dark:bg-slate-900/95 dark:text-slate-200 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-900 motion-reduce:transition-none"
+      className="floating-theme-toggle fixed z-[15] flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface/95 text-main shadow-md transition-colors hover:bg-surface-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 dark:border-border dark:bg-surface/95 dark:text-main dark:hover:bg-surface-elevated dark:focus-visible:ring-offset-surface motion-reduce:transition-none"
       style={{ right: 'calc(env(safe-area-inset-right, 0px) + 1rem)' }}
     >
-      {theme === 'light' ? <Moon className="h-4 w-4" aria-hidden="true" /> : <Sun className="h-4 w-4 text-amber-400" aria-hidden="true" />}
+      {theme === 'light' ? <Moon className="h-4 w-4" aria-hidden="true" /> : <Sun className="h-4 w-4 text-warning-ink" aria-hidden="true" />}
     </button>
   );
 };

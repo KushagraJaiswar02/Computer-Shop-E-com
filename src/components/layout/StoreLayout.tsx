@@ -15,7 +15,7 @@ export const StoreLayout: React.FC = () => {
   useKeyboardShortcuts();
 
   return (
-    <div className="min-h-screen flex flex-col bg-surface-50 dark:bg-surface-900 text-slate-800 dark:text-slate-100 transition-colors">
+    <div className="storefront-app min-h-screen flex flex-col bg-background dark:bg-background text-main dark:text-main transition-colors">
       <AnnouncementBar />
       <Header />
       <CartDrawer />

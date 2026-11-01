@@ -13,14 +13,14 @@ export interface CategoryConfig {
 }
 
 export const CATEGORY_CONFIG: CategoryConfig[] = [
-  { name: 'Laptops', slug: 'laptops', icon: Laptop, accentColor: '#2563eb' },
-  { name: 'Graphics Cards', slug: 'graphics-cards', icon: CircuitBoard, accentColor: '#7c3aed' },
-  { name: 'Processors', slug: 'processors', icon: Cpu, accentColor: '#c2410c' },
-  { name: 'Memory', slug: 'memory-ram', icon: MemoryStick, accentColor: '#0f766e' },
-  { name: 'Storage', slug: 'storage-ssd', icon: HardDrive, accentColor: '#0369a1' },
-  { name: 'Motherboards', slug: 'motherboards', icon: CircuitBoard, accentColor: '#4338ca' },
-  { name: 'Monitors', slug: 'monitors', icon: Monitor, accentColor: '#be185d' },
-  { name: 'Peripherals', slug: 'peripherals', icon: Keyboard, accentColor: '#a16207' },
+  { name: 'Laptops', slug: 'laptops', icon: Laptop, accentColor: 'rgb(var(--color-category-accent))' },
+  { name: 'Graphics Cards', slug: 'graphics-cards', icon: CircuitBoard, accentColor: 'rgb(var(--color-category-accent))' },
+  { name: 'Processors', slug: 'processors', icon: Cpu, accentColor: 'rgb(var(--color-category-accent))' },
+  { name: 'Memory', slug: 'memory-ram', icon: MemoryStick, accentColor: 'rgb(var(--color-category-accent))' },
+  { name: 'Storage', slug: 'storage-ssd', icon: HardDrive, accentColor: 'rgb(var(--color-category-accent))' },
+  { name: 'Motherboards', slug: 'motherboards', icon: CircuitBoard, accentColor: 'rgb(var(--color-category-accent))' },
+  { name: 'Monitors', slug: 'monitors', icon: Monitor, accentColor: 'rgb(var(--color-category-accent))' },
+  { name: 'Peripherals', slug: 'peripherals', icon: Keyboard, accentColor: 'rgb(var(--color-category-accent))' },
 ];
 
 export interface CategoryDirectoryEntry extends Omit<CategoryConfig, 'subcategories'> {

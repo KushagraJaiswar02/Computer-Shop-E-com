@@ -1,28 +1,34 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Heart, ShoppingBag } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { ProductCard } from '../components/product/ProductCard';
 import { KeycapButton } from '../components/common/KeycapButton';
+import { MotionList, productKey } from '../components/motion/MotionList';
 
 export const WishlistPage: React.FC = () => {
   const { wishlist, products, addToCart, toggleWishlist } = useStore();
 
-  const savedProducts = products.filter(p => wishlist.includes(p.id));
+  const savedProducts = useMemo(() => products.filter(p => wishlist.includes(p.id)), [products, wishlist]);
+  const inStock = savedProducts.filter(product => product.stockStatus !== 'out_of_stock' && product.stock > 0);
+  const moveToCart = (product: typeof products[number]) => {
+    addToCart(product, 1);
+    if (wishlist.includes(product.id)) toggleWishlist(product.id);
+  };
 
   return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-900 py-8 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-slate-200 dark:border-surface-750 gap-4">
+    <div className="wishlist-page min-h-screen bg-background dark:bg-background py-8 transition-colors">
+      <div className="shop-container ">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-border dark:border-border gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
-              <Heart className="w-4 h-4 fill-rose-500 text-rose-500" />
+            <div className="flex items-center gap-2 text-xs font-sans font-bold uppercase tracking-wider text-danger-ink dark:text-danger-ink">
+              <Heart className="w-4 h-4 fill-danger-ink text-danger-ink" />
               <span>Personal Hardware Wishlist</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-main dark:text-main mt-1">
               Saved Hardware ({savedProducts.length})
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs sm:text-sm text-muted dark:text-muted mt-0.5">
               Items saved for upcoming custom PC builds or upgrade cycles.
             </p>
           </div>
@@ -31,41 +37,31 @@ export const WishlistPage: React.FC = () => {
             <div className="flex items-center gap-3">
               <KeycapButton
                 variant="primary"
-                onClick={() => {
-                  savedProducts.forEach(p => {
-                    if (p.stockStatus !== 'out_of_stock') addToCart(p, 1);
-                  });
-                }}
+                onClick={() => inStock.forEach(moveToCart)}
+                disabled={inStock.length === 0}
               >
-                <ShoppingBag className="w-4 h-4 mr-1.5" />
-                Move All In-Stock to Cart
+                <span className="inline-flex items-center gap-1.5"><ShoppingBag aria-hidden="true" className="w-4 h-4" />Move All In-Stock to Cart</span>
               </KeycapButton>
             </div>
           )}
         </div>
 
-        {savedProducts.length === 0 ? (
-          <div className="py-20 text-center bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 p-8 shadow-soft-card">
-            <div className="w-16 h-16 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-500 flex items-center justify-center mx-auto mb-4">
+        <MotionList items={savedProducts} itemKey={productKey} entranceId="wishlist" animateChanges className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-4" empty={(
+          <div className="py-20 text-center bg-surface dark:bg-surface rounded-2xl border border-border dark:border-border p-8 shadow-soft-card">
+            <div className="w-16 h-16 rounded-full bg-danger/10 dark:bg-danger/10 text-danger-ink flex items-center justify-center mx-auto mb-4">
               <Heart className="w-8 h-8" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+            <h3 className="text-lg font-bold text-main dark:text-main mb-2">
               Your wishlist is currently empty
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto mb-6">
-              Browse our laptops, GPUs, processors, and memory kits. Hover or focus any card and press <strong className="font-mono text-slate-700 dark:text-slate-200">[ L ]</strong> to save it instantly.
+            <p className="text-xs sm:text-sm text-muted dark:text-muted max-w-sm mx-auto mb-6">
+              Browse our laptops, GPUs, processors, and memory kits. Hover or focus any card and press <strong className="font-sans text-main dark:text-main">[ L ]</strong> to save it instantly.
             </p>
-            <Link to="/shop">
-              <KeycapButton variant="primary">Explore Hardware Catalog</KeycapButton>
-            </Link>
+            <Link to="/shop" className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 text-sm font-semibold text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">Explore Hardware Catalog</Link>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {savedProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
+        )}>
+          {product => <ProductCard product={product} onAddToCart={moveToCart} cartActionLabel="Move to cart" muteUnavailable />}
+        </MotionList>
       </div>
     </div>
   );

@@ -24,7 +24,7 @@ export const BrandHero: React.FC<{ brand: BrandDirectoryEntry }> = ({ brand }) =
       ) : (
         <div className="brand-directory-hero-fallback brand-directory-hero-image absolute inset-0 flex items-center justify-center p-10">
           <div className="brand-directory-hero-pattern absolute inset-0" />
-          <span className="brand-directory-hero-logo relative flex h-28 w-full items-center justify-center text-center text-3xl font-bold text-white">
+          <span className="brand-directory-hero-logo relative flex h-28 w-full items-center justify-center text-center text-3xl font-bold text-inverse-ink">
             {brand.logo ? <span className="block h-full w-full" dangerouslySetInnerHTML={{ __html: brand.logo }} /> : brand.name}
           </span>
         </div>

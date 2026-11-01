@@ -1,8 +1,8 @@
 .brand-directory-card {
   --directory-accent: var(--directory-accent-color);
-  --directory-button-bg: color-mix(in srgb, var(--directory-accent) 80%, black);
-  --directory-button-ink: white;
-  --directory-accent-ink: color-mix(in srgb, var(--directory-accent) 75%, black);
+  --directory-button-bg: color-mix(in srgb, var(--directory-accent) 80%, rgb(var(--color-overlay)));
+  --directory-button-ink: rgb(var(--color-on-primary));
+  --directory-accent-ink: color-mix(in srgb, var(--directory-accent) 75%, rgb(var(--color-overlay)));
   background: var(--bg-surface);
   border-color: var(--border-color);
   animation: brand-directory-enter 420ms ease-out both;
@@ -12,27 +12,27 @@
 .dark .brand-directory-card {
   --directory-accent: var(--directory-accent-dark);
   --directory-button-bg: var(--directory-accent);
-  --directory-button-ink: #0f172a;
+  --directory-button-ink: rgb(var(--color-text));
   --directory-accent-ink: var(--directory-accent);
 }
 
 .brand-directory-card[data-expanded="true"] {
   background: color-mix(in srgb, var(--directory-accent) 7%, var(--bg-surface));
   border-color: color-mix(in srgb, var(--directory-accent) 70%, var(--border-color));
-  box-shadow: 0 8px 28px -16px color-mix(in srgb, var(--directory-accent) 45%, transparent), 0 1px 3px rgb(0 0 0 / 0.04);
+  box-shadow:var(--shadow-elevated);
 }
 
 .brand-directory-logo {
   color: var(--directory-brand-color);
-  background: #fff;
-  border: 1px solid #e2e8f0;
+  background: rgb(var(--color-media-surface));
+  border: 1px solid rgb(var(--color-border));
   transition: transform 200ms ease-out;
 }
 
 .brand-directory-header:hover .brand-directory-logo,
 .brand-directory-header:focus-visible .brand-directory-logo {
   transform: scale(1.04);
-  box-shadow: 0 4px 18px color-mix(in srgb, var(--directory-accent-color) 18%, transparent);
+  box-shadow:var(--shadow-elevated);
 }
 
 .brand-directory-logo svg,
@@ -87,16 +87,16 @@
   max-width: 100%;
   padding: 0.375rem 0.625rem;
   border: 1px solid var(--border-color);
-  border-radius: 9999px;
+  border-radius:var(--radius-xl);
   background: var(--bg-surface);
-  color: #475569;
+  color: rgb(var(--color-text-muted));
   font-size: 0.625rem;
   font-weight: 600;
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
 
-.dark .brand-directory-pill { color: #cbd5e1; }
+.dark .brand-directory-pill { color: rgb(var(--color-text-muted)); }
 
 .brand-directory-chip {
   color: var(--directory-accent-ink);
@@ -120,7 +120,7 @@
 .brand-directory-browse:focus-visible svg { transform: translateX(3px); }
 
 .brand-directory-hero {
-  background: linear-gradient(145deg, #dce1e8, #f8fafc 78%);
+  background: linear-gradient(145deg, rgb(var(--color-surface-soft)), rgb(var(--color-background)) 78%);
   isolation: isolate;
 }
 
@@ -130,12 +130,12 @@
   inset: 0;
   z-index: 1;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 7px rgb(255 255 255 / 0.9);
+  box-shadow:var(--shadow-soft);
   pointer-events: none;
 }
 
-.dark .brand-directory-hero { background: linear-gradient(145deg, #283548, #475569 78%); }
-.dark .brand-directory-hero::after { box-shadow: inset 0 0 0 7px #334155; }
+.dark .brand-directory-hero { background: linear-gradient(145deg, rgb(var(--color-surface-elevated)), rgb(var(--color-text-muted)) 78%); }
+.dark .brand-directory-hero::after { box-shadow:var(--shadow-soft); }
 
 .brand-directory-hero-image {
   opacity: 0;
@@ -150,12 +150,12 @@
 }
 
 .brand-directory-hero-shadow {
-  background: radial-gradient(ellipse, rgb(15 23 42 / 0.32), transparent 70%);
+  background: radial-gradient(ellipse, rgb(var(--color-overlay) / 0.32), transparent 70%);
   opacity: 0;
   transition: opacity 280ms ease-out;
 }
 
-.dark .brand-directory-hero-shadow { background: radial-gradient(ellipse, rgb(0 0 0 / 0.5), transparent 70%); }
+.dark .brand-directory-hero-shadow { background: radial-gradient(ellipse, rgb(var(--color-overlay) / 0.5), transparent 70%); }
 .brand-directory-panel[data-expanded="true"] .brand-directory-hero-shadow { opacity: 1; transition-delay: 180ms; }
 
 /* Existing catalog photography may have a background; soften its edges until a cutout is supplied. */
@@ -164,11 +164,11 @@
 }
 
 .brand-directory-hero-fallback {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--directory-accent-color) 80%, white), var(--directory-accent-color) 40%, color-mix(in srgb, var(--directory-accent-color) 25%, #070b13));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--directory-accent-color) 80%, rgb(var(--color-media-surface))), var(--directory-accent-color) 40%, color-mix(in srgb, var(--directory-accent-color) 25%, rgb(var(--color-inverse))));
 }
 
 .brand-directory-hero-pattern {
-  background-image: radial-gradient(circle, rgb(255 255 255 / 0.17) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgb(var(--color-highlight) / 0.17) 1px, transparent 1px);
   background-size: 18px 18px;
   mask-image: linear-gradient(135deg, black, transparent 85%);
 }
@@ -205,3 +205,5 @@
     transform: none;
   }
 }
+.brand-directory-browse{--directory-button-bg:rgb(var(--color-primary));--directory-button-ink:rgb(var(--color-on-primary))}
+.brand-directory-card[data-expanded=true]{background:var(--bg-surface)}

@@ -15,9 +15,9 @@ export const CategoryPage: React.FC = () => {
   if (!category) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-center">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Category Not Found</h2>
-        <p className="text-sm text-slate-500 mb-6">The hardware category you requested does not exist.</p>
-        <Link to="/shop" className="text-brand-600 hover:underline">
+        <h2 className="text-2xl font-bold text-main dark:text-main mb-2">Category Not Found</h2>
+        <p className="text-sm text-muted mb-6">The hardware category you requested does not exist.</p>
+        <Link to="/shop" className="text-accent hover:underline">
           Return to full catalog
         </Link>
       </div>
@@ -30,27 +30,27 @@ export const CategoryPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-900 py-8 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background dark:bg-background py-8 transition-colors">
+      <div className="shop-container ">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-4 font-mono">
-          <Link to="/" className="hover:text-brand-600">Home</Link>
+        <div className="flex items-center gap-2 text-xs text-muted dark:text-muted mb-4 font-sans">
+          <Link to="/" className="hover:text-accent">Home</Link>
           <span>/</span>
-          <Link to="/shop" className="hover:text-brand-600">Categories</Link>
+          <Link to="/shop" className="hover:text-accent">Categories</Link>
           <span>/</span>
-          <span className="text-slate-900 dark:text-white font-semibold">{category.name}</span>
+          <span className="text-main dark:text-main font-semibold">{category.name}</span>
         </div>
 
         {/* Hero Header for Category */}
-        <div className="relative rounded-2xl bg-slate-900 text-white overflow-hidden p-6 sm:p-10 mb-8 border border-slate-800">
+        <div className="relative rounded-2xl bg-inverse text-inverse-ink overflow-hidden p-6 sm:p-10 mb-8 border border-border">
           <div className="relative z-10 max-w-2xl">
-            <span className="text-xs font-mono uppercase tracking-wider text-brand-400 font-bold block mb-1">
+            <span className="text-xs font-sans uppercase tracking-wider text-accent font-bold block mb-1">
               Hardware category
             </span>
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2">
               {category.name}
             </h1>
-            <p className="text-sm text-slate-300 leading-relaxed mb-6">
+            <p className="text-sm text-muted leading-relaxed mb-6">
               {category.description}
             </p>
 
@@ -60,8 +60,8 @@ export const CategoryPage: React.FC = () => {
                 to={category.href}
                 className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-all ${
                   !subcategoryId
-                    ? 'bg-brand-600 border-brand-500 text-white shadow-keycap'
-                    : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700'
+                    ? 'bg-primary border-primary text-on-primary shadow-keycap'
+                    : 'bg-overlay/80 border-border text-muted hover:bg-inverse'
                 }`}
               >
                 All {category.name}
@@ -74,8 +74,8 @@ export const CategoryPage: React.FC = () => {
                     to={sub.href}
                     className={`text-xs px-3 py-1.5 rounded-lg border font-medium transition-all ${
                       isActive
-                        ? 'bg-brand-600 border-brand-500 text-white shadow-keycap'
-                        : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700'
+                        ? 'bg-primary border-primary text-on-primary shadow-keycap'
+                        : 'bg-overlay/80 border-border text-muted hover:bg-inverse'
                     }`}
                   >
                     {sub.name}
@@ -87,13 +87,13 @@ export const CategoryPage: React.FC = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="mb-6 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+        <div className="mb-6 flex items-center justify-between text-xs text-muted dark:text-muted">
           <div>
-            Showing <span className="font-mono font-bold text-slate-900 dark:text-white">{catProducts.length}</span> components in stock
+            Showing <span className="font-sans font-bold text-main dark:text-main">{catProducts.length}</span> components in stock
           </div>
           <Link
             to={category.href}
-            className="text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1 font-semibold"
+            className="text-accent dark:text-accent hover:underline flex items-center gap-1 font-semibold"
           >
             <span>Open in Full Filter Catalog</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -101,9 +101,9 @@ export const CategoryPage: React.FC = () => {
         </div>
 
         {catProducts.length === 0 ? (
-          <div className="p-12 text-center bg-white dark:bg-surface-850 rounded-xl border border-slate-200 dark:border-surface-750">
-            <p className="text-slate-600 dark:text-slate-300 font-medium">No items found in this subcategory.</p>
-            <Link to={category.href} className="text-xs text-brand-600 hover:underline mt-2 inline-block">
+          <div className="p-12 text-center bg-surface dark:bg-surface rounded-xl border border-border dark:border-border">
+            <p className="text-muted dark:text-main font-medium">No items found in this subcategory.</p>
+            <Link to={category.href} className="text-xs text-accent hover:underline mt-2 inline-block">
               View all {category.name}
             </Link>
           </div>

@@ -46,18 +46,21 @@ export const useBrandTransition = (brands: BrandDirectoryEntry[], reducedMotion:
     const brand = brands[target];
     if (!brand) return;
     let cancelled = false;
-    let frame = 0;
+    // Selection must never wait for a remote image. Keep the branded fallback
+    // visible while artwork loads, and ignore results from older selections.
+    setView(current => current.current?.brand === brand ? current : ({
+      current: { brand, imageKind: 'none' },
+      previous: reducedMotion ? null : current.current,
+      serial: current.serial + 1,
+    }));
     void prepareBrand(brand).then(prepared => {
       if (cancelled || targetRef.current !== target) return;
-      frame = requestAnimationFrame(() => {
-        if (cancelled || targetRef.current !== target) return;
-        setView(current => {
-          if (current.current?.brand === prepared.brand && current.current.imageSrc === prepared.imageSrc) return current;
-          return { current: prepared, previous: reducedMotion ? null : current.current, serial: current.serial + 1 };
-        });
+      setView(current => {
+        if (current.current?.brand !== brand || current.current.imageSrc === prepared.imageSrc) return current;
+        return { ...current, current: prepared };
       });
     });
-    return () => { cancelled = true; cancelAnimationFrame(frame); };
+    return () => { cancelled = true; };
   }, [brands, target, reducedMotion]);
 
   useEffect(() => {
@@ -73,6 +76,15 @@ export const useBrandTransition = (brands: BrandDirectoryEntry[], reducedMotion:
     const timer = window.setTimeout(warmNeighbors, 250);
     return () => window.clearTimeout(timer);
   }, [brands, target]);
+
+  useEffect(() => {
+    if (!view.previous) return;
+    const serial = view.serial;
+    const timer = window.setTimeout(() => {
+      setView(current => current.serial === serial ? { ...current, previous: null } : current);
+    }, 650);
+    return () => window.clearTimeout(timer);
+  }, [view.serial, view.previous]);
 
   const finish = useCallback((serial: number) => {
     setView(current => current.serial === serial && current.previous ? { ...current, previous: null } : current);

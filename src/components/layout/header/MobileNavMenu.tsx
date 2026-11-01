@@ -15,8 +15,9 @@ export const MobileNavMenu: React.FC<MobileNavMenuProps> = ({ isOpen, onClose, c
   if (!isOpen) return null;
   return (
     <nav id={id} aria-label="Product categories" className="category-mega-panel category-mobile-panel">
-      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+      <div className="shop-container py-4 ">
         <Link to="/shop" onClick={onClose} className="category-menu-all">All Categories<ArrowRight aria-hidden="true" className="h-4 w-4" /></Link>
+        <div className="flex flex-wrap gap-x-5 gap-y-2 border-b border-border py-3 text-sm"><Link to="/enquiry?request=product" onClick={onClose}>Request a Product</Link><Link to="/wishlist" onClick={onClose}>Wishlist</Link><Link to="/compare" onClick={onClose}>Compare</Link><Link to="/brands" onClick={onClose}>Brands</Link></div>
         <div className="mt-3 space-y-1">
           {categories.map(category => {
             const Icon = category.icon;

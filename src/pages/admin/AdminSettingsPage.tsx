@@ -1,70 +1,37 @@
 import React, { useState } from 'react';
-import { RotateCcw, Check, Database, ShieldAlert } from 'lucide-react';
+import { authorize, audit } from '../../services/admin/mockAdmin';
+import { adminConfig } from '../../config/admin';
 import { useStore } from '../../context/StoreContext';
-import { KeycapButton } from '../../components/common/KeycapButton';
-
+import { AdminButton, AdminModal, Field, PageHeading, Panel, useAdminToast } from './AdminUi';
 export const AdminSettingsPage: React.FC = () => {
-  const { resetHomepageConfig } = useStore();
-  const [resetDone, setResetDone] = useState(false);
-
-  const handleResetLocalStorage = () => {
-    if (confirm('Reset all demo catalog mutations, custom orders, and homepage modifications to initial factory values?')) {
-      localStorage.clear();
-      resetHomepageConfig();
-      setResetDone(true);
-      setTimeout(() => {
+  const { resetHomepageConfig, homepageConfig } = useStore(), toast = useAdminToast();
+  const [reset, setReset] = useState<'homepage' | 'all' | 'reload' | 'clear' | null>(null), [confirmation, setConfirmation] = useState(''), [error, setError] = useState('');
+  const run = () => {
+    if (confirmation !== 'RESET') return;
+    try {
+      const user = authorize('settings.write');
+      if (reset === 'homepage') { resetHomepageConfig(); audit(user, 'settings', 'homepage', 'reset', homepageConfig, null); setReset(null); toast('Homepage reset to its original layout.'); }
+      else if (reset === 'reload') {
+        audit(user, 'settings', 'demo', 'reload', null, { source: 'deterministic-demo-generator' });
+        localStorage.removeItem('compshop_demo_cleared');
+        ['compshop_custom_products', 'compshop_archived_products', 'compshop_orders', 'compshop_enquiries', 'compshop_cart', 'compshop_wishlist', 'compshop_compare', 'compshop_homepage_config_v3'].forEach(key => localStorage.removeItem(key));
         window.location.reload();
-      }, 1000);
-    }
+      } else if (reset === 'clear') {
+        audit(user, 'settings', 'demo', 'clear', { source: 'browser-demo-data' }, null);
+        localStorage.setItem('compshop_demo_cleared', '1');
+        ['compshop_custom_products', 'compshop_archived_products', 'compshop_orders', 'compshop_enquiries', 'compshop_cart', 'compshop_wishlist', 'compshop_compare', 'compshop_homepage_config_v3', 'compshop_admin_audit'].forEach(key => localStorage.removeItem(key));
+        window.location.reload();
+      }
+      else {
+        audit(user, 'settings', 'demo', 'reset', { keys: ['products', 'archive', 'orders', 'enquiries', 'cart', 'wishlist', 'compare', 'homepage'] }, null);
+        resetHomepageConfig();
+        ['compshop_custom_products', 'compshop_archived_products', 'compshop_orders', 'compshop_enquiries', 'compshop_cart', 'compshop_wishlist', 'compshop_compare', 'compshop_homepage_config_v3'].forEach(key => localStorage.removeItem(key));
+        window.location.reload();
+      }
+    } catch (failure) { setError(failure instanceof Error ? failure.message : 'Could not reset.'); }
   };
-
-  return (
-    <div className="space-y-6 max-w-4xl">
-      <div className="pb-6 border-b border-slate-800">
-        <h1 className="text-2xl font-bold text-white tracking-tight">
-          Demo Storefront Configuration & State
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
-          Settings for the prototype environment, data caching, and sample state storage.
-        </p>
-      </div>
-
-      <div className="bg-slate-950 rounded-2xl border border-slate-800 p-6 space-y-6 text-xs">
-        <div className="space-y-2">
-          <h3 className="font-bold text-sm text-white flex items-center gap-2">
-            <Database className="w-4 h-4 text-brand-400" />
-            <span>Local Demonstration Persistence</span>
-          </h3>
-          <p className="text-slate-400 leading-relaxed">
-            All prototype mutations — such as newly added hardware items, updated stock levels, reordered homepage blocks, customer orders, and saved wishlists — are persisted safely in the browser's LocalStorage. This allows showing realistic dynamic capabilities to the shop owner without requiring an active database connection.
-          </p>
-        </div>
-
-        <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-          <div>
-            <h4 className="font-bold text-white">Reset Demo Environment</h4>
-            <p className="text-slate-500 text-[11px] mt-0.5">
-              Restore default products, sample orders, and original homepage order.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            {resetDone && (
-              <span className="text-emerald-400 font-mono font-bold flex items-center gap-1">
-                <Check className="w-4 h-4" /> Reset Complete! Reloading...
-              </span>
-            )}
-            <KeycapButton
-              variant="danger"
-              size="sm"
-              onClick={handleResetLocalStorage}
-            >
-              <RotateCcw className="w-3.5 h-3.5 mr-1" />
-              Reset All Demo State
-            </KeycapButton>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const start = (value: 'homepage' | 'all' | 'reload' | 'clear') => { setReset(value); setConfirmation(''); setError(''); };
+  const modalTitle = reset === 'homepage' ? 'Reset homepage?' : reset === 'reload' ? 'Reload demo data?' : reset === 'clear' ? 'Clear all demo data?' : 'Reset demo data?';
+  const modalCopy = reset === 'homepage' ? 'This replaces your homepage changes with the original layout.' : reset === 'clear' ? 'This removes browser-stored demo data. You can reload it later from this page.' : 'This clears your shop edits in this browser and reloads deterministic demo data.';
+  return <div className="au-stack"><PageHeading title="Settings" description="Manage this demo workspace and restore the original shop setup." /><Panel title="About this workspace"><p className="au-muted">Your products, stock changes, orders, wishlist and homepage edits are saved in this browser. {adminConfig.PUBLIC_DEMO_ACCESS ? 'Public demo access is enabled.' : 'Admin access requires an admin account.'} {adminConfig.DEMO_MODE && 'Demo admin sign-in is available on the login page.'}</p></Panel><Panel title="Demo data"><p className="au-muted mb-4">Reload the full deterministic demo catalogue, customer activity and admin scenarios, or remove the browser-stored demo records.</p><div className="au-actions"><AdminButton onClick={() => start('reload')}>Reload demo data</AdminButton><AdminButton variant="danger" onClick={() => start('clear')}>Clear all data</AdminButton></div></Panel><Panel title="Reset homepage"><p className="au-muted mb-4">Restore the original sections, banners, announcement and product selections. Products and orders are kept.</p><AdminButton onClick={() => start('homepage')}>Reset homepage</AdminButton></Panel><Panel title="Reset demo data"><p className="au-muted mb-4">Remove catalog edits, archived products, custom orders, enquiries, basket, wishlist, comparison list and homepage changes. The original sample shop will load again. Accounts and audit history are kept.</p><AdminButton variant="danger" onClick={() => start('all')}>Reset demo data</AdminButton></Panel>{reset && <AdminModal title={modalTitle} onClose={() => setReset(null)}><p className="mb-5">{modalCopy} This cannot be undone.</p><Field label="Type RESET to confirm" error={error}><input autoComplete="off" value={confirmation} onChange={event => setConfirmation(event.target.value)} /></Field><div className="au-actions mt-5"><AdminButton onClick={() => setReset(null)}>Keep my changes</AdminButton><AdminButton variant="danger" disabled={confirmation !== 'RESET'} onClick={run}>Confirm</AdminButton></div></AdminModal>}</div>;
 };

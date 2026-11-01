@@ -17,18 +17,18 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
   return (
     <div className="flex flex-col gap-3">
       {/* Primary Main Image */}
-      <div className="relative aspect-4/3 rounded-xl bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-800 flex items-center justify-center p-6 overflow-hidden shadow-xs">
+      <div className="relative h-72 sm:h-96 lg:h-[min(45vh,28rem)] rounded-xl bg-surface dark:bg-surface border border-border dark:border-border flex items-center justify-center p-6 overflow-hidden shadow-xs">
         {discountPercent && discountPercent > 0 ? (
-          <div className="absolute top-3 left-3 z-10 px-2.5 py-0.5 rounded text-xs font-mono font-bold bg-rose-600 text-white shadow-xs">
+          <div className="absolute top-3 left-3 z-10 px-2.5 py-0.5 rounded text-xs font-sans font-bold bg-discount-badge text-on-primary shadow-xs">
             -{discountPercent}% OFF
           </div>
         ) : null}
 
-        <img
+        {activeImage ? <img
           src={activeImage}
           alt={name}
           className="max-h-full max-w-full object-contain transition-transform duration-200 hover:scale-105"
-        />
+        /> : <span className="text-sm text-muted dark:text-muted">Image unavailable</span>}
       </div>
 
       {/* Thumbnails Row */}
@@ -37,11 +37,13 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
           {images.map((img, idx) => (
             <button
               key={idx}
+              type="button"
               onClick={() => setSelectedIndex(idx)}
-              className={`w-16 h-16 rounded-lg bg-white dark:bg-slate-850 border p-1 flex items-center justify-center overflow-hidden transition-all flex-shrink-0 ${
+              aria-pressed={selectedIndex === idx}
+              className={`w-16 h-16 rounded-lg bg-surface dark:bg-surface border p-1 flex items-center justify-center overflow-hidden transition-all flex-shrink-0 ${
                 selectedIndex === idx
-                  ? 'border-blue-600 ring-2 ring-blue-500/20 shadow-xs'
-                  : 'border-slate-200 dark:border-slate-800 opacity-70 hover:opacity-100 hover:border-slate-300'
+                  ? 'border-primary ring-2 ring-focus/20 shadow-xs'
+                  : 'border-border dark:border-border opacity-70 hover:opacity-100 hover:border-border'
               }`}
               aria-label={`View image ${idx + 1}`}
             >

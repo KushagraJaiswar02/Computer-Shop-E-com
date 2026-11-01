@@ -1,3 +1,4 @@
+import { authorize, audit } from '../services/admin/mockAdmin';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import {
   Product,
@@ -16,6 +17,9 @@ import {
   DEFAULT_HOMEPAGE_CONFIG,
   SAMPLE_ORDERS,
 } from '../data/mockData';
+import { adminConfig } from '../config/admin';
+import { makeDemoCatalog } from '../demo/catalog';
+import { createDemoEnquiries, createDemoOrders } from '../demo/activity';
 
 interface StoreContextType {
   // Theme
@@ -219,23 +223,18 @@ const normalizeHomepageConfig = (stored: any): HomepageConfig => {
 };
 
 export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Theme state - light mode default
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-
-  useEffect(() => {
-    const saved = localStorage.getItem(LOCAL_STORAGE_KEYS.THEME);
-    if (saved === 'dark' || saved === 'light') {
-      setTheme(saved);
-    }
+  const demoCatalog = React.useMemo(() => {
+    const cleared = localStorage.getItem('compshop_demo_cleared') === '1';
+    return adminConfig.DEMO_MODE && !cleared ? makeDemoCatalog(INITIAL_PRODUCTS, INITIAL_CATEGORIES, INITIAL_BRANDS) : null;
   }, []);
-
+  // Initialize synchronously so StrictMode cannot overwrite a saved preference.
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try { const saved = localStorage.getItem(LOCAL_STORAGE_KEYS.THEME); if (saved === 'dark' || saved === 'light') return saved; } catch { /* Use system preference when storage is unavailable. */ }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, theme);
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    try { localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, theme); } catch { /* Theme still works without persistence. */ }
   }, [theme]);
 
   const toggleTheme = () => {
@@ -252,7 +251,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         console.error('Failed to parse saved products', e);
       }
     }
-    return INITIAL_PRODUCTS;
+    return demoCatalog?.products || INITIAL_PRODUCTS;
   });
 
   useEffect(() => {
@@ -260,19 +259,31 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   }, [products]);
 
   const addProduct = (prod: Product) => {
+    const user = authorize('products.write');
+    audit(user, 'product', prod.id, 'create', null, prod);
     setProducts(prev => [prod, ...prev]);
   };
 
   const updateProduct = (id: string, updated: Partial<Product>) => {
+    const user = authorize('products.write');
+    const before = products.find(p => p.id === id);
+    if (!before) return;
+    audit(user, 'product', id, 'update', before, { ...before, ...updated });
     setProducts(prev => prev.map(p => (p.id === id ? { ...p, ...updated } : p)));
   };
 
   const deleteProduct = (id: string) => {
+    const user = authorize('products.write');
+    const before = products.find(p => p.id === id);
+    if (!before) return;
+    const archived = JSON.parse(localStorage.getItem('compshop_archived_products') || '[]');
+    localStorage.setItem('compshop_archived_products', JSON.stringify([before, ...archived]));
+    audit(user, 'product', id, 'archive', before, null);
     setProducts(prev => prev.filter(p => p.id !== id));
   };
 
-  const categories = INITIAL_CATEGORIES;
-  const brands = INITIAL_BRANDS;
+  const categories = demoCatalog?.categories || INITIAL_CATEGORIES;
+  const brands = demoCatalog?.brands || INITIAL_BRANDS;
 
   // Cart
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -416,13 +427,14 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   }, [homepageConfig]);
 
   const updateHomepageConfig = (newConfig: Partial<HomepageConfig>) => {
-    setHomepageConfig(prev => ({
-      ...prev,
-      ...newConfig,
-    }));
+    const user = authorize('banners.write');
+    audit(user, 'homepage', 'config', 'update', homepageConfig, { ...homepageConfig, ...newConfig });
+    setHomepageConfig(prev => ({ ...prev, ...newConfig }));
   };
 
   const resetHomepageConfig = () => {
+    const user = authorize('banners.write');
+    audit(user, 'homepage', 'config', 'reset', homepageConfig, DEFAULT_HOMEPAGE_CONFIG);
     setHomepageConfig(DEFAULT_HOMEPAGE_CONFIG);
   };
 
@@ -436,7 +448,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         console.error('Failed to parse orders', e);
       }
     }
-    return SAMPLE_ORDERS;
+    return adminConfig.DEMO_MODE ? createDemoOrders(products.length ? products : (demoCatalog?.products || INITIAL_PRODUCTS)) : SAMPLE_ORDERS;
   });
 
   useEffect(() => {
@@ -464,6 +476,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         console.error('Failed to parse enquiries', e);
       }
     }
+    if (adminConfig.DEMO_MODE) return createDemoEnquiries();
     return [
       {
         id: 'enq-001',
@@ -516,10 +529,11 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   const focusSearch = () => {
-    if (searchInputRefState && searchInputRefState.current) {
-      searchInputRefState.current.focus();
-      searchInputRefState.current.select();
-    }
+    window.dispatchEvent(new Event('storefront-search-open'));
+    requestAnimationFrame(() => {
+      searchInputRefState?.current?.focus();
+      searchInputRefState?.current?.select();
+    });
   };
 
   return (

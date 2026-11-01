@@ -1,235 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import {
-  User,
-  Package,
-  MapPin,
-  Shield,
-  CreditCard,
-  LogOut,
-  ExternalLink,
-  ChevronRight,
-  Clock,
-  CheckCircle2,
-  Truck,
-} from 'lucide-react';
-import { useStore } from '../context/StoreContext';
-import { formatPrice, formatDate } from '../lib/utils';
-import { KeycapButton } from '../components/common/KeycapButton';
+import React, { useState } from 'react';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '../features/account/useAuth';
+import { accountConfig, accountLabels } from '../config/account';
+import { errorMessage } from '../services/account/validation';
+import { FormMessage, panelClass, secondaryClass } from '../features/account/AccountUi';
+import '../features/account/account.css';
 
 export const AccountPage: React.FC = () => {
-  const { orders } = useStore();
-  const { subpage } = useParams<{ subpage?: string }>();
-  const routeTab: 'orders' | 'profile' | 'addresses' = subpage === 'addresses' ? 'addresses' : subpage === 'profile' ? 'profile' : 'orders';
-  const [activeTab, setActiveTab] = useState<'orders' | 'profile' | 'addresses'>(routeTab);
-  const [selectedOrderDetails, setSelectedOrderDetails] = useState<string | null>(null);
-
-  useEffect(() => setActiveTab(routeTab), [routeTab]);
-
-  const activeOrder = orders.find(o => o.id === selectedOrderDetails);
-
-  return (
-    <div className="min-h-screen bg-surface-50 dark:bg-surface-900 py-8 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Customer Header Strip */}
-        <div className="bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 p-6 shadow-soft-card mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-blue-600 text-white font-mono font-bold text-xl flex items-center justify-center shadow-keycap">
-              DEMO
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-bold text-slate-900 dark:text-white">
-                  Demo account
-                </h1>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 font-semibold border border-blue-200 dark:border-blue-800">
-                  No customer session
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Authentication and customer profiles are not connected.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Link to="/auth/login">
-              <KeycapButton variant="secondary" size="sm">
-                View demo sign-in
-              </KeycapButton>
-            </Link>
-          </div>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Tab Buttons */}
-          <div className="lg:col-span-3 space-y-1">
-            <button
-              onClick={() => setActiveTab('orders')}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'orders'
-                  ? 'bg-brand-600 text-white shadow-keycap'
-                  : 'bg-white dark:bg-surface-850 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-surface-800 border border-slate-200 dark:border-surface-750'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <Package className="w-4 h-4" />
-                <span>Orders & Tracking</span>
-              </div>
-              <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${activeTab === 'orders' ? 'bg-brand-700' : 'bg-slate-100 dark:bg-surface-700'}`}>
-                {orders.length}
-              </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('profile')}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'profile'
-                  ? 'bg-brand-600 text-white shadow-keycap'
-                  : 'bg-white dark:bg-surface-850 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-surface-800 border border-slate-200 dark:border-surface-750'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <User className="w-4 h-4" />
-                <span>Account Profile</span>
-              </div>
-              <ChevronRight className="w-4 h-4 opacity-50" />
-            </button>
-
-            <button
-              onClick={() => setActiveTab('addresses')}
-              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-semibold transition-all ${
-                activeTab === 'addresses'
-                  ? 'bg-brand-600 text-white shadow-keycap'
-                  : 'bg-white dark:bg-surface-850 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-surface-800 border border-slate-200 dark:border-surface-750'
-              }`}
-            >
-              <div className="flex items-center gap-2.5">
-                <MapPin className="w-4 h-4" />
-                <span>Delivery Addresses</span>
-              </div>
-              <ChevronRight className="w-4 h-4 opacity-50" />
-            </button>
-          </div>
-
-          {/* Right Main Panel */}
-          <div className="lg:col-span-9">
-            {activeTab === 'orders' && (
-              <div className="space-y-4">
-                <div className="bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 p-6 shadow-soft-card">
-                  <h3 className="font-bold text-base text-slate-900 dark:text-white mb-1">
-                    Customer Order History
-                  </h3>
-                  <p className="text-xs text-slate-500 mb-6">
-                    Example records only. This demo does not provide customer order history, shipment tracking or invoices.
-                  </p>
-
-                  <div className="space-y-4">
-                    {orders.map(order => (
-                      <div
-                        key={order.id}
-                        className="rounded-xl border border-slate-200 dark:border-surface-750 overflow-hidden bg-slate-50/50 dark:bg-surface-900/40 divide-y divide-slate-100 dark:divide-surface-750"
-                      >
-                        {/* Order Header */}
-                        <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                          <div>
-                            <span className="font-mono text-slate-400 block text-[10px]">ORDER NUMBER</span>
-                            <span className="font-mono font-bold text-slate-900 dark:text-white text-sm">
-                              #{order.orderNumber}
-                            </span>
-                          </div>
-
-                          <div>
-                            <span className="font-mono text-slate-400 block text-[10px]">DATE PLACED</span>
-                            <span className="text-slate-700 dark:text-slate-300">
-                              {formatDate(order.date)}
-                            </span>
-                          </div>
-
-                          <div>
-                            <span className="font-mono text-slate-400 block text-[10px]">TOTAL</span>
-                            <span className="font-mono font-bold text-brand-600 dark:text-brand-400">
-                              {formatPrice(order.total)}
-                            </span>
-                          </div>
-
-                          <div>
-                            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold ${
-                              order.status === 'Delivered'
-                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
-                                : 'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-400'
-                            }`}>
-                              <Truck className="w-3.5 h-3.5" />
-                              <span>{order.status}</span>
-                            </span>
-                          </div>
-
-                          <div>
-                            <Link to={`/order-confirmation/${order.id}`}>
-                              <KeycapButton size="sm" variant="secondary">
-                                View Demo Record
-                              </KeycapButton>
-                            </Link>
-                          </div>
-                        </div>
-
-                        {/* Order Items */}
-                        <div className="p-4 space-y-2">
-                          {order.items.map((item, idx) => (
-                            <div key={idx} className="flex items-center justify-between text-xs">
-                              <div className="flex items-center gap-3">
-                                <img
-                                  src={item.image}
-                                  alt=""
-                                  className="w-10 h-10 object-contain rounded bg-white dark:bg-surface-800 border p-1"
-                                />
-                                <div>
-                                  <span className="font-medium text-slate-800 dark:text-slate-200">
-                                    {item.productName}
-                                  </span>
-                                  <span className="font-mono text-[10px] text-slate-400 block">
-                                    Qty: {item.quantity} • SKU: {item.sku}
-                                  </span>
-                                </div>
-                              </div>
-                              <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
-                                {formatPrice(item.price * item.quantity)}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'profile' && (
-              <div className="bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 p-6 shadow-soft-card">
-                <h3 className="font-bold text-base text-slate-900 dark:text-white mb-1">
-                  Customer Profile
-                </h3>
-                <p className="text-xs text-slate-500 mb-6">
-                  Customer profile data is not connected in this storefront demo.
-                </p>
-              </div>
-            )}
-
-            {activeTab === 'addresses' && (
-              <div className="bg-white dark:bg-surface-850 rounded-2xl border border-slate-200 dark:border-surface-750 p-6 shadow-soft-card">
-                <h3 className="font-bold text-base text-slate-900 dark:text-white mb-1">
-                  Saved Shipping Addresses
-                </h3>
-                <p className="text-xs text-slate-500 mb-6">
-                  Saved customer addresses are not available in this demo.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+  const auth = useAuth(), navigate = useNavigate(), labels = accountLabels();
+  const [error, setError] = useState('');
+  const links = [{ to: '/account', label: 'Dashboard', end: true }, { to: '/account/orders', label: labels.plural }, { to: '/account/requests', label: 'My requests' }, { to: '/account/details', label: 'Account details' }];
+  const logout = async () => { setError(''); try { await auth.logout(); navigate('/login', { replace: true }); } catch (failure) { setError(errorMessage(failure)); } };
+  return <div className="account-ui min-h-[60vh] bg-background py-6 dark:bg-background sm:py-8"><div className="shop-container ">
+    <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-2 text-xs text-muted dark:text-muted"><Link to="/">Home</Link><span aria-hidden="true">/</span><span>Account</span></nav>
+    <div className={`${panelClass} mb-5 flex flex-wrap items-center gap-3`}><span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-bold text-on-primary" aria-hidden="true">{auth.user?.name.charAt(0).toUpperCase()}</span><div className="min-w-0"><p className="font-bold text-main dark:text-main">{auth.user?.name}</p><p className="break-all text-xs text-muted dark:text-muted">{auth.user?.email}</p></div>{accountConfig.SHOW_MOCK_NOTICE && <p className="w-full text-xs text-muted dark:text-muted">Mock account: records stay in this browser. No information is sent to a retailer.</p>}</div>
+    {auth.basketError && <div className="mb-4"><FormMessage error={auth.basketError} /></div>}
+    <div className="grid min-w-0 gap-5 lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-7">
+      <aside className="min-w-0"><nav aria-label="Account navigation" className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible">
+        {links.map(link => <NavLink key={link.to} to={link.to} end={link.end} className={({ isActive }) => `inline-flex min-h-10 shrink-0 items-center whitespace-nowrap rounded-lg border px-3 text-xs font-semibold ${isActive ? 'border-primary bg-primary text-on-primary' : 'border-border bg-surface text-main hover:border-primary dark:border-border dark:bg-surface dark:text-main'}`}>{link.label}</NavLink>)}
+        <button type="button" onClick={logout} disabled={auth.busy} className={`${secondaryClass} shrink-0`}>{auth.busy ? 'Signing out…' : 'Logout'}</button>
+      </nav><FormMessage error={error} /></aside>
+      <div className="min-w-0"><Outlet /></div>
     </div>
-  );
+  </div></div>;
 };

@@ -1,3 +1,4 @@
+import { brandConfig } from '../../config/brand';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Building2, ChevronLeft, ChevronRight, Pause, Play, Sparkles, Tag } from 'lucide-react';
@@ -63,7 +64,7 @@ export const HeroBanner: React.FC = () => {
     brands: {
       eyebrow: 'SHOP BY BRAND',
       title: brand ? `Explore ${brand.name} hardware` : 'Explore hardware brands',
-      description: brand?.description || 'Browse the manufacturers represented in the current ComputerShop catalog.',
+      description: brand?.description || `Browse the manufacturers represented in the current ${brandConfig.shopName} catalog.`,
       ctaLabel: brand ? `Shop ${brand.name}` : 'Browse brands',
       ctaUrl: brand ? `/brand/${brand.id}` : '/brands',
       imageUrl: brandProduct?.images[0] || '',
@@ -74,7 +75,7 @@ export const HeroBanner: React.FC = () => {
     new_arrivals: {
       eyebrow: 'NEW ARRIVALS',
       title: arrivalProduct?.name || 'Recently added computer hardware',
-      description: arrivalProduct?.shortDescription || 'See the newest products marked in the ComputerShop catalog.',
+      description: arrivalProduct?.shortDescription || `See the newest products marked in the ${brandConfig.shopName} catalog.`,
       ctaLabel: arrivalProduct ? 'View product' : 'View new arrivals',
       ctaUrl: arrivalProduct ? `/product/${arrivalProduct.slug}` : '/shop?sort=newest',
       imageUrl: arrivalProduct?.images[0] || '',
@@ -162,7 +163,7 @@ export const HeroBanner: React.FC = () => {
     setActiveId(slides[(activeIndex + direction + slides.length) % slides.length].id);
   };
   const isInternalUrl = content.ctaUrl.startsWith('/');
-  const ctaClassName = 'inline-flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950';
+  const ctaClassName = 'inline-flex min-h-11 items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-on-primary shadow-sm transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 dark:focus-visible:ring-offset-surface';
   const cta = isInternalUrl ? (
     <Link to={content.ctaUrl} className={ctaClassName}>{content.ctaLabel}<ArrowRight className="ml-2 h-4 w-4" /></Link>
   ) : (
@@ -176,38 +177,38 @@ export const HeroBanner: React.FC = () => {
   );
   const brandNames = brands.slice(0, 4).map(item => item.name).join(' · ');
   const modeHighlight = activeMode === 'hot_deals' && dealProduct ? (
-    <div className="mt-3 border-l-2 border-blue-600 pl-3">
-      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300"><Tag className="h-3 w-3" />{validDeals.length} catalog offers</span>
-      <span className="mt-1 block line-clamp-1 text-xs font-semibold text-slate-800 dark:text-slate-100">{dealProduct.name}</span>
-      <span className="mt-1 flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300"><strong className="font-mono text-slate-950 dark:text-white">{formatPrice(dealProduct.price)}</strong>{dealProduct.originalPrice !== undefined && <del className="text-slate-400">{formatPrice(dealProduct.originalPrice)}</del>}</span>
+    <div className="mt-3 border-l-2 border-primary pl-3">
+      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-accent dark:text-accent"><Tag className="h-3 w-3" />{validDeals.length} catalog offers</span>
+      <span className="mt-1 block line-clamp-1 text-xs font-semibold text-main dark:text-main">{dealProduct.name}</span>
+      <span className="mt-1 flex items-center gap-2 text-xs text-muted dark:text-main"><strong className="font-sans text-main dark:text-main price">{formatPrice(dealProduct.price)}</strong>{dealProduct.originalPrice !== undefined && <del className="text-muted price">{formatPrice(dealProduct.originalPrice)}</del>}</span>
     </div>
   ) : activeMode === 'brands' ? (
-    <div className="mt-3 border-l-2 border-blue-600 pl-3">
-      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300"><Building2 className="h-3 w-3" />{brands.length} catalog brands</span>
-      <span className="mt-1 block line-clamp-1 text-xs font-semibold text-slate-700 dark:text-slate-200">{brandNames}</span>
+    <div className="mt-3 border-l-2 border-primary pl-3">
+      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-accent dark:text-accent"><Building2 className="h-3 w-3" />{brands.length} catalog brands</span>
+      <span className="mt-1 block line-clamp-1 text-xs font-semibold text-main dark:text-main">{brandNames}</span>
     </div>
   ) : activeMode === 'new_arrivals' && arrivalProduct ? (
-    <div className="mt-3 border-l-2 border-blue-600 pl-3">
-      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300"><Sparkles className="h-3 w-3" />Recently added</span>
-      <span className="mt-1 block line-clamp-1 text-xs font-semibold text-slate-800 dark:text-slate-100">{arrivalProduct.brandName} · {formatPrice(arrivalProduct.price)}</span>
+    <div className="mt-3 border-l-2 border-primary pl-3">
+      <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-accent dark:text-accent"><Sparkles className="h-3 w-3" />Recently added</span>
+      <span className="mt-1 block line-clamp-1 text-xs font-semibold text-main dark:text-main">{arrivalProduct.brandName} · {formatPrice(arrivalProduct.price)}</span>
     </div>
   ) : null;
 
   return (
-    <section className="relative w-full overflow-hidden border-b border-slate-200/80 bg-white/70 pt-4 transition-colors dark:border-slate-800/80 dark:bg-slate-950/55 sm:pt-6">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-white/95 to-transparent dark:from-slate-900/95" />
-      <div className="w-full px-4 sm:px-6 lg:pl-4 lg:pr-0">
+    <section className="relative w-full overflow-hidden border-b border-border/80 bg-surface/70 pt-4 transition-colors dark:border-border/80 dark:bg-surface/55 sm:pt-6">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-surface/95 to-transparent dark:from-surface/95" />
+      <div className="shop-container">
         <div className="grid min-w-0 lg:grid-cols-[176px_minmax(0,1fr)]">
-          <nav aria-label="Hero collections" className="border-b border-slate-200 py-3 dark:border-slate-800 lg:flex lg:flex-col lg:justify-center lg:border-b-0 lg:border-r lg:py-8 lg:pr-4">
-            <p className="mb-3 hidden px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400 lg:block">Explore the store</p>
+          <nav aria-label="Hero collections" className="border-b border-border py-3 dark:border-border lg:flex lg:flex-col lg:justify-center lg:border-b-0 lg:border-r lg:py-8 lg:pr-4">
+            <p className="mb-3 hidden px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-muted dark:text-muted lg:block">Explore the store</p>
             <div className="grid grid-cols-3 gap-1 lg:grid-cols-1 lg:gap-2">
               {heroModes.map((mode, index) => {
                 const Icon = index === 0 ? Tag : index === 1 ? Building2 : Sparkles;
                 return (
-                  <Link key={mode.id} to={mode.to} className="group inline-flex min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-lg px-1 text-[11px] font-semibold text-slate-700 transition-colors hover:bg-blue-50 hover:text-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:text-slate-200 dark:hover:bg-blue-950/60 dark:hover:text-blue-200 sm:gap-2 sm:px-3 sm:text-xs lg:justify-start">
-                    <Icon className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                  <Link key={mode.id} to={mode.to} className="group inline-flex min-h-11 min-w-0 items-center justify-center gap-1.5 rounded-lg px-1 text-[11px] font-semibold text-main transition-colors hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus dark:text-main hover:bg-accent/10 dark:hover:text-accent sm:gap-2 sm:px-3 sm:text-xs lg:justify-start">
+                    <Icon className="h-4 w-4 shrink-0 text-accent dark:text-accent" aria-hidden="true" />
                     <span>{mode.label}</span>
-                    <ChevronRight className="ml-auto hidden h-3.5 w-3.5 text-slate-400 group-hover:text-blue-600 lg:block" aria-hidden="true" />
+                    <ChevronRight className="ml-auto hidden h-3.5 w-3.5 text-muted group-hover:text-accent lg:block" aria-hidden="true" />
                   </Link>
                 );
               })}
@@ -226,9 +227,9 @@ export const HeroBanner: React.FC = () => {
           >
             <div className={`relative z-10 flex min-w-0 items-center py-8 sm:px-5 sm:pb-16 sm:pt-6 lg:px-6 ${content.textPosition === 'right' ? 'sm:col-start-2 sm:row-start-1 justify-end text-right' : 'justify-start text-left'}`}>
               <div key={slide?.id} className={`w-full max-w-[30rem] ${content.textPosition === 'right' ? 'ml-auto' : ''} ${!reducedMotion ? 'animate-fade-in' : ''}`}>
-                {content.eyebrow && <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-blue-700 dark:text-blue-300 sm:text-xs">{content.eyebrow}</p>}
-                <h1 className="max-w-[19ch] text-3xl font-bold leading-[1.06] tracking-tight text-slate-950 dark:text-white xl:text-[32px]">{content.title}</h1>
-                <p className={`mt-3 max-w-[46ch] text-sm leading-relaxed text-slate-700 dark:text-slate-300 ${content.textPosition === 'right' ? 'ml-auto' : ''}`}>{content.description}</p>
+                {content.eyebrow && <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-accent dark:text-accent sm:text-xs">{content.eyebrow}</p>}
+                <h1 className="max-w-[19ch] text-3xl font-bold leading-[1.06] tracking-tight text-main dark:text-main xl:text-[32px]">{content.title}</h1>
+                <p className={`mt-3 max-w-[46ch] text-sm leading-relaxed text-main dark:text-main ${content.textPosition === 'right' ? 'ml-auto' : ''}`}>{content.description}</p>
                 {modeHighlight}
                 <div className="mt-4">{cta}</div>
               </div>
@@ -250,7 +251,7 @@ export const HeroBanner: React.FC = () => {
                 </picture>
               </div>
             ) : (
-              <div className={`hidden items-center justify-center text-8xl font-black tracking-tighter text-blue-600/10 dark:text-blue-300/10 sm:flex ${content.textPosition === 'right' ? 'sm:col-start-1 sm:row-start-1' : ''}`} aria-hidden="true">CS</div>
+              <div className={`hidden items-center justify-center text-8xl font-black tracking-tighter text-accent/10 dark:text-accent/10 sm:flex ${content.textPosition === 'right' ? 'sm:col-start-1 sm:row-start-1' : ''}`} aria-hidden="true">CS</div>
             )}
 
             {slides.length > 1 && (
@@ -263,16 +264,16 @@ export const HeroBanner: React.FC = () => {
                       onClick={() => setActiveId(item.id)}
                       aria-label={`Show ${heroModes.find(mode => mode.id === item.heroMode)?.label || 'promotion'} slide ${index + 1}`}
                       aria-current={index === activeIndex ? 'true' : undefined}
-                      className={`h-2.5 rounded-full ring-1 ring-slate-500/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 ${index === activeIndex ? 'w-7 bg-blue-600' : 'w-2.5 bg-slate-400/70 hover:bg-blue-400'}`}
+                      className={`h-2.5 rounded-full ring-1 ring-focus/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 ${index === activeIndex ? 'w-7 bg-primary' : 'w-2.5 bg-border/70 hover:bg-primary-hover'}`}
                     />
                   ))}
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <button type="button" onClick={() => setManuallyPaused(value => !value)} aria-label={manuallyPaused ? 'Resume automatic slide rotation' : 'Pause automatic slide rotation'} className="rounded-full border border-slate-300 bg-white/90 p-2 text-slate-700 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white">
+                  <button type="button" onClick={() => setManuallyPaused(value => !value)} aria-label={manuallyPaused ? 'Resume automatic slide rotation' : 'Pause automatic slide rotation'} className="rounded-full border border-border bg-surface/90 p-2 text-main shadow-sm transition hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus dark:border-border dark:bg-surface/90 dark:text-main">
                     {manuallyPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
                   </button>
-                  <button type="button" onClick={() => move(-1)} aria-label="Previous promotion" className="rounded-full border border-slate-300 bg-white/90 p-2 text-slate-700 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white"><ChevronLeft className="h-4 w-4" /></button>
-                  <button type="button" onClick={() => move(1)} aria-label="Next promotion" className="rounded-full border border-slate-300 bg-white/90 p-2 text-slate-700 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 dark:border-slate-700 dark:bg-slate-900/90 dark:text-white"><ChevronRight className="h-4 w-4" /></button>
+                  <button type="button" onClick={() => move(-1)} aria-label="Previous promotion" className="rounded-full border border-border bg-surface/90 p-2 text-main shadow-sm transition hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus dark:border-border dark:bg-surface/90 dark:text-main"><ChevronLeft className="h-4 w-4" /></button>
+                  <button type="button" onClick={() => move(1)} aria-label="Next promotion" className="rounded-full border border-border bg-surface/90 p-2 text-main shadow-sm transition hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus dark:border-border dark:bg-surface/90 dark:text-main"><ChevronRight className="h-4 w-4" /></button>
                 </div>
               </div>
             )}

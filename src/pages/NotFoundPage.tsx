@@ -5,18 +5,18 @@ import { KeycapButton } from '../components/common/KeycapButton';
 
 export const NotFoundPage: React.FC = () => {
   return (
-    <div className="min-h-[70vh] bg-surface-50 dark:bg-surface-900 flex items-center justify-center p-6 text-center transition-colors">
+    <div className="shop-container min-h-[70vh] bg-background dark:bg-background flex items-center justify-center py-6 text-center transition-colors">
       <div className="max-w-md space-y-4">
-        <div className="w-16 h-16 rounded-2xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-800 flex items-center justify-center mx-auto">
+        <div className="w-16 h-16 rounded-2xl bg-accent/10 dark:bg-accent/10 text-accent dark:text-accent border border-primary dark:border-primary flex items-center justify-center mx-auto">
           <AlertCircle className="w-8 h-8" />
         </div>
-        <span className="font-mono text-xs font-bold text-slate-400 uppercase tracking-widest">
+        <span className="font-sans text-xs font-bold text-muted uppercase tracking-widest">
           Error 404
         </span>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-main dark:text-main">
           Hardware Component Not Found
         </h1>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+        <p className="text-xs sm:text-sm text-muted dark:text-muted leading-relaxed">
           The requested page, hardware SKU, or brand collection does not exist or has been relocated.
         </p>
 

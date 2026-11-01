@@ -38,7 +38,7 @@ export const KeycapButton: React.FC<KeycapButtonProps> = ({
   };
 
   const baseStyles =
-    'relative inline-flex items-center justify-center font-medium transition-all select-none overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-surface-900 disabled:opacity-50 disabled:pointer-events-none active:translate-y-[1px]';
+    'relative inline-flex items-center justify-center font-medium transition-all select-none overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 dark:focus-visible:ring-offset-surface disabled:opacity-50 disabled:pointer-events-none active:translate-y-[1px]';
 
   const sizeStyles = {
     sm: 'text-xs px-2.5 py-1.5 rounded-md gap-1.5',
@@ -48,15 +48,15 @@ export const KeycapButton: React.FC<KeycapButtonProps> = ({
 
   const variantStyles = {
     primary:
-      'bg-brand-600 hover:bg-brand-500 text-white border border-brand-700 shadow-keycap active:shadow-keycap-pressed',
+      'bg-primary hover:bg-primary-hover text-on-primary border border-primary shadow-keycap active:shadow-keycap-pressed',
     secondary:
-      'bg-slate-100 hover:bg-slate-200 dark:bg-surface-800 dark:hover:bg-surface-750 text-slate-800 dark:text-slate-100 border border-slate-300 dark:border-surface-700 shadow-keycap dark:shadow-keycap-dark active:shadow-keycap-pressed',
+      'bg-surface-soft hover:bg-surface-soft dark:bg-surface-elevated dark:hover:bg-surface-soft text-main dark:text-main border border-border dark:border-border shadow-keycap dark:shadow-keycap-dark active:shadow-keycap-pressed',
     outline:
-      'bg-transparent hover:bg-slate-50 dark:hover:bg-surface-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-surface-700 active:bg-slate-100 dark:active:bg-surface-750',
+      'bg-transparent hover:bg-surface-soft dark:hover:bg-surface-elevated text-main dark:text-main border border-border dark:border-border active:bg-surface-soft dark:active:bg-surface-soft',
     ghost:
-      'bg-transparent hover:bg-slate-100 dark:hover:bg-surface-800 text-slate-600 dark:text-slate-300 active:bg-slate-200 dark:active:bg-surface-750',
+      'bg-transparent hover:bg-surface-soft dark:hover:bg-surface-elevated text-muted dark:text-main active:bg-surface-soft dark:active:bg-surface-soft',
     danger:
-      'bg-rose-600 hover:bg-rose-500 text-white border border-rose-700 shadow-keycap active:shadow-keycap-pressed',
+      'bg-danger hover:bg-danger text-on-semantic border border-danger shadow-keycap active:shadow-keycap-pressed',
   };
 
   return (
@@ -69,7 +69,7 @@ export const KeycapButton: React.FC<KeycapButtonProps> = ({
       {/* Ripple Animation */}
       {ripple && (
         <span
-          className="pointer-events-none absolute w-12 h-12 rounded-full bg-white/30 animate-ripple -translate-x-1/2 -translate-y-1/2"
+          className="pointer-events-none absolute w-12 h-12 rounded-full bg-surface/30 animate-ripple -translate-x-1/2 -translate-y-1/2"
           style={{ left: ripple.x, top: ripple.y }}
         />
       )}
@@ -81,7 +81,7 @@ export const KeycapButton: React.FC<KeycapButtonProps> = ({
       <span>{children}</span>
 
       {shortcutHint && (
-        <kbd className="ml-1.5 px-1.5 py-0.2 text-[10px] font-mono tracking-tighter opacity-80 bg-black/10 dark:bg-white/10 rounded border border-black/10 dark:border-white/10">
+        <kbd className="ml-1.5 px-1.5 py-0.2 text-[10px] font-sans tracking-tighter opacity-80 bg-overlay/10 dark:bg-surface/10 rounded border border-border/10 dark:border-border/10">
           {shortcutHint}
         </kbd>
       )}

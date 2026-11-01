@@ -1,0 +1,12 @@
+{
+  "Inter": {
+    "rupee_U20B9": true,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/Inter%5Bopsz,wght%5D.ttf",
+    "bytes": 876576
+  },
+  "Space Grotesk": {
+    "rupee_U20B9": true,
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/spacegrotesk/SpaceGrotesk%5Bwght%5D.ttf",
+    "bytes": 136676
+  }
+}

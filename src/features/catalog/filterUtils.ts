@@ -4,8 +4,7 @@ export interface CatalogFilterCriteria {
   searchQuery?: string;
   category?: string;
   subcategory?: string;
-  brand?: string;
-  series?: string;
+  brand?: string | string[];
   isDealOnly?: boolean;
   dealProductIds?: string[];
   isBestsellerOnly?: boolean;
@@ -26,7 +25,6 @@ export function filterAndSortProducts(
     category = '',
     subcategory = '',
     brand = '',
-    series = '',
     isDealOnly = false,
     dealProductIds = [],
     isBestsellerOnly = false,
@@ -46,7 +44,7 @@ export function filterAndSortProducts(
         const matchesName = product.name.toLowerCase().includes(q);
         const matchesBrand = product.brandName.toLowerCase().includes(q);
         const matchesCategory = `${product.categoryName} ${product.subcategoryName || ''}`.toLowerCase().includes(q);
-        const matchesSeries = (product.seriesName || '').toLowerCase().includes(q);
+        const matchesSeries = `${product.series || ''} ${product.seriesName || ''}`.toLowerCase().includes(q);
         const matchesDescription = product.shortDescription.toLowerCase().includes(q);
         const matchesSku = product.sku.toLowerCase().includes(q);
         const matchesAttrs = product.attributes.some(a => `${a.name} ${a.value}`.toLowerCase().includes(q));
@@ -62,10 +60,14 @@ export function filterAndSortProducts(
       if (subcategory && product.subcategoryId !== subcategory) return false;
 
       // Brand
-      if (brand && product.brandId !== brand) return false;
-
-      // Series
-      if (series && product.seriesId !== series) return false;
+      if (brand) {
+        const brandList = Array.isArray(brand)
+          ? brand
+          : brand.split(',').map(b => b.trim()).filter(Boolean);
+        if (brandList.length > 0 && !brandList.includes(product.brandId)) {
+          return false;
+        }
+      }
 
       // Deal
       if (isDealOnly && !(

@@ -1,97 +1,27 @@
+const token = name => `rgb(var(--color-${name}) / <alpha-value>)`;
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#2563eb', // Restrained primary retail blue
-          600: '#1d4ed8',
-          700: '#1e40af',
-          800: '#1e3a8a',
-          900: '#172554',
-          accent: '#0284c7',
-        },
-        terracotta: {
-          50: '#fdf6f4',
-          100: '#fbece6',
-          200: '#f7d8cc',
-          300: '#efbba9',
-          400: '#e3947b',
-          500: '#cb6142', // Warm restrained terracotta accent
-          600: '#b74b2d',
-          700: '#973c24',
-          800: '#7d3320',
-          900: '#672e1e',
-        },
-        surface: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          650: '#334155',
-          700: '#273449',
-          750: '#202b3d', // Card border in dark mode
-          800: '#1a2332', // Secondary / elevated dark surface
-          850: '#131c2a', // Primary card dark surface
-          900: '#0c121e', // Comfortable charcoal page background
-          950: '#070b13', // Deep modal backdrop / high contrast
-        }
+        background: token('background'), surface: { DEFAULT: token('surface'), elevated: token('surface-elevated'), soft: token('surface-soft') },
+        border: token('border'), control: token('control-border'), main: token('text'), muted: token('text-muted'),
+        primary: { DEFAULT: token('primary'), hover: token('primary-hover') }, 'on-primary': token('on-primary'), 'on-semantic': token('on-semantic'), accent: token('accent-text'),
+        success: { DEFAULT: token('success'), ink: token('success-text') }, warning: { DEFAULT: token('warning'), ink: token('warning-text') },
+        danger: { DEFAULT: token('danger'), ink: token('danger-text') }, info: { DEFAULT: token('info'), ink: token('info-text') },
+        price: token('price'), 'discount-badge': token('discount-badge'), focus: token('focus-ring'),
+        inverse: { DEFAULT: token('inverse'), ink: token('inverse-text'), muted: token('inverse-muted') },
+        overlay: token('overlay'), media: { DEFAULT: token('media-surface'), ink: token('media-text') },
       },
-      fontFamily: {
-        sans: [
-          'Inter',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          'Segoe UI',
-          'Roboto',
-          'Helvetica Neue',
-          'sans-serif',
-        ],
-        mono: [
-          'JetBrains Mono',
-          'ui-monospace',
-          'SFMono-Regular',
-          'Menlo',
-          'Monaco',
-          'Consolas',
-          'monospace',
-        ],
-      },
-      boxShadow: {
-        'keycap': '0 2px 0 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-        'keycap-dark': '0 2px 0 0 rgba(255, 255, 255, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.4)',
-        'keycap-pressed': 'inset 0 1px 2px 0 rgba(0, 0, 0, 0.2)',
-        'soft-card': '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04)',
-        'elevated': '0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)',
-        'wheel-glow': '0 0 40px -10px rgba(203, 97, 66, 0.25)',
-        'wheel-glow-dark': '0 0 50px -10px rgba(224, 122, 95, 0.2)',
-      },
-      animation: {
-        'ripple': 'ripple 0.4s cubic-bezier(0, 0.2, 0.8, 1) forwards',
-        'subtle-pulse': 'subtlePulse 3s ease-in-out infinite',
-      },
-      keyframes: {
-        ripple: {
-          '0%': { transform: 'scale(0)', opacity: '0.5' },
-          '100%': { transform: 'scale(2.5)', opacity: '0' },
-        },
-        subtlePulse: {
-          '0%, 100%': { opacity: '0.4' },
-          '50%': { opacity: '0.8' },
-        }
-      }
+      fontFamily: { sans: ['var(--font-body)'], heading: ['var(--font-heading)'], mono: ['var(--font-mono)'] },
+      fontSize: Object.fromEntries(['xs','sm','base','lg','xl','2xl','3xl','4xl','5xl'].map(size => [size, [`var(--text-${size})`, { lineHeight: size === 'xs' || size === 'sm' || size === 'base' ? 'var(--leading-body)' : 'var(--leading-heading)' }]])),
+      borderRadius: { sm: 'var(--radius-xs)', DEFAULT: 'var(--radius-xs)', md: 'var(--radius-sm)', lg: 'var(--radius-md)', xl: 'var(--radius-lg)', '2xl': 'var(--radius-xl)', '3xl': 'var(--radius-2xl)', full: 'var(--radius-pill)' },
+      boxShadow: { xs: 'var(--shadow-soft)', sm: 'var(--shadow-soft)', DEFAULT: 'var(--shadow-soft)', md: 'var(--shadow-elevated)', lg: 'var(--shadow-elevated)', xl: 'var(--shadow-modal)', '2xl': 'var(--shadow-modal)', keycap: 'var(--shadow-keycap)', 'keycap-dark': 'var(--shadow-keycap)', 'keycap-pressed': 'var(--shadow-pressed)', 'soft-card': 'var(--shadow-soft)', elevated: 'var(--shadow-elevated)', 'wheel-glow': 'var(--shadow-glow)', 'wheel-glow-dark': 'var(--shadow-glow)' },
+      animation: { ripple: 'ripple 0.4s cubic-bezier(0, 0.2, 0.8, 1) forwards', 'subtle-pulse': 'subtlePulse 3s ease-in-out infinite' },
+      keyframes: { ripple: { '0%': { transform: 'scale(0)', opacity: '.5' }, '100%': { transform: 'scale(2.5)', opacity: '0' } }, subtlePulse: { '0%,100%': { opacity: '.4' }, '50%': { opacity: '.8' } } },
     },
   },
   plugins: [],
-}
+};

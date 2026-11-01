@@ -7,57 +7,180 @@ interface ActiveFilterChipsProps {
   activeSearch: string;
   activeCategory: string;
   activeSubcategory: string;
-  activeBrand: string;
-  activeSeries: string;
-  isDealOnly: boolean;
-  isBestsellerOnly: boolean;
-  isFeaturedOnly: boolean;
-  isSaleOnly: boolean;
+  activeBrands: string[];
   inStockOnly: boolean;
+  isDealOnly: boolean;
   minPrice: number;
   maxPrice: number;
+  minDataPrice: number;
+  maxDataPrice: number;
   categories: Category[];
   brands: Brand[];
-  onRemoveFilter: (key: string) => void;
+  onRemoveFilter: (key: string, value?: string) => void;
   onClearAll: () => void;
 }
 
-export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = props => {
-  const {
-    activeSearch, activeCategory, activeSubcategory, activeBrand, activeSeries,
-    isDealOnly, isBestsellerOnly, isFeaturedOnly, isSaleOnly, inStockOnly, minPrice, maxPrice,
-    categories, brands, onRemoveFilter, onClearAll,
-  } = props;
-  const currentCategory = categories.find(category => category.id === activeCategory);
-  const currentBrand = brands.find(brand => brand.id === activeBrand);
-  const currentSeries = currentBrand?.seriesList.find(series => series.id === activeSeries);
-  const hasPriceFilter = minPrice > 0 || maxPrice < 500000;
-  const hasAnyFilter = Boolean(activeSearch || activeCategory || activeSubcategory || activeBrand || activeSeries || isDealOnly || isBestsellerOnly || isFeaturedOnly || isSaleOnly || inStockOnly || hasPriceFilter);
+export const ActiveFilterChips: React.FC<ActiveFilterChipsProps> = ({
+  activeSearch,
+  activeCategory,
+  activeSubcategory,
+  activeBrands,
+  inStockOnly,
+  isDealOnly,
+  minPrice,
+  maxPrice,
+  minDataPrice,
+  maxDataPrice,
+  categories,
+  brands,
+  onRemoveFilter,
+  onClearAll,
+}) => {
+  const currentCategory = categories.find((c) => c.id === activeCategory);
+  const currentSubcategory = currentCategory?.subcategories.find((s) => s.id === activeSubcategory);
+  const hasPriceFilter = minPrice > minDataPrice || maxPrice < maxDataPrice;
+
+  const hasAnyFilter = Boolean(
+    activeSearch ||
+      activeCategory ||
+      activeSubcategory ||
+      activeBrands.length > 0 ||
+      inStockOnly ||
+      isDealOnly ||
+      hasPriceFilter
+  );
 
   if (!hasAnyFilter) return null;
 
-  const chipClass = 'inline-flex items-center gap-1 rounded border px-2 py-0.5';
-  const removeButton = (label: string, key: string, color = 'text-slate-400') => (
-    <button type="button" aria-label={`Remove ${label} filter`} onClick={() => onRemoveFilter(key)} className={`${color} hover:text-slate-900 dark:hover:text-white`}>
-      <X className="h-3 w-3" />
-    </button>
-  );
+  const chipClass = 'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs';
 
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-1.5 rounded-lg border border-slate-200 bg-white p-2.5 text-xs dark:border-slate-800 dark:bg-slate-850">
-      <span className="mr-1 text-[11px] font-medium text-slate-400">Filters:</span>
-      {activeSearch && <span className={`${chipClass} border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200`}>Query: “{activeSearch}”{removeButton('search', 'q')}</span>}
-      {activeCategory && <span className={`${chipClass} border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950/60 dark:text-blue-300`}>{currentCategory?.name || activeCategory}{removeButton('category', 'category', 'text-blue-400')}</span>}
-      {activeSubcategory && <span className={`${chipClass} border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950/60 dark:text-blue-300`}>Subcategory: {currentCategory?.subcategories.find(item => item.id === activeSubcategory)?.name || activeSubcategory}{removeButton('subcategory', 'subcategory', 'text-blue-400')}</span>}
-      {activeBrand && <span className={`${chipClass} border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200`}>Brand: {currentBrand?.name || activeBrand}{removeButton('brand', 'brand')}</span>}
-      {activeSeries && <span className={`${chipClass} border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950/60 dark:text-blue-300`}>Series: {currentSeries?.name || activeSeries}{removeButton('series', 'series', 'text-blue-400')}</span>}
-      {isDealOnly && <span className={`${chipClass} border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-300`}>Deals only{removeButton('deals', 'deal', 'text-amber-400')}</span>}
-      {isBestsellerOnly && <span className={`${chipClass} border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-800 dark:bg-violet-950/50 dark:text-violet-300`}>Bestsellers{removeButton('bestseller', 'bestseller', 'text-violet-400')}</span>}
-      {isFeaturedOnly && <span className={`${chipClass} border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950/50 dark:text-blue-300`}>Featured{removeButton('featured', 'featured', 'text-blue-400')}</span>}
-      {isSaleOnly && <span className={`${chipClass} border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-300`}>Sale items{removeButton('sale items', 'sale', 'text-rose-400')}</span>}
-      {inStockOnly && <span className={`${chipClass} border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300`}>In stock{removeButton('in-stock', 'inStock', 'text-emerald-500')}</span>}
-      {hasPriceFilter && <span className={`${chipClass} border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200`}>Price: {formatPrice(minPrice)} – {formatPrice(maxPrice)}<button type="button" aria-label="Remove price filter" onClick={() => onRemoveFilter('price')} className="text-slate-400 hover:text-slate-900 dark:hover:text-white"><X className="h-3 w-3" /></button></span>}
-      <button type="button" onClick={onClearAll} aria-label="Clear all filters" className="ml-auto text-[11px] text-slate-400 underline hover:text-rose-600">Clear all</button>
+    <div className="mb-4 flex flex-wrap items-center gap-1.5 rounded-lg border border-border bg-surface p-2 text-xs dark:border-border dark:bg-surface">
+      <span className="mr-1 text-[11px] font-semibold text-muted uppercase tracking-wider font-sans">
+        Active:
+      </span>
+
+      {/* Search query chip */}
+      {activeSearch && (
+        <span className={`${chipClass} border-border bg-surface-soft text-main dark:border-border dark:bg-surface-elevated dark:text-main`}>
+          <span>Search: “{activeSearch}”</span>
+          <button
+            type="button"
+            aria-label="Remove search filter"
+            onClick={() => onRemoveFilter('q')}
+            className="inline-flex min-h-10 min-w-10 items-center justify-center text-muted hover:text-main dark:hover:text-main"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      )}
+
+      {/* Category chip */}
+      {activeCategory && (
+        <span className={`${chipClass} border-primary bg-accent/10 text-accent dark:border-primary dark:bg-accent/10 dark:text-accent`}>
+          <span>Category: {currentCategory?.name || activeCategory}</span>
+          <button
+            type="button"
+            aria-label="Remove category filter"
+            onClick={() => onRemoveFilter('category')}
+            className="inline-flex min-h-10 min-w-10 items-center justify-center text-accent hover:text-accent dark:hover:text-main"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      )}
+
+      {/* Subcategory chip */}
+      {activeSubcategory && (
+        <span className={`${chipClass} border-primary bg-accent/10 text-accent dark:border-primary dark:bg-accent/10 dark:text-accent`}>
+          <span>Sub: {currentSubcategory?.name || activeSubcategory}</span>
+          <button
+            type="button"
+            aria-label="Remove subcategory filter"
+            onClick={() => onRemoveFilter('subcategory')}
+            className="inline-flex min-h-10 min-w-10 items-center justify-center text-accent hover:text-accent dark:hover:text-main"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      )}
+
+      {/* Selected brands chips */}
+      {activeBrands.map((brandId) => {
+        const brandObj = brands.find((b) => b.id === brandId);
+        const name = brandObj?.name || brandId;
+
+        return (
+          <span
+            key={brandId}
+            className={`${chipClass} border-border bg-surface-soft text-main dark:border-border dark:bg-surface-elevated dark:text-main`}
+          >
+            <span>Brand: {name}</span>
+            <button
+              type="button"
+              aria-label={`Remove ${name} brand filter`}
+              onClick={() => onRemoveFilter('brand', brandId)}
+              className="inline-flex min-h-10 min-w-10 items-center justify-center text-muted hover:text-main dark:hover:text-main"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </span>
+        );
+      })}
+
+      {/* Price filter chip */}
+      {hasPriceFilter && (
+        <span className={`${chipClass} border-border bg-surface-soft text-main dark:border-border dark:bg-surface-elevated dark:text-main`}>
+          <span>Price: {formatPrice(minPrice)} – {formatPrice(maxPrice)}</span>
+          <button
+            type="button"
+            aria-label="Remove price filter"
+            onClick={() => onRemoveFilter('price')}
+            className="inline-flex min-h-10 min-w-10 items-center justify-center text-muted hover:text-main dark:hover:text-main"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      )}
+
+      {/* In stock chip */}
+      {inStockOnly && (
+        <span className={`${chipClass} border-success bg-success/10 text-success-ink dark:border-success dark:bg-success/10 dark:text-success-ink`}>
+          <span>In stock</span>
+          <button
+            type="button"
+            aria-label="Remove in-stock filter"
+            onClick={() => onRemoveFilter('inStock')}
+            className="inline-flex min-h-10 min-w-10 items-center justify-center text-success-ink hover:text-success-ink dark:hover:text-main"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      )}
+
+      {/* Deals chip */}
+      {isDealOnly && (
+        <span className={`${chipClass} border-warning bg-warning/10 text-warning-ink dark:border-warning dark:bg-warning/10 dark:text-warning-ink`}>
+          <span>Deals</span>
+          <button
+            type="button"
+            aria-label="Remove deals filter"
+            onClick={() => onRemoveFilter('deal')}
+            className="inline-flex min-h-10 min-w-10 items-center justify-center text-warning-ink hover:text-warning-ink dark:hover:text-main"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </span>
+      )}
+
+      {/* Clear all link */}
+      <button
+        type="button"
+        onClick={onClearAll}
+        className="ml-auto text-xs font-semibold text-danger-ink dark:text-danger-ink hover:underline px-1 py-0.5"
+      >
+        Clear all
+      </button>
     </div>
   );
 };

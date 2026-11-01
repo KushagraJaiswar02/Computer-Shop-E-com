@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useStore } from '../../context/StoreContext';
 import type { Product, Series } from '../../types';
 import { formatPrice } from '../../lib/utils';
+import { getSeriesForBrand, BrandSeriesCount } from '../catalog/seriesUtils';
 import asusLogo from '../../assets/brands/asus.svg?raw';
 import lenovoLogo from '../../assets/brands/lenovo.svg?raw';
 import msiLogo from '../../assets/brands/msi.svg?raw';
@@ -38,6 +39,7 @@ export interface BrandDirectoryEntry extends BrandIdentity {
   id: string;
   description: string;
   series: Series[];
+  seriesList: BrandSeriesCount[];
   count: number;
   lowestPrice?: number;
   priceRange?: BrandPriceRange;
@@ -98,19 +100,22 @@ export const useBrandDirectory = (): BrandDirectoryEntry[] => {
       })
       .slice(0, 4);
 
+    const seriesList = getSeriesForBrand(brandProducts, brand.id);
+
     return {
       id: brand.id,
       name: brand.name,
       slug: brand.slug,
       logo: identity?.logo || '',
-      hoverColor: identity?.hoverColor || '#2563eb',
-      accentColor: identity?.accentColor || '#2563eb',
+      hoverColor: identity?.hoverColor || 'rgb(var(--color-accent-text))',
+      accentColor: identity?.accentColor || 'rgb(var(--color-accent-text))',
       tagline: identity?.tagline || '',
       heroSrc: identity?.heroSrc,
       cardSrc: identity?.cardSrc,
-      darkHoverColor: identity?.darkHoverColor || '#60a5fa',
+      darkHoverColor: identity?.darkHoverColor || 'rgb(var(--color-accent-text))',
       description: brand.description,
       series: brand.seriesList,
+      seriesList,
       count: brandProducts.length,
       lowestPrice: prices.length ? Math.min(...prices) : undefined,
       priceRange,

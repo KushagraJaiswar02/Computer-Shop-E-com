@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, ChevronDown, ChevronRight, LayoutGrid } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronRight, LayoutGrid, Menu } from 'lucide-react';
 import { useCategoryDirectory } from '../../../features/catalog/useCategoryDirectory';
 import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import { MobileNavMenu } from './MobileNavMenu';
@@ -82,11 +82,11 @@ export const HeaderNav: React.FC = () => {
           else setOpen(true);
         }
       }}>
-        <LayoutGrid aria-hidden="true" className="h-4 w-4" /><span className="hidden lg:inline">Categories</span><ChevronDown aria-hidden="true" className={`hidden h-3.5 w-3.5 lg:block ${open ? 'rotate-180' : ''}`} />
+        <LayoutGrid aria-hidden="true" className="hidden lg:block h-4 w-4" /><Menu aria-hidden="true" className="lg:hidden h-5 w-5" /><span className="hidden lg:inline">Categories</span><ChevronDown aria-hidden="true" className={`hidden h-3.5 w-3.5 lg:block ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (desktop ? (
         <nav id={id} aria-label="Product categories" className="category-mega-panel">
-          <div className="category-mega-inner mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="category-mega-inner shop-container ">
             <div className="category-menu-tabs" role="tablist" aria-label="Hardware categories" aria-orientation="vertical">
               {categories.map(category => {
                 const Icon = category.icon;
@@ -109,15 +109,15 @@ export const HeaderNav: React.FC = () => {
             <div ref={panelRef} id={`${id}-details`} role="tabpanel" aria-labelledby={selected ? `${id}-tab-${selected.slug}` : undefined} className="category-menu-details">
               {selected ? <>
                 <div className="mb-5 flex items-start justify-between gap-6">
-                  <div><h2 className="text-lg font-bold text-slate-900 dark:text-white">{selected.name}</h2><p className="mt-1 max-w-xl text-xs leading-relaxed text-slate-500 dark:text-slate-400">{selected.description}</p></div>
-                  <span className="shrink-0 text-xs text-slate-500 dark:text-slate-400">{selected.count} {selected.count === 1 ? 'product' : 'products'}</span>
+                  <div><h2 className="text-lg font-bold text-main dark:text-main">{selected.name}</h2><p className="mt-1 max-w-xl text-xs leading-relaxed text-muted dark:text-muted">{selected.description}</p></div>
+                  <span className="shrink-0 text-xs text-muted dark:text-muted">{selected.count} {selected.count === 1 ? 'product' : 'products'}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   {selected.subcategories.length ? selected.subcategories.map(subcategory => <Link key={subcategory.id} to={subcategory.href} className="category-menu-subcategory" onClick={() => closeMenu()}><span>{subcategory.name}</span><ArrowRight aria-hidden="true" className="h-3.5 w-3.5 shrink-0" /></Link>) : available.map(category => <Link key={category.id} to={category.href} className="category-menu-subcategory" onClick={() => closeMenu()}>{category.name}<ArrowRight aria-hidden="true" className="h-3.5 w-3.5" /></Link>)}
                 </div>
                 <Link to={selected.href} onClick={() => closeMenu()} className="category-menu-all mt-5">View all {selected.name}<ArrowRight aria-hidden="true" className="h-4 w-4" /></Link>
-              </> : <p className="text-sm text-slate-500">Categories are coming soon.</p>}
-              <Link to="/shop" onClick={() => closeMenu()} className="mt-3 block w-fit text-xs text-slate-500 underline dark:text-slate-400">All Categories</Link>
+              </> : <p className="text-sm text-muted">Categories are coming soon.</p>}
+              <Link to="/shop" onClick={() => closeMenu()} className="mt-3 block w-fit text-xs text-muted underline dark:text-muted">All Categories</Link>
             </div>
           </div>
         </nav>

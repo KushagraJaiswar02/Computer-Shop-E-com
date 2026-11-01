@@ -1,74 +1,21 @@
-import React from 'react';
-import { MessageSquare, Mail, Phone, Clock, CheckCircle } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useStore } from '../../context/StoreContext';
+import { HardwareEnquiry } from '../../types';
 import { formatDate } from '../../lib/utils';
-import { KeycapButton } from '../../components/common/KeycapButton';
-
+import { AdminButton, AdminList, AdminModal, Badge, Panel } from './AdminUi';
 export const AdminEnquiriesPage: React.FC = () => {
-  const { enquiries } = useStore();
-
-  return (
-    <div className="space-y-6 max-w-6xl">
-      <div className="pb-6 border-b border-slate-800">
-        <h1 className="text-2xl font-bold text-white tracking-tight">
-          Custom PC & Hardware Enquiries ({enquiries.length})
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
-          Technical consultations submitted by creators, studios, and enterprise builders from the storefront.
-        </p>
-      </div>
-
-      <div className="space-y-4">
-        {enquiries.map(enq => (
-          <div
-            key={enq.id}
-            className="p-5 rounded-xl border border-slate-800 bg-slate-950 space-y-3 text-xs"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-white text-sm">{enq.customerName}</span>
-                {enq.companyName && (
-                  <span className="text-slate-400 font-mono text-[11px]">
-                    ({enq.companyName})
-                  </span>
-                )}
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-950 text-brand-400 border border-brand-800 font-semibold">
-                  {enq.enquiryType.replace(/_/g, ' ')}
-                </span>
-              </div>
-              <span className="text-slate-400 font-mono text-[11px]">
-                {formatDate(enq.createdAt)}
-              </span>
-            </div>
-
-            <p className="text-slate-300 leading-relaxed bg-slate-900/60 p-3.5 rounded-lg border border-slate-800/80">
-              "{enq.message}"
-            </p>
-
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-1 text-slate-400">
-              <div className="flex items-center gap-4 font-mono text-[11px]">
-                <div className="flex items-center gap-1.5">
-                  <Mail className="w-3.5 h-3.5 text-brand-400" />
-                  <span>{enq.email}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Phone className="w-3.5 h-3.5 text-brand-400" />
-                  <span>{enq.phone}</span>
-                </div>
-                {enq.targetBudget && (
-                  <span className="text-amber-400 font-semibold">Budget: {enq.targetBudget}</span>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-400 border border-emerald-900 font-bold">
-                  Status: {enq.status}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  const { enquiries } = useStore(), [params, setParams] = useSearchParams();
+  const [selected, setSelected] = useState<HardwareEnquiry | null>(null);
+  const status = params.get('status') || '';
+  const rows = useMemo(() => enquiries.filter(e => !status || (status === 'open' ? ['New', 'In Review'].includes(e.status) : e.status === status)), [enquiries, status]);
+  const enquiry = selected || enquiries.find(e => e.id === params.get('enquiry'));
+  const close = () => { setSelected(null); setParams(previous => { const next = new URLSearchParams(previous); next.delete('enquiry'); return next; }); };
+  return <><AdminList title="Enquiries" description="Read customer questions and custom PC requests." rows={rows} searchText={e => `${e.customerName} ${e.email} ${e.message} ${e.companyName || ''} ${e.phone}`} initialSearch={params.get('q') || ''} filters={<select aria-label="Filter enquiry status" value={status} onChange={event => setParams(previous => { const next = new URLSearchParams(previous); event.target.value ? next.set('status', event.target.value) : next.delete('status'); return next; })}><option value="">All statuses</option><option value="open">Open enquiries</option>{Array.from(new Set(enquiries.map(e => e.status))).map(status => <option key={status}>{status}</option>)}</select>} emptyAction={<AdminButton onClick={() => setParams({})}>Show all enquiries</AdminButton>} columns={[
+    { key: 'customer', label: 'Customer', sortValue: e => e.customerName, render: e => <div><strong>{e.customerName}</strong><small className="block au-muted">{e.companyName || e.email}</small></div> },
+    { key: 'type', label: 'Request', sortValue: e => e.enquiryType, render: e => <div>{e.enquiryType.replace(/_/g, ' ')}<small className="block au-muted">{e.message.slice(0, 90)}{e.message.length > 90 ? '…' : ''}</small></div> },
+    { key: 'date', label: 'Received', sortValue: e => e.createdAt, render: e => formatDate(e.createdAt) },
+    { key: 'status', label: 'Status', sortValue: e => e.status, render: e => <Badge>{e.status}</Badge> },
+    { key: 'details', label: 'Details', render: e => <AdminButton onClick={() => setSelected(e)}>View enquiry</AdminButton> },
+  ]} />{enquiry && <AdminModal title={`Enquiry from ${enquiry.customerName}`} onClose={close}><div className="au-stack"><div className="au-actions"><Badge>{enquiry.status}</Badge><Badge>{enquiry.enquiryType.replace(/_/g, ' ')}</Badge><span className="au-muted">{formatDate(enquiry.createdAt)}</span></div><Panel title="Customer message"><p className="whitespace-pre-wrap">{enquiry.message}</p></Panel><Panel title="Contact details"><p><strong>{enquiry.customerName}</strong>{enquiry.companyName && <><br />{enquiry.companyName}</>}<br />{enquiry.email}<br />{enquiry.phone}</p>{enquiry.targetBudget && <p className="mt-3"><strong>Budget:</strong> {enquiry.targetBudget}</p>}</Panel><AdminButton onClick={close}>Close enquiry</AdminButton></div></AdminModal>}</>;
 };

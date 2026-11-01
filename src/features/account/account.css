@@ -1,0 +1,12 @@
+.account-ui { overflow-wrap: anywhere; }
+.account-ui :is(a, button, input, select, textarea):focus-visible { outline: 2px solid rgb(var(--color-focus-ring)); outline-offset: 3px; }
+.account-input { min-height: 42px; }
+.account-ui .account-panel, .account-menu { min-width: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .account-panel, .account-menu { animation: account-appear 150ms ease-out both; }
+  .account-action { transition: opacity 150ms ease-out; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .account-ui *, .account-menu { animation: none !important; transition: none !important; }
+}
+@keyframes account-appear { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
