@@ -237,7 +237,7 @@ export const HeroBanner: React.FC = () => {
 
             {showImage ? (
               <div className={`relative min-w-0 overflow-hidden sm:overflow-visible ${content.textPosition === 'right' ? 'sm:col-start-1 sm:row-start-1' : ''}`}>
-                <picture className={`pointer-events-none block h-48 w-full sm:absolute sm:inset-y-0 sm:h-full sm:w-[125%] sm:[mask-composite:intersect] ${content.textPosition === 'right' ? 'sm:left-0 sm:[mask-image:linear-gradient(to_bottom,transparent,black_24px),linear-gradient(to_left,transparent,rgba(0,0,0,0.04)_15%,rgba(0,0,0,0.25)_30%,rgba(0,0,0,0.65)_45%,black_60%)]' : 'sm:right-0 sm:[mask-image:linear-gradient(to_bottom,transparent,black_24px),linear-gradient(to_right,transparent,rgba(0,0,0,0.04)_15%,rgba(0,0,0,0.25)_30%,rgba(0,0,0,0.65)_45%,black_60%)]'}`}>
+                <picture className={`pointer-events-none block h-48 w-full sm:absolute sm:inset-y-0 sm:h-full sm:w-[125%] sm:[mask-composite:intersect] ${content.textPosition === 'right' ? 'sm:left-0 sm:[mask-image:linear-gradient(to_bottom,transparent,black_24px),linear-gradient(to_left,transparent,rgb(var(--color-overlay)/0.04)_15%,rgb(var(--color-overlay)/0.25)_30%,rgb(var(--color-overlay)/0.65)_45%,black_60%)]' : 'sm:right-0 sm:[mask-image:linear-gradient(to_bottom,transparent,black_24px),linear-gradient(to_right,transparent,rgb(var(--color-overlay)/0.04)_15%,rgb(var(--color-overlay)/0.25)_30%,rgb(var(--color-overlay)/0.65)_45%,black_60%)]'}`}>
                   {slide?.useCustomImage && slide.mobileImageUrl && <source media="(max-width: 639px)" srcSet={slide.mobileImageUrl} />}
                   <img
                     key={`${slide?.id}-${imageUrl}`}

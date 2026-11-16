@@ -19,7 +19,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({
       {/* Primary Main Image */}
       <div className="relative h-72 sm:h-96 lg:h-[min(45vh,28rem)] rounded-xl bg-surface dark:bg-surface border border-border dark:border-border flex items-center justify-center p-6 overflow-hidden shadow-xs">
         {discountPercent && discountPercent > 0 ? (
-          <div className="absolute top-3 left-3 z-10 px-2.5 py-0.5 rounded text-xs font-sans font-bold bg-discount-badge text-on-primary shadow-xs">
+          <div className="absolute top-3 left-3 z-10 px-2.5 py-0.5 rounded text-xs font-sans font-bold bg-discount-badge text-overlay shadow-xs">
             -{discountPercent}% OFF
           </div>
         ) : null}

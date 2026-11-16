@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeftRight, Heart, ShoppingBag } from 'lucide-react';
+import { ArrowLeftRight, Heart, ShoppingBag, Moon, Sun } from 'lucide-react';
 import { useStore } from '../../../context/StoreContext';
 import { HeaderAccount } from './HeaderAccount';
 
 const utilityClass = 'shop-icon-button relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-transparent text-muted transition-colors hover:border-border hover:bg-surface-soft hover:text-main focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus dark:text-main dark:hover:border-border dark:hover:bg-surface-elevated dark:hover:text-main';
 
 export const HeaderActions: React.FC = () => {
-  const { cartCount, setIsCartOpen, wishlist, compareList } = useStore();
+  const { cartCount, setIsCartOpen, wishlist, compareList, theme, toggleTheme } = useStore();
   const previousCount = useRef(cartCount);
   const [cartBump, setCartBump] = useState(0);
   useEffect(() => {
@@ -17,6 +17,7 @@ export const HeaderActions: React.FC = () => {
 
   return (
     <div className="shop-action-list">
+      <button type="button" className={utilityClass} onClick={toggleTheme} aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}><span aria-hidden="true">{theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}</span></button>
       <HeaderAccount className={utilityClass} />
       <Link to="/compare" className={`${utilityClass} shop-secondary-action`} title={`Compare products${compareList.length ? `, ${compareList.length} selected` : ''}`} aria-label={`Compare products${compareList.length ? `, ${compareList.length} selected` : ''}`}>
         <ArrowLeftRight className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />

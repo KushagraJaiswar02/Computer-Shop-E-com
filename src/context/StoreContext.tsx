@@ -234,11 +234,20 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   });
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
-    try { localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, theme); } catch { /* Theme still works without persistence. */ }
+    document.documentElement.dataset.theme = theme;
   }, [theme]);
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const update = () => {
+      try { if (localStorage.getItem(LOCAL_STORAGE_KEYS.THEME)) return; } catch { /* Follow the system. */ }
+      setTheme(media.matches ? 'dark' : 'light');
+    };
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   const toggleTheme = () => {
-    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+    setTheme(prev => { const next = prev === 'light' ? 'dark' : 'light'; try { localStorage.setItem(LOCAL_STORAGE_KEYS.THEME, next); } catch { /* Keep the choice for this session. */ } return next; });
   };
 
   // Products

@@ -6,10 +6,13 @@ export const demoToday = () => new Date();
 const day = (offset: number) => new Date(Date.now() + offset * 86400000).toISOString();
 
 export const placeholderImage = (label: string, category: string, variant = 0) => {
-  const palettes = [['#172554', '#2563eb'], ['#3f0c43', '#c026d3'], ['#3f1d0a', '#ea580c'], ['#12372a', '#16a34a']];
-  const [start, end] = palettes[variant % palettes.length];
+  const styles = getComputedStyle(document.documentElement);
+  const color = (name: string) => `rgb(${styles.getPropertyValue(name).trim().replace(/\s+/g, ',')})`;
+  const start = color('--color-inverse');
+  const end = color('--color-text-muted');
+  void variant;
   const safe = label.replace(/[<>&]/g, '').slice(0, 24);
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="${start}"/><stop offset="1" stop-color="${end}"/></linearGradient></defs><rect width="800" height="600" fill="url(#g)"/><circle cx="650" cy="120" r="180" fill="white" opacity=".08"/><text x="48" y="265" fill="white" font-family="Arial,sans-serif" font-size="44" font-weight="700">${safe}</text><text x="48" y="318" fill="white" opacity=".75" font-family="Arial,sans-serif" font-size="22">${category} · DEMO</text></svg>`;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="${start}"/><stop offset="1" stop-color="${end}"/></linearGradient></defs><rect width="800" height="600" fill="url(#g)"/><circle cx="650" cy="120" r="180" fill="${color('--color-inverse-text')}" opacity=".08"/><text x="48" y="265" fill="${color('--color-inverse-text')}" font-family="Arial,sans-serif" font-size="44" font-weight="700">${safe}</text><text x="48" y="318" fill="${color('--color-inverse-text')}" opacity=".75" font-family="Arial,sans-serif" font-size="22">${category} · DEMO</text></svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 };
 

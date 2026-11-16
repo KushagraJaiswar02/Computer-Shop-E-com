@@ -7,7 +7,6 @@ import { CartDrawer } from '../../features/cart/CartDrawer';
 import { KeyboardShortcutsModal } from '../shortcuts/KeyboardShortcutsModal';
 import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
 import { TechnicalBackground } from '../home/TechnicalBackground';
-import { FloatingThemeToggle } from './FloatingThemeToggle';
 
 export const StoreLayout: React.FC = () => {
   const isHomepage = useLocation().pathname === '/';
@@ -20,7 +19,6 @@ export const StoreLayout: React.FC = () => {
       <Header />
       <CartDrawer />
       <KeyboardShortcutsModal />
-      <FloatingThemeToggle />
 
       {isHomepage ? (
         <div className="homepage-background-context relative isolate flex flex-1 flex-col">

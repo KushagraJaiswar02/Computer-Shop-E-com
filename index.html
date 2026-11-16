@@ -9,14 +9,11 @@
     <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <script>
       (function() {
-        try {
-          var saved = localStorage.getItem('compshop_theme');
-          if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-          } else {
-            document.documentElement.classList.remove('dark');
-          }
-        } catch (e) {}
+        var saved;
+        try { saved = localStorage.getItem('compshop_theme'); } catch (e) {}
+        var dark = saved === 'dark' || (saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.documentElement.classList.toggle('dark', dark);
       })();
     </script>
   </head>

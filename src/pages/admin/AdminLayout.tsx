@@ -78,6 +78,7 @@ export const AdminLayout: React.FC = () => {
   const products = store.products.filter(p => matches(`${p.name} ${p.sku} ${p.brandName}`));
   const orders = store.orders.filter(o => matches(`${o.orderNumber} ${o.shippingAddress.fullName} ${o.id}`));
   const enquiries = store.enquiries.filter(e => matches(`${e.customerName} ${e.email} ${e.message}`));
+  if (mobile) return <div className="admin-app" style={{minHeight:'100dvh',display:'grid',placeItems:'center',padding:24,textAlign:'center'}}><div><h1>Best viewed on desktop</h1><p>The store administration workspace is designed for a larger screen.</p><Link to="/" className="au-link">Back to store</Link></div></div>;
   const customers = Array.from(new Map(store.orders.map(order => [order.shippingAddress.fullName, order.shippingAddress])).values()).filter(address => matches(`${address.fullName} ${address.phone}`));
   const total = products.length + orders.length + enquiries.length + customers.length;
   return <div data-theme={adminTheme} className={`admin-app ${collapsed ? 'au-collapsed' : ''}`}>

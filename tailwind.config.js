@@ -6,6 +6,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        brand: { DEFAULT: 'rgb(var(--brand) / <alpha-value>)', hover: 'rgb(var(--brand-hover) / <alpha-value>)', accent: 'rgb(var(--brand-accent) / <alpha-value>)', tint: 'rgb(var(--brand-tint) / <alpha-value>)', 'tint-border': 'rgb(var(--brand-tint-border) / <alpha-value>)' },
         background: token('background'), surface: { DEFAULT: token('surface'), elevated: token('surface-elevated'), soft: token('surface-soft') },
         border: token('border'), control: token('control-border'), main: token('text'), muted: token('text-muted'),
         primary: { DEFAULT: token('primary'), hover: token('primary-hover') }, 'on-primary': token('on-primary'), 'on-semantic': token('on-semantic'), accent: token('accent-text'),

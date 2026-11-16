@@ -50,14 +50,14 @@ export interface BrandDirectoryEntry extends BrandIdentity {
 }
 
 const brandIdentities: BrandIdentity[] = [
-  { name: 'ASUS', slug: 'asus', tagline: 'Republic of Gamers', logo: asusLogo, hoverColor: '#000000', accentColor: '#000000', darkHoverColor: '#f8fafc' },
-  { name: 'Lenovo', slug: 'lenovo', tagline: 'Legion & ThinkPad', logo: lenovoLogo, hoverColor: '#E2231A', accentColor: '#E2231A', darkHoverColor: '#ff6b63' },
-  { name: 'MSI', slug: 'msi', tagline: 'MEG, MAG & SUPRIM', logo: msiLogo, hoverColor: '#FF0000', accentColor: '#FF0000', darkHoverColor: '#ff6666' },
-  { name: 'AMD', slug: 'amd', tagline: 'Ryzen & Radeon', logo: amdLogo, hoverColor: '#ED1C24', accentColor: '#ED1C24', darkHoverColor: '#ff6870' },
-  { name: 'Intel', slug: 'intel', tagline: 'Core & Core Ultra', logo: intelLogo, hoverColor: '#0071C5', accentColor: '#0071C5', darkHoverColor: '#60baff' },
-  { name: 'Corsair', slug: 'corsair', tagline: 'Vengeance & Dominator', logo: corsairLogo, hoverColor: '#231F20', accentColor: '#231F20', darkHoverColor: '#f8fafc' },
-  { name: 'Samsung', slug: 'samsung', tagline: '990 PRO NVMe', logo: samsungLogo, hoverColor: '#1428A0', accentColor: '#1428A0', darkHoverColor: '#a5b4fc' },
-  { name: 'Dell / Alienware', slug: 'dell', tagline: 'Alienware M-Series', logo: dellLogo, hoverColor: '#007DB8', accentColor: '#007DB8', darkHoverColor: '#64c8f3' },
+  { name: 'ASUS', slug: 'asus', tagline: 'Republic of Gamers', logo: asusLogo, hoverColor: 'rgb(var(--color-accent-text))', accentColor: 'rgb(var(--color-accent-text))', darkHoverColor: 'rgb(var(--color-accent-text))' },
+  { name: 'Lenovo', slug: 'lenovo', tagline: 'Legion & ThinkPad', logo: lenovoLogo, hoverColor: 'rgb(var(--color-accent-text))', accentColor: 'rgb(var(--color-accent-text))', darkHoverColor: 'rgb(var(--color-accent-text))' },
+  { name: 'MSI', slug: 'msi', tagline: 'MEG, MAG & SUPRIM', logo: msiLogo, hoverColor: 'rgb(var(--color-accent-text))', accentColor: 'rgb(var(--color-accent-text))', darkHoverColor: 'rgb(var(--color-accent-text))' },
+  { name: 'AMD', slug: 'amd', tagline: 'Ryzen & Radeon', logo: amdLogo, hoverColor: 'rgb(var(--color-accent-text))', accentColor: 'rgb(var(--color-accent-text))', darkHoverColor: 'rgb(var(--color-accent-text))' },
+  { name: 'Intel', slug: 'intel', tagline: 'Core & Core Ultra', logo: intelLogo, hoverColor: 'rgb(var(--color-accent-text))', accentColor: 'rgb(var(--color-accent-text))', darkHoverColor: 'rgb(var(--color-accent-text))' },
+  { name: 'Corsair', slug: 'corsair', tagline: 'Vengeance & Dominator', logo: corsairLogo, hoverColor: 'rgb(var(--color-accent-text))', accentColor: 'rgb(var(--color-accent-text))', darkHoverColor: 'rgb(var(--color-accent-text))' },
+  { name: 'Samsung', slug: 'samsung', tagline: '990 PRO NVMe', logo: samsungLogo, hoverColor: 'rgb(var(--color-accent-text))', accentColor: 'rgb(var(--color-accent-text))', darkHoverColor: 'rgb(var(--color-accent-text))' },
+  { name: 'Dell / Alienware', slug: 'dell', tagline: 'Alienware M-Series', logo: dellLogo, hoverColor: 'rgb(var(--color-accent-text))', accentColor: 'rgb(var(--color-accent-text))', darkHoverColor: 'rgb(var(--color-accent-text))' },
 ];
 
 // Store content stays authoritative, including administrator edits and product counts.

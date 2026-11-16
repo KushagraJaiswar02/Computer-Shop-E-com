@@ -1,38 +1,20 @@
 /* Canonical design tokens. RGB channels support Tailwind opacity modifiers. */
 :root {
-  --color-background: 250 250 249;
-  --color-surface: 255 255 255;
-  --color-surface-elevated: 255 255 255;
-  --color-surface-soft: 245 245 244;
-  --color-border: 231 229 228;
-  --color-control-border: 125 131 143;
-  --color-text: 23 24 28;
-  --color-text-muted: 95 100 112;
-  --color-primary: 245 158 11;
-  --color-primary-hover: 217 119 6;
-  --color-on-primary: 23 24 28;
-  --color-accent-text: 180 83 9;
-  --color-success: 22 163 74;
-  --color-success-text: 22 101 52;
-  --color-warning: 217 119 6;
-  --color-warning-text: 180 83 9;
-  --color-danger: 220 38 38;
-  --color-danger-text: 185 28 28;
-  --color-info: 37 99 235;
-  --color-info-text: 29 78 216;
-  --color-price: 23 24 28;
-  --color-discount-badge: 245 158 11;
-  --color-focus-ring: 217 119 6;
-  --color-on-semantic: 255 255 255;
-  --color-inverse: 22 24 29;
-  --color-inverse-text: 236 237 239;
-  --color-inverse-muted: 171 177 188;
-  --color-overlay: 14 15 18;
-  --color-media-surface: 255 255 255;
-  --color-media-text: 23 24 28;
-  --color-shadow: 23 24 28;
-  --color-highlight: 255 255 255;
-  --color-category-accent: 180 83 9;
+  color-scheme: light;
+  --brand: 211 47 47; --brand-hover: 183 28 28; --brand-accent: 229 57 53;
+  --brand-tint: 253 236 236; --brand-tint-border: 249 207 207; --on-brand: 255 255 255;
+  --bg: 255 255 255; --surface: 247 247 248; --surface-2: 239 239 241;
+  --border: 228 228 231; --text: 24 24 27; --muted: 82 82 91; --link: 211 47 47;
+  --success: 21 128 61; --warning: 180 83 9; --error: 159 18 57; --info: 29 78 216;
+  --color-background: var(--bg); --color-surface: var(--surface); --color-surface-elevated: var(--surface-2); --color-surface-soft: var(--surface-2);
+  --color-border: var(--border); --color-control-border: var(--muted); --color-text: var(--text); --color-text-muted: var(--muted);
+  --color-primary: var(--brand); --color-primary-hover: var(--brand-hover); --color-on-primary: var(--on-brand); --color-accent-text: var(--link);
+  --color-success: var(--success); --color-success-text: var(--success); --color-warning: var(--warning); --color-warning-text: var(--warning);
+  --color-danger: var(--error); --color-danger-text: var(--error); --color-info: var(--info); --color-info-text: var(--info);
+  --color-price: var(--text); --color-discount-badge: var(--brand-accent); --color-focus-ring: var(--brand); --color-on-semantic: var(--on-brand);
+  --color-inverse: 24 24 27; --color-inverse-text: 250 250 250; --color-inverse-muted: 200 200 200;
+  --color-overlay: 0 0 0; --color-media-surface: 255 255 255; --color-media-text: 24 24 27;
+  --color-shadow: 0 0 0; --color-highlight: 255 255 255; --color-category-accent: var(--text);
   --font-body: 'Inter', 'Segoe UI', Arial, sans-serif;
   --font-heading: 'Space Grotesk', 'Inter', 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Consolas, monospace;
@@ -66,34 +48,13 @@
   --shadow-glow: 0 0 40px -10px rgb(var(--color-primary) / .25);
   --container-padding: 16px;
 }
-:root.dark {
+[data-theme="dark"]:root {
   color-scheme: dark;
-  --color-background: 14 15 18;
-  --color-surface: 22 24 29;
-  --color-surface-elevated: 29 32 38;
-  --color-surface-soft: 29 32 38;
-  --color-border: 42 46 54;
-  --color-control-border: 105 112 125;
-  --color-text: 236 237 239;
-  --color-text-muted: 154 160 170;
-  --color-primary: 251 191 36;
-  --color-primary-hover: 245 158 11;
-  --color-on-primary: 23 24 28;
-  --color-accent-text: 251 191 36;
-  --color-success: 34 197 94;
-  --color-success-text: 34 197 94;
-  --color-warning: 251 191 36;
-  --color-warning-text: 251 191 36;
-  --color-on-semantic: 23 24 28;
-  --color-danger: 248 113 113;
-  --color-danger-text: 248 113 113;
-  --color-info: 96 165 250;
-  --color-info-text: 96 165 250;
-  --color-price: 236 237 239;
-  --color-discount-badge: 251 191 36;
-  --color-focus-ring: 251 191 36;
-  --color-shadow: 0 0 0;
-  --color-category-accent: 251 191 36;
+  --brand: 211 47 47; --brand-hover: 229 57 53; --brand-accent: 255 82 82;
+  --brand-tint: 42 18 20; --brand-tint-border: 74 30 33; --on-brand: 255 255 255;
+  --bg: 10 10 10; --surface: 20 20 20; --surface-2: 28 28 28;
+  --border: 42 42 42; --text: 250 250 250; --muted: 163 163 163; --link: 255 82 82;
+  --success: 34 197 94; --warning: 245 158 11; --error: 251 113 133; --info: 96 165 250;
 }
 /* Independent admin scope: resets every UI color instead of inheriting storefront colors. */
 .admin-app {

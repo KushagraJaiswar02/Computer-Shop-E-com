@@ -224,7 +224,7 @@
   h1,h2,h3,h4,h5,h6 { font-family: var(--font-heading); line-height:var(--leading-heading); font-weight:600; letter-spacing:-.025em; }
   h1 { font-size:var(--text-3xl); } h2 { font-size:var(--text-2xl); } h3 { font-size:var(--text-lg); }
   :is(input,select,textarea) { border-color:rgb(var(--color-control-border)); }
-  :is(a,button,input,select,textarea,summary):focus-visible { outline:2px solid rgb(var(--color-focus-ring)); outline-offset:3px; }
+  :is(a,button,input,select,textarea,summary):focus-visible { outline:2px solid rgb(var(--color-focus-ring)); outline-offset:2px; }
   ::selection { background:rgb(var(--color-primary)); color:rgb(var(--color-on-primary)); }
 }
 .shop-container { width:100%;max-width:1920px;margin-inline:auto;padding-inline:var(--container-padding);min-width:0; }
@@ -232,7 +232,7 @@
 .shop-logo img,.shop-mark { background:rgb(var(--color-primary));border-radius:var(--radius-md);flex-shrink:0; }
 .shop-logo strong { display:block;font-family:var(--font-heading);font-size:20px;font-weight:700;letter-spacing:-.045em;color:rgb(var(--color-text)); }
 .shop-logo small { display:block;font-size:10px;font-weight:500;color:rgb(var(--color-text-muted));margin-top:1px; }
-.shop-header { position:sticky;top:0;z-index:40;border-bottom:1px solid rgb(var(--color-border));background:rgb(var(--color-surface) / .97); }
+.shop-header { position:sticky;top:0;z-index:40;border-bottom:1px solid rgb(var(--color-border));background:rgb(var(--color-background)); }
 .shop-header.is-scrolled { box-shadow:var(--shadow-header); }
 .shop-header-row { display:flex;align-items:center;gap:20px;min-height:80px;position:static; }
 .shop-header-logo { flex-shrink:0; }
@@ -263,3 +263,5 @@
 :is(.storefront-app,.admin-app) :is(input[type=checkbox],input[type=radio]){accent-color:rgb(var(--color-primary))}
 .shop-sticky-cart-container{padding-right:calc(var(--container-padding) + 48px)}
 .account-ui.shop-container>[role=status],.account-ui.shop-container>[role=alert]{max-width:32rem;margin-inline:auto}
+
+.storefront-app :is(a, button, input, select, textarea, summary):focus-visible { outline: 2px solid rgb(var(--brand)); outline-offset: 2px; }

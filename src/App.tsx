@@ -2,7 +2,7 @@ import { BrandDocumentTitle } from './components/layout/BrandDocumentTitle';
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { StoreProvider } from './context/StoreContext';
-import { StoreLayout } from './components/layout/StoreLayout';
+import { ResponsivePage, ResponsiveStoreLayout } from './components/layout/ResponsiveStoreLayout';
 
 // Customer Pages
 import { HomePage } from './pages/HomePage';
@@ -55,29 +55,31 @@ export const App: React.FC = () => {
           <BrandDocumentTitle />
           <Routes>
             {/* Customer Storefront Routes */}
-            <Route element={<StoreLayout />}>
-              <Route index element={<HomePage />} />
-              <Route path="shop" element={<ShopPage />} />
-              <Route path="category/:categoryId" element={<CategoryPage />} />
-              <Route path="category/:categoryId/:subcategoryId" element={<CategoryPage />} />
-              <Route path="brand/:brandId" element={<BrandPage />} />
-              <Route path="brand/:brandId/:seriesId" element={<BrandPage />} />
-              <Route path="brands" element={<BrandsPage />} />
-              <Route path="brands/:brandSlug" element={<BrandPage />} />
-              <Route path="product/:slug" element={<ProductDetailPage />} />
-              <Route path="wishlist" element={<WishlistPage />} />
-              <Route path="cart" element={<CartPage />} />
-              <Route path="checkout" element={<CheckoutPage />} />
+            <Route element={<ResponsiveStoreLayout />}>
+              <Route index element={<ResponsivePage screen="home" desktop={<HomePage />} />} />
+              <Route path="shop" element={<ResponsivePage screen="shop" desktop={<ShopPage />} />} />
+              <Route path="categories" element={<ResponsivePage screen="categories" desktop={<ShopPage />} />} />
+              <Route path="category/:categoryId" element={<ResponsivePage screen="category" desktop={<CategoryPage />} />} />
+              <Route path="category/:categoryId/:subcategoryId" element={<ResponsivePage screen="category" desktop={<CategoryPage />} />} />
+              <Route path="brand/:brandId" element={<ResponsivePage screen="brand" desktop={<BrandPage />} />} />
+              <Route path="brand/:brandId/:seriesId" element={<ResponsivePage screen="brand" desktop={<BrandPage />} />} />
+              <Route path="brands" element={<ResponsivePage screen="brands" desktop={<BrandsPage />} />} />
+              <Route path="brands/:brandSlug" element={<ResponsivePage screen="brand" desktop={<BrandPage />} />} />
+              <Route path="product/:slug" element={<ResponsivePage screen="product" desktop={<ProductDetailPage />} />} />
+              <Route path="wishlist" element={<ResponsivePage screen="wishlist" desktop={<WishlistPage />} />} />
+              <Route path="cart" element={<ResponsivePage screen="cart" desktop={<CartPage />} />} />
+              <Route path="checkout" element={<ResponsivePage screen="checkout" desktop={<CheckoutPage />} />} />
               <Route path="order-confirmation/:orderId" element={<OrderConfirmationPage />} />
-              <Route path="compare" element={<ComparePage />} />
+              <Route path="compare" element={<ResponsivePage screen="compare" desktop={<ComparePage />} />} />
+              <Route path="search" element={<ResponsivePage screen="search" desktop={<ShopPage />} />} />
               <Route path="enquiry" element={<EnquiryPage />} />
               <Route path="about" element={<AboutPage />} />
               <Route path="contact" element={<ContactPage />} />
               <Route path="policies" element={<PoliciesPage />} />
-              <Route path="login" element={<LoginPage />} />
-              <Route path="register" element={<RegisterPage />} />
+              <Route path="login" element={<ResponsivePage screen="login" desktop={<LoginPage />} />} />
+              <Route path="register" element={<ResponsivePage screen="register" desktop={<RegisterPage />} />} />
               <Route element={<ProtectedAccountRoute />}>
-                <Route path="account" element={<AccountPage />}>
+                <Route path="account" element={<ResponsivePage screen="account" desktop={<AccountPage />} />}>
                   <Route index element={<AccountDashboard />} />
                   <Route path="details" element={<AccountDetails />} />
                   <Route path="profile" element={<Navigate to="/account/details" replace />} />
